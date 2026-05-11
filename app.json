@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "LinguaAdapt",
+    "slug": "linguaadapt",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bardamri.linguaadapt",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "com.bardamri.linguaadapt"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "baseUrl": "/LinguaAdapt"
+    },
+    "experiments": {
+      "baseUrl": "/LinguaAdapt"
+    },
+    "plugins": [
+      "expo-localization"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "ceca9f2f-f1bb-44b4-a047-d35b4f6ccc7b"
+      }
+    },
+    "owner": "bardamris-organization"
+  }
+}
