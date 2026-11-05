@@ -8,7 +8,7 @@ import React, {
   useState,
 } from 'react';
 import { darkTheme, lightTheme, type AppTheme } from '../theme/theme';
-import { applyLocale } from '../services/i18n';
+import { applyLocale, getUiLanguage } from '../services/i18n';
 
 const K_DARK = 'lingua_dark_mode';
 const K_SOUND = 'lingua_sound_effects';
@@ -21,7 +21,8 @@ export type PreferencesContextValue = {
   soundEnabled: boolean;
   setSoundEnabled: (v: boolean) => void;
   appLanguage: string;
-  setAppLanguage: (lang: string) => Promise<void>;
+  /** Changes the UI language. `remount: false` skips rebuilding the app (used mid-onboarding). */
+  setAppLanguage: (lang: string, opts?: { remount?: boolean }) => Promise<void>;
   preferencesLoaded: boolean;
 };
 
@@ -37,7 +38,7 @@ type ProviderProps = {
 export function PreferencesProvider({ children, onLocaleChange }: ProviderProps) {
   const [isDark, setIsDark] = useState(false);
   const [soundEnabled, setSoundEnabledState] = useState(true);
-  const [appLanguage, setAppLanguageState] = useState('en');
+  const [appLanguage, setAppLanguageState] = useState<string>(getUiLanguage());
   const [preferencesLoaded, setPreferencesLoaded] = useState(false);
 
   useEffect(() => {
@@ -78,11 +79,11 @@ export function PreferencesProvider({ children, onLocaleChange }: ProviderProps)
   }, []);
 
   const setAppLanguage = useCallback(
-    async (lang: string) => {
+    async (lang: string, opts?: { remount?: boolean }) => {
       applyLocale(lang);
       setAppLanguageState(lang);
       await AsyncStorage.setItem(K_LANG, lang);
-      onLocaleChange?.();
+      if (opts?.remount !== false) onLocaleChange?.();
     },
     [onLocaleChange],
   );

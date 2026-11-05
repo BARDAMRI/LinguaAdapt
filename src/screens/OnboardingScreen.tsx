@@ -1,287 +1,131 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  useWindowDimensions,
-  View,
-} from 'react-native';
 import { CommonActions, useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useAuth } from '../context/AuthContext';
-import { useAppTheme } from '../context/PreferencesContext';
-import {
-  ONBOARDING_LANGUAGE_CODES,
-  type OnboardingLanguageCode,
-} from '../constants/onboardingLanguages';
+import { useAppTheme, usePreferences } from '../context/PreferencesContext';
+import { nativeOf, type PairId } from '../content/types';
+import { buildCourse } from '../course/build';
 import type { AppNav } from '../navigation/types';
-import { rootNavigationRef } from '../navigation/rootNavigationRef';
-import { updateOnboardingLanguages } from '../services/profileService';
+import { useProgress } from '../progress/ProgressContext';
 import { isRTL, t } from '../services/i18n';
-import type { AppTheme } from '../theme/theme';
-import { cardShadowStyle, layoutDirectionStyle, textWritingDirection } from '../utils/platformStyles';
-
-function langLabel(code: OnboardingLanguageCode): string {
-  return t(`onboarding.languages.${code}`);
-}
-
-function createStyles(theme: AppTheme) {
-  const c = theme.colors;
-  return StyleSheet.create({
-    scroll: { flex: 1, backgroundColor: c.background },
-    inner: { paddingHorizontal: theme.spacing.lg },
-    card: {
-      backgroundColor: c.surface,
-      borderRadius: theme.radii.lg,
-      padding: theme.spacing.xl,
-      borderWidth: 1,
-      borderColor: c.border,
-      marginBottom: theme.spacing.lg,
-    },
-    title: {
-      ...theme.typography.title,
-      fontSize: 26,
-      color: c.text,
-      marginBottom: theme.spacing.sm,
-    },
-    subtitle: {
-      ...theme.typography.body,
-      color: c.textSecondary,
-      marginBottom: theme.spacing.xl,
-    },
-    sectionTitle: {
-      fontSize: 16,
-      fontWeight: '700',
-      color: c.text,
-      marginBottom: theme.spacing.md,
-    },
-    chipRow: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: theme.spacing.sm,
-    },
-    chip: {
-      paddingVertical: theme.spacing.sm,
-      paddingHorizontal: theme.spacing.md,
-      borderRadius: theme.radii.md,
-      borderWidth: 2,
-      borderColor: c.border,
-      backgroundColor: c.surface,
-    },
-    chipSelected: {
-      borderColor: c.primary,
-      backgroundColor: theme.isDark
-        ? 'rgba(96,165,250,0.14)'
-        : 'rgba(239,246,255,1)',
-    },
-    chipLabel: {
-      fontSize: 16,
-      fontWeight: '600',
-      color: c.text,
-    },
-    primaryBtn: {
-      backgroundColor: c.primary,
-      paddingVertical: theme.spacing.md,
-      borderRadius: theme.radii.md,
-      alignItems: 'center',
-      marginTop: theme.spacing.md,
-    },
-    primaryBtnPressed: { opacity: 0.9 },
-    primaryBtnDisabled: { opacity: 0.55 },
-    primaryLabel: {
-      ...theme.typography.button,
-      color: c.onPrimary,
-    },
-  });
-}
+import { cardShadowStyle, rowDir, textStart } from '../utils/platformStyles';
 
 export function OnboardingScreen() {
+  const theme = useAppTheme();
+  const c = theme.colors;
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<AppNav>();
-  const { user } = useAuth();
-  const appTheme = useAppTheme();
-  const styles = useMemo(() => createStyles(appTheme), [appTheme]);
-  const { width } = useWindowDimensions();
-  const isWide = width >= 768;
+  const { setAppLanguage } = usePreferences();
+  const { setActivePair } = useProgress();
+  const [pair, setPair] = useState<PairId | null>(null);
 
-  const [nativeLang, setNativeLang] = useState<OnboardingLanguageCode | null>(null);
-  const [targetLang, setTargetLang] = useState<OnboardingLanguageCode | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const continueInFlightRef = useRef(false);
+  const choosePair = async (p: PairId) => {
+    // The UI speaks the learner's own language.
+    await setAppLanguage(nativeOf(p), { remount: false });
+    setActivePair(p);
+    setPair(p);
+  };
 
-  const onContinue = useCallback(async () => {
-    if (!user?.id || !nativeLang || !targetLang || continueInFlightRef.current) return;
-    continueInFlightRef.current = true;
-    setSubmitting(true);
-    setError(null);
-    try {
-      const { error: err } = await updateOnboardingLanguages(
-        user.id,
-        nativeLang,
-        targetLang,
-      );
-      if (err) {
-        setError(t('onboarding.saveError'));
-        return;
-      }
-      const resetPlacement = CommonActions.reset({
-        index: 0,
-        routes: [{ name: 'PlacementTest' }],
-      });
-      const runNav = () => {
-        if (rootNavigationRef.isReady()) {
-          rootNavigationRef.dispatch(resetPlacement);
-        } else {
-          navigation.dispatch(resetPlacement);
-        }
-      };
-      setTimeout(runNav, 0);
-    } finally {
-      continueInFlightRef.current = false;
-      setSubmitting(false);
+  const start = (knowSome: boolean) => {
+    if (!pair) return;
+    const routes: { name: 'Home' | 'Lesson'; params?: object }[] = [{ name: 'Home' }];
+    if (knowSome) {
+      // Test the letters: passing opens the reading stage.
+      const reading = buildCourse(pair).stages[1];
+      if (reading.units[0]) routes.push({ name: 'Lesson', params: { mode: 'checkpoint', unitId: reading.units[0].id } });
     }
-  }, [nativeLang, navigation, targetLang, user?.id]);
+    navigation.dispatch(CommonActions.reset({ index: routes.length - 1, routes }));
+  };
+
+  const card = (p: PairId, emoji: string, title: string, sub: string, rtl: boolean) => (
+    <Pressable
+      key={p}
+      onPress={() => void choosePair(p)}
+      testID={`onboarding_pair_${p}`}
+      style={({ pressed }) => [
+        styles.pairCard,
+        cardShadowStyle(theme),
+        { flexDirection: rowDir(rtl), backgroundColor: c.surface, borderColor: pair === p ? c.primary : c.border, transform: [{ scale: pressed ? 0.98 : 1 }] },
+      ]}
+    >
+      <Text style={styles.pairEmoji}>{emoji}</Text>
+      <View style={{ flex: 1 }}>
+        <Text style={[styles.pairTitle, { color: c.text }, textStart(rtl)]}>{title}</Text>
+        <Text style={[styles.pairSub, { color: c.primary }, textStart(rtl)]}>{sub}</Text>
+      </View>
+    </Pressable>
+  );
 
   return (
     <ScrollView
-      style={[styles.scroll, layoutDirectionStyle(isRTL)]}
-      contentContainerStyle={[
-        styles.inner,
-        {
-          paddingTop: insets.top + appTheme.spacing.xl,
-          paddingBottom: insets.bottom + appTheme.spacing.xl,
-        },
-      ]}
-      keyboardShouldPersistTaps="handled"
-      bounces={false}
-      testID="onboarding_scroll"
+      style={{ backgroundColor: c.background }}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + 32, paddingBottom: insets.bottom + 24 }]}
     >
-      <View
-        style={[
-          styles.card,
-          cardShadowStyle(appTheme),
-          { maxWidth: isWide ? 520 : '100%', alignSelf: 'center', width: '100%' },
-        ]}
-        testID="onboarding_card"
-      >
-        <Text
-          style={[
-            styles.title,
-            { textAlign: isRTL ? 'right' : 'left' },
-            textWritingDirection(isRTL),
-          ]}
-          testID="onboarding_text_title"
-        >
-          {t('onboarding.title')}
-        </Text>
-        <Text
-          style={[
-            styles.subtitle,
-            { textAlign: isRTL ? 'right' : 'left' },
-            textWritingDirection(isRTL),
-          ]}
-          testID="onboarding_text_subtitle"
-        >
-          {t('onboarding.subtitle')}
-        </Text>
-
-        <Text
-          style={[
-            styles.sectionTitle,
-            { textAlign: isRTL ? 'right' : 'left' },
-            textWritingDirection(isRTL),
-          ]}
-          testID="onboarding_text_native_question"
-        >
-          {t('onboarding.nativeQuestion')}
-        </Text>
-        <View
-          style={[
-            styles.chipRow,
-            { flexDirection: isRTL ? 'row-reverse' : 'row' },
-          ]}
-          testID="onboarding_row_native_chips"
-        >
-          {ONBOARDING_LANGUAGE_CODES.map((code) => (
+      <View style={styles.column}>
+        <Animated.Text entering={FadeInUp} style={styles.hero}>
+          אב · ABC
+        </Animated.Text>
+        {!pair ? (
+          <Animated.View entering={FadeInDown} style={styles.gap}>
+            <Text style={[styles.title, { color: c.text }]}>LinguaAdapt</Text>
+            <Text style={[styles.subtitle, { color: c.textSecondary }]}>
+              Learn a language from zero · ללמוד שפה מאפס
+            </Text>
+            {card('en-he', '🇮🇱', t('onboarding.enHeTitle'), t('onboarding.enHeSub'), false)}
+            {card('he-en', '🇬🇧', t('onboarding.heEnTitle'), t('onboarding.heEnSub'), true)}
+          </Animated.View>
+        ) : (
+          <Animated.View entering={FadeInDown} style={styles.gap}>
+            <Text style={[styles.title, { color: c.text }]}>{t('onboarding.levelTitle')}</Text>
             <Pressable
-              key={`n-${code}`}
-              onPress={() => { setNativeLang(code); if (targetLang === code) setTargetLang(null); }}
-              style={[
-                styles.chip,
-                nativeLang === code && styles.chipSelected,
-              ]}
-              testID={`onboarding_chip_native_${code}`}
+              onPress={() => start(false)}
+              testID="onboarding_from_zero"
+              style={[styles.levelCard, { backgroundColor: c.primary, flexDirection: rowDir(isRTL) }]}
             >
-              <Text style={styles.chipLabel}>{langLabel(code)}</Text>
+              <Text style={styles.levelEmoji}>🌱</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.levelTitle, { color: c.onPrimary }, textStart(isRTL)]}>{t('onboarding.fromZero')}</Text>
+                <Text style={[styles.levelSub, { color: c.onPrimary }, textStart(isRTL)]}>{t('onboarding.fromZeroSub')}</Text>
+              </View>
             </Pressable>
-          ))}
-        </View>
-
-        <Text
-          style={[
-            styles.sectionTitle,
-            { marginTop: appTheme.spacing.xl, textAlign: isRTL ? 'right' : 'left' },
-            textWritingDirection(isRTL),
-          ]}
-          testID="onboarding_text_target_question"
-        >
-          {t('onboarding.targetQuestion')}
-        </Text>
-        <View
-          style={[
-            styles.chipRow,
-            { flexDirection: isRTL ? 'row-reverse' : 'row' },
-          ]}
-          testID="onboarding_row_target_chips"
-        >
-          {ONBOARDING_LANGUAGE_CODES.filter((code) => code !== nativeLang).map((code) => (
             <Pressable
-              key={`t-${code}`}
-              onPress={() => setTargetLang(code)}
-              style={[
-                styles.chip,
-                targetLang === code && styles.chipSelected,
-              ]}
-              testID={`onboarding_chip_target_${code}`}
+              onPress={() => start(true)}
+              testID="onboarding_know_some"
+              style={[styles.levelCard, { backgroundColor: c.surface, borderColor: c.border, borderWidth: 1, flexDirection: rowDir(isRTL) }]}
             >
-              <Text style={styles.chipLabel}>{langLabel(code)}</Text>
+              <Text style={styles.levelEmoji}>🚀</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.levelTitle, { color: c.text }, textStart(isRTL)]}>{t('onboarding.knowSome')}</Text>
+                <Text style={[styles.levelSub, { color: c.textSecondary }, textStart(isRTL)]}>{t('onboarding.knowSomeSub')}</Text>
+              </View>
             </Pressable>
-          ))}
-        </View>
-
-        {error ? (
-          <Text
-            style={{
-              color: appTheme.colors.danger,
-              marginTop: appTheme.spacing.md,
-              textAlign: isRTL ? 'right' : 'left',
-            }}
-            testID="onboarding_text_error"
-          >
-            {error}
-          </Text>
-        ) : null}
-
-        <Pressable
-          style={({ pressed }) => [
-            styles.primaryBtn,
-            pressed && styles.primaryBtnPressed,
-            (submitting || !nativeLang || !targetLang) && styles.primaryBtnDisabled,
-          ]}
-          onPress={() => void onContinue()}
-          disabled={submitting || !nativeLang || !targetLang}
-          testID="onboarding_btn_continue"
-        >
-          {submitting ? (
-            <ActivityIndicator color={appTheme.colors.onPrimary} />
-          ) : (
-            <Text style={styles.primaryLabel}>{t('onboarding.continue')}</Text>
-          )}
-        </Pressable>
+            <Text style={[styles.note, { color: c.textSecondary }]}>{t('onboarding.guestNote')}</Text>
+            <Pressable onPress={() => setPair(null)} hitSlop={8}>
+              <Text style={[styles.back, { color: c.primary }]}>{t('common.back')}</Text>
+            </Pressable>
+          </Animated.View>
+        )}
       </View>
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  content: { paddingHorizontal: 20, flexGrow: 1 },
+  column: { width: '100%', maxWidth: 520, alignSelf: 'center', gap: 20 },
+  gap: { gap: 16 },
+  hero: { fontSize: 56, textAlign: 'center', fontWeight: '800', color: '#4f46e5' },
+  title: { fontSize: 28, fontWeight: '800', textAlign: 'center' },
+  subtitle: { fontSize: 16, textAlign: 'center', lineHeight: 24 },
+  pairCard: { flexDirection: 'row', alignItems: 'center', gap: 14, borderWidth: 2, borderRadius: 20, padding: 18 },
+  pairEmoji: { fontSize: 40 },
+  pairTitle: { fontSize: 20, fontWeight: '800' },
+  pairSub: { fontSize: 17, fontWeight: '700', marginTop: 2 },
+  levelCard: { flexDirection: 'row', alignItems: 'center', gap: 14, borderRadius: 20, padding: 18 },
+  levelEmoji: { fontSize: 34 },
+  levelTitle: { fontSize: 18, fontWeight: '800' },
+  levelSub: { fontSize: 14, marginTop: 2, opacity: 0.9 },
+  note: { fontSize: 14, textAlign: 'center', lineHeight: 20 },
+  back: { textAlign: 'center', fontSize: 15, fontWeight: '700' },
+});

@@ -10,12 +10,12 @@ import { useNavigation } from '@react-navigation/native';
 import { AuthLayout } from '../components/AuthLayout';
 import { LabeledInput } from '../components/LabeledInput';
 import { useAuth } from '../context/AuthContext';
-import type { AuthNav } from '../navigation/types';
+import type { AppNav } from '../navigation/types';
 import { isRTL, t } from '../services/i18n';
 import { theme } from '../theme/theme';
 
 export function LoginScreen() {
-  const navigation = useNavigation<AuthNav>();
+  const navigation = useNavigation<AppNav>();
   const { signIn, authError, clearAuthError } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,7 +25,7 @@ export function LoginScreen() {
     clearAuthError();
     setSubmitting(true);
     try {
-      await signIn(email.trim(), password);
+      if (await signIn(email.trim(), password)) navigation.goBack();
     } finally {
       setSubmitting(false);
     }
@@ -94,6 +94,9 @@ export function LoginScreen() {
           <Text style={styles.linkAccent}>{t('auth.switchSignup')}</Text>
         </Pressable>
       </View>
+      <Pressable onPress={() => navigation.goBack()} hitSlop={8} style={styles.guest} testID="login_btn_guest">
+        <Text style={styles.switchText}>{t('auth.continueAsGuest')}</Text>
+      </Pressable>
     </AuthLayout>
   );
 }
@@ -131,6 +134,10 @@ const styles = StyleSheet.create({
   switchText: {
     fontSize: 15,
     color: theme.colors.textSecondary,
+  },
+  guest: {
+    marginTop: theme.spacing.md,
+    alignItems: 'center',
   },
   linkAccent: {
     fontSize: 15,

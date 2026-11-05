@@ -10,12 +10,12 @@ import { useNavigation } from '@react-navigation/native';
 import { AuthLayout } from '../components/AuthLayout';
 import { LabeledInput } from '../components/LabeledInput';
 import { useAuth } from '../context/AuthContext';
-import type { AuthNav } from '../navigation/types';
+import type { AppNav } from '../navigation/types';
 import { isRTL, t } from '../services/i18n';
 import { theme } from '../theme/theme';
 
 export function SignupScreen() {
-  const navigation = useNavigation<AuthNav>();
+  const navigation = useNavigation<AppNav>();
   const { signUp, authError, clearAuthError } = useAuth();
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
@@ -38,6 +38,8 @@ export function SignupScreen() {
       const result = await signUp(email.trim(), password, displayName.trim());
       if (result.needsEmailConfirmation) {
         setNotice(t('auth.emailConfirm'));
+      } else if (result.ok) {
+        navigation.popToTop();
       }
     } finally {
       setSubmitting(false);
@@ -122,7 +124,7 @@ export function SignupScreen() {
         <Pressable
           onPress={() => {
             clearAuthError();
-            navigation.navigate('Login');
+            navigation.replace('Login');
           }}
           hitSlop={8}
           testID="signup_btn_login"

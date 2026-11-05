@@ -2,15 +2,19 @@ import { Platform, type TextStyle, type ViewStyle } from 'react-native';
 import type { AppTheme } from '../theme/theme';
 
 /**
- * Avoid invalid `direction` on web ScrollView/View; use `writingDirection` on Text
- * and `textAlign` / `flexDirection: 'row-reverse'` for rows. Native keeps `direction`
- * for proper RTL layout.
+ * RTL is applied by our own styles on every platform (native mirroring is off,
+ * see services/i18n). Use these helpers instead of `direction`.
  */
-export function layoutDirectionStyle(isRTL: boolean): ViewStyle {
-  if (Platform.OS === 'web') {
-    return {};
-  }
-  return { direction: isRTL ? 'rtl' : 'ltr' };
+export function rowDir(rtl: boolean): ViewStyle['flexDirection'] {
+  return rtl ? 'row-reverse' : 'row';
+}
+
+export function textStart(rtl: boolean): TextStyle {
+  return { textAlign: rtl ? 'right' : 'left', writingDirection: rtl ? 'rtl' : 'ltr' };
+}
+
+export function textWritingDirection(isRTL: boolean): TextStyle {
+  return { writingDirection: isRTL ? 'rtl' : 'ltr' };
 }
 
 function expandHex(hex: string): string {
@@ -24,7 +28,7 @@ function expandHex(hex: string): string {
   return h;
 }
 
-function hexToRgba(hex: string, alpha: number): string {
+export function hexToRgba(hex: string, alpha: number): string {
   const full = expandHex(hex);
   if (full.length !== 6) {
     return `rgba(0,0,0,${alpha})`;
@@ -39,8 +43,8 @@ function hexToRgba(hex: string, alpha: number): string {
 /**
  * Card elevation: `boxShadow` on web, legacy shadow* + `elevation` on native.
  */
-export function cardShadowStyle(theme: AppTheme): ViewStyle {
-  const s = theme.shadows.card;
+export function cardShadowStyle(theme: AppTheme, strong = false): ViewStyle {
+  const s = strong ? theme.shadows.strong : theme.shadows.card;
   if (Platform.OS === 'web') {
     const color = s.shadowColor.startsWith('#')
       ? hexToRgba(s.shadowColor, s.shadowOpacity)
@@ -55,11 +59,5 @@ export function cardShadowStyle(theme: AppTheme): ViewStyle {
     shadowOpacity: s.shadowOpacity,
     shadowRadius: s.shadowRadius,
     elevation: s.elevation,
-  };
-}
-
-export function textWritingDirection(isRTL: boolean): TextStyle {
-  return {
-    writingDirection: isRTL ? 'rtl' : 'ltr',
   };
 }

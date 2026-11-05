@@ -1,87 +1,41 @@
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useMemo } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useAppTheme } from '../context/PreferencesContext';
-import { AlphabetOverviewScreen } from '../screens/AlphabetOverviewScreen';
-import { AppBootstrapScreen } from '../screens/AppBootstrapScreen';
-import { ConversationScreen } from '../screens/ConversationScreen';
-import { LearningSessionScreen } from '../screens/LearningSessionScreen';
+import { BootstrapScreen } from '../screens/BootstrapScreen';
+import { ChartScreen } from '../screens/ChartScreen';
+import { CreditsScreen, PrivacyScreen } from '../screens/CreditsScreen';
+import { DictionaryScreen } from '../screens/DictionaryScreen';
+import { HomeScreen } from '../screens/HomeScreen';
+import { LessonCompleteScreen } from '../screens/LessonCompleteScreen';
+import { LessonScreen } from '../screens/LessonScreen';
 import { LoginScreen } from '../screens/LoginScreen';
 import { OnboardingScreen } from '../screens/OnboardingScreen';
-import { PlacementTestScreen } from '../screens/PlacementTestScreen';
+import { PhrasebookScreen } from '../screens/PhrasebookScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { SignupScreen } from '../screens/SignupScreen';
-import { SummaryScreen } from '../screens/SummaryScreen';
-import { WelcomeScreen } from '../screens/WelcomeScreen';
-import type { AppStackParamList, AuthStackParamList } from './types';
+import { WordDetailScreen } from '../screens/WordDetailScreen';
+import type { AppStackParamList } from './types';
 
-const AuthStack = createNativeStackNavigator<AuthStackParamList>();
-const AppStack = createNativeStackNavigator<AppStackParamList>();
+const Stack = createNativeStackNavigator<AppStackParamList>();
 
-function AuthNavigator() {
-  return (
-    <AuthStack.Navigator
-      initialRouteName="Login"
-      screenOptions={{
-        headerShown: false,
-        animation: 'fade',
-      }}
-    >
-      <AuthStack.Screen name="Login" component={LoginScreen} />
-      <AuthStack.Screen name="Signup" component={SignupScreen} />
-    </AuthStack.Navigator>
-  );
-}
-
-function AppNavigator() {
-  return (
-    <AppStack.Navigator
-      initialRouteName="AppBootstrap"
-      screenOptions={{
-        headerShown: false,
-        animation: 'fade',
-      }}
-    >
-      <AppStack.Screen name="AppBootstrap" component={AppBootstrapScreen} />
-      <AppStack.Screen name="Welcome" component={WelcomeScreen} />
-      <AppStack.Screen name="Onboarding" component={OnboardingScreen} />
-      <AppStack.Screen name="Profile" component={ProfileScreen} />
-      <AppStack.Screen name="PlacementTest" component={PlacementTestScreen} />
-      <AppStack.Screen name="AlphabetOverview" component={AlphabetOverviewScreen} />
-      <AppStack.Screen name="LearningSession" component={LearningSessionScreen} />
-      <AppStack.Screen name="Summary" component={SummaryScreen} />
-      <AppStack.Screen name="Settings" component={SettingsScreen} />
-      <AppStack.Screen name="Conversation" component={ConversationScreen} />
-    </AppStack.Navigator>
-  );
-}
-
+/** One stack for everyone: accounts are optional (guest mode). */
 export function RootNavigator() {
-  const { session, loading } = useAuth();
-  const theme = useAppTheme();
-
-  const loadingStyles = useMemo(
-    () =>
-      StyleSheet.create({
-        loading: {
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: theme.colors.background,
-        },
-      }),
-    [theme.colors.background],
+  return (
+    <Stack.Navigator initialRouteName="Bootstrap" screenOptions={{ headerShown: false, animation: 'fade' }}>
+      <Stack.Screen name="Bootstrap" component={BootstrapScreen} />
+      <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Lesson" component={LessonScreen} options={{ animation: 'slide_from_bottom', gestureEnabled: false }} />
+      <Stack.Screen name="LessonComplete" component={LessonCompleteScreen} options={{ animation: 'fade', gestureEnabled: false }} />
+      <Stack.Screen name="Dictionary" component={DictionaryScreen} options={{ animation: 'default' }} />
+      <Stack.Screen name="WordDetail" component={WordDetailScreen} options={{ animation: 'default' }} />
+      <Stack.Screen name="Phrasebook" component={PhrasebookScreen} options={{ animation: 'default' }} />
+      <Stack.Screen name="Chart" component={ChartScreen} options={{ animation: 'default' }} />
+      <Stack.Screen name="Profile" component={ProfileScreen} options={{ animation: 'default' }} />
+      <Stack.Screen name="Settings" component={SettingsScreen} options={{ animation: 'default' }} />
+      <Stack.Screen name="Credits" component={CreditsScreen} options={{ animation: 'default' }} />
+      <Stack.Screen name="Privacy" component={PrivacyScreen} options={{ animation: 'default' }} />
+      <Stack.Screen name="Login" component={LoginScreen} options={{ animation: 'slide_from_bottom' }} />
+      <Stack.Screen name="Signup" component={SignupScreen} options={{ animation: 'default' }} />
+    </Stack.Navigator>
   );
-
-  if (loading) {
-    return (
-      <View style={loadingStyles.loading}>
-        <ActivityIndicator size="large" color={theme.colors.primary} />
-      </View>
-    );
-  }
-
-  return session ? <AppNavigator /> : <AuthNavigator />;
 }

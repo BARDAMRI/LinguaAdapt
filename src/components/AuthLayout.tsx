@@ -11,7 +11,6 @@ import { isRTL } from '../services/i18n';
 import { theme } from '../theme/theme';
 import {
   cardShadowStyle,
-  layoutDirectionStyle,
   textWritingDirection,
 } from '../utils/platformStyles';
 
@@ -32,7 +31,7 @@ export function AuthLayout({ title, subtitle, children }: AuthLayoutProps) {
 
   return (
     <ScrollView
-      style={[styles.scroll, layoutDirectionStyle(isRTL)]}
+      style={styles.scroll}
       contentContainerStyle={[
         styles.scrollContent,
         {
