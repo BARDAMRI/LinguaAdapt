@@ -1,13 +1,15 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { CommonActions, useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Alert, Platform, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Platform, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, SlideInRight } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ExerciseView, type DoneResult } from '../components/exercises/ExerciseView';
 import { ProgressBar } from '../components/ui';
 import { useAppTheme, usePreferences } from '../context/PreferencesContext';
 import { getItem } from '../content/registry';
+import { useCourseContentVersion } from '../content/courseContent';
+import { ensureCourseContent, usePackState } from '../content/packs';
 import { buildCourse, findLesson } from '../course/build';
 import { checkpointItems } from '../course/progress';
 import { buildCheckpoint, buildLesson, buildPractice, buildReview, CHECKPOINT_PASS } from '../engine/lesson';
@@ -46,7 +48,7 @@ export function LessonScreen() {
   const { soundEnabled } = usePreferences();
   const pair = state.activePair ?? 'en-he';
 
-  const [queue, setQueue] = useState<Exercise[]>(() => {
+  const build = (): Exercise[] => {
     const course = buildCourse(pair);
     if (params.mode === 'lesson') {
       const found = findLesson(course, params.lessonId);
@@ -55,7 +57,19 @@ export function LessonScreen() {
     if (params.mode === 'review') return buildReview(dueItemIds().slice(0, 15), pair);
     if (params.mode === 'checkpoint') return buildCheckpoint(checkpointItems(course, params.unitId).itemIds, pair);
     return buildPractice(resolveItems(params.itemIds), { pair, kind: 'review' }, 12);
-  });
+  };
+  const [queue, setQueue] = useState<Exercise[]>(build);
+  const contentVersion = useCourseContentVersion(pair);
+  const pack = usePackState();
+
+  // Opened before the word/sentence packs finished loading (e.g. a deep link): build once they arrive.
+  useEffect(() => {
+    void ensureCourseContent(pair);
+  }, [pair]);
+  useEffect(() => {
+    if (queue.length === 0) setQueue(build());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contentVersion]);
   const [index, setIndex] = useState(0);
   const [combo, setCombo] = useState(0);
   const firstAttempt = useRef(new Map<string, boolean>());
@@ -169,9 +183,12 @@ export function LessonScreen() {
     params.mode === 'review' ? t('lesson.reviewTitle') : params.mode === 'checkpoint' ? t('lesson.checkpointTitle') : params.mode === 'practice' ? params.title : '';
 
   if (queue.length === 0) {
+    const waiting = pack.course === 'loading' || pack.course === 'idle';
     return (
       <View style={[styles.root, { backgroundColor: c.background, paddingTop: insets.top + 16 }]}>
-        <Text style={[styles.empty, { color: c.textSecondary }]}>{t('home.reviewNone')}</Text>
+        <Ionicons name="close" size={30} color={c.textSecondary} onPress={() => navigation.goBack()} accessibilityLabel={t('common.close')} />
+        {waiting ? <ActivityIndicator style={{ marginTop: 40 }} color={c.primary} /> : null}
+        <Text style={[styles.empty, { color: c.textSecondary }]}>{waiting ? t('home.downloading') : t('home.reviewNone')}</Text>
       </View>
     );
   }

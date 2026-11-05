@@ -29,7 +29,7 @@ export function LangText({
   const theme = useAppTheme();
   const { state } = useProgress();
   const isHe = display.lang === 'he';
-  const text = isHe && !state.settings.showNiqqud && !display.keepNiqqud ? stripNiqqud(display.text) : display.text;
+  const text = isHe && !state.settings.showNiqqud && !display.keepNiqqud ? (display.plain ?? stripNiqqud(display.text)) : display.text;
   const size = SIZES[display.size ?? 'normal'];
   // Vowel signs sit below the letters: give Hebrew a little more room.
   const lineHeight = isHe ? Math.round(size.lineHeight * 1.12) : size.lineHeight;

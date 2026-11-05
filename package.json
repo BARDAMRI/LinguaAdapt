@@ -16,7 +16,11 @@
     "deploy:mobile": "eas build --platform all --profile production --non-interactive",
     "deploy:all": "npm run deploy:web && eas build --platform all --profile production --non-interactive",
     "lint": "expo lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "content:fetch": "sh scripts/content/fetch.sh",
+    "content:setup-niqqud": "sh scripts/content/setup-niqqud.sh",
+    "content:niqqud": "HF_HOME=.cache/hf HF_HUB_OFFLINE=1 .cache/venv/bin/python -I scripts/content/niqqud.py .cache/niqqud-todo.txt scripts/content/niqqud-cache.json",
+    "content:build": "python3 -I scripts/content/build.py"
   },
   "homepage": "https://BARDAMRI.github.io/LinguaAdapt",
   "dependencies": {

@@ -11,6 +11,8 @@ export type Display = {
   size?: 'glyph' | 'big' | 'normal' | 'small';
   /** Keep vowel signs even when the learner hides niqqud (letters & reading stages). */
   keepNiqqud?: boolean;
+  /** Spelling to show without niqqud when it differs from `text` minus the marks (full spelling). */
+  plain?: string;
   translit?: string;
   /** Secondary line, e.g. the meaning. */
   note?: string;

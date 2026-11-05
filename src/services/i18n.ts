@@ -81,6 +81,8 @@ const translations = {
       completed: 'Completed',
       comingSoon: 'More coming soon',
       practiceAgain: 'Practice again',
+      downloading: 'Downloading words and sentences… (one time only)',
+      downloadError: 'Could not download the course content. Check your internet connection.',
     },
     lesson: {
       quitTitle: 'Quit this lesson?',
@@ -189,10 +191,15 @@ const translations = {
       examples: 'Example sentences',
       practiceMyWords: 'Practice my words',
       noMyWords: 'Save words from the dictionary to practice them here.',
+      partOfSpeech: 'Part of speech',
+      meanings: 'Meanings',
+      results: '%{count} results',
+      pos: { noun: 'noun', verb: 'verb', adj: 'adjective', adv: 'adverb', pron: 'pronoun', prep: 'preposition', conj: 'conjunction', num: 'number', intj: 'interjection', phrase: 'phrase', other: 'word' },
     },
     phrasebook: {
       title: 'Phrasebook',
       subtitle: 'Everyday phrases by situation',
+      practice: 'Practice these phrases',
     },
     profile: {
       title: 'Your progress',
@@ -336,6 +343,8 @@ const translations = {
       completed: 'הושלם',
       comingSoon: 'עוד בקרוב',
       practiceAgain: 'לתרגל שוב',
+      downloading: 'מוריד מילים ומשפטים… (פעם אחת בלבד)',
+      downloadError: 'לא הצלחנו להוריד את תוכן הקורס. בדקו את החיבור לאינטרנט.',
     },
     lesson: {
       quitTitle: 'לצאת מהשיעור?',
@@ -444,10 +453,15 @@ const translations = {
       examples: 'משפטים לדוגמה',
       practiceMyWords: 'לתרגל את המילים שלי',
       noMyWords: 'שמרו מילים מהמילון כדי לתרגל אותן כאן.',
+      partOfSpeech: 'חלק דיבר',
+      meanings: 'פירושים',
+      results: '%{count} תוצאות',
+      pos: { noun: 'שם עצם', verb: 'פועל', adj: 'שם תואר', adv: 'תואר הפועל', pron: 'כינוי גוף', prep: 'מילת יחס', conj: 'מילת חיבור', num: 'מספר', intj: 'מילת קריאה', phrase: 'ביטוי', other: 'מילה' },
     },
     phrasebook: {
       title: 'שיחון',
       subtitle: 'ביטויים יומיומיים לפי מצב',
+      practice: 'לתרגל את הביטויים',
     },
     profile: {
       title: 'ההתקדמות שלכם',

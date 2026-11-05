@@ -46,8 +46,26 @@ export function getItem(id: string): AnyItem | undefined {
   return items.get(id);
 }
 
-export function registerWords(list: Word[]): void {
-  for (const data of list) add({ kind: 'word', data });
+const courseWordIds: Record<string, string[]> = {};
+
+/**
+ * Registers words. Course words win over dictionary entries with the same id
+ * (their meanings are written for beginners), so the dictionary never overwrites.
+ */
+export function registerWords(list: Word[], course?: 'en-he' | 'he-en'): void {
+  for (const data of list) {
+    if (!course && items.has(data.id)) continue;
+    add({ kind: 'word', data });
+  }
+  if (course) courseWordIds[course] = list.map((w) => w.id);
+}
+
+/** Words of a course, in course order (used for distractors). */
+export function courseWords(pair: 'en-he' | 'he-en'): Word[] {
+  return (courseWordIds[pair] ?? [])
+    .map((id) => items.get(id))
+    .filter((x): x is Extract<AnyItem, { kind: 'word' }> => x?.kind === 'word')
+    .map((x) => x.data);
 }
 
 export function registerSentences(list: Sentence[]): void {

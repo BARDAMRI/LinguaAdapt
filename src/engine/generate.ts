@@ -6,7 +6,7 @@ import { ENGLISH_LETTERS } from '../content/en/letters';
 import { PHONICS_PATTERNS } from '../content/en/phonics';
 import { HEBREW_FINAL_LETTERS, HEBREW_LETTERS } from '../content/he/letters';
 import { NIQQUD_SIGNS, SYLLABLE_CONSONANTS, buildSyllable } from '../content/he/niqqud';
-import { getItem, itemsOfKind, type AnyItem } from '../content/registry';
+import { courseWords, getItem, itemsOfKind, type AnyItem } from '../content/registry';
 import type { PairId, Phrase, Sentence, Word } from '../content/types';
 import type { LessonKind } from '../course/types';
 import { t } from '../services/i18n';
@@ -476,6 +476,8 @@ function enPhonicsPractice(item: Extract<AnyItem, { kind: 'en-phonics' }>, _ctx:
 // ─────────────────────────────────────────────────────────────── Words ──
 
 function wordPool(pair: PairId): Word[] {
+  const list = courseWords(pair);
+  if (list.length > 0) return list;
   const prefix = pair === 'en-he' ? 'w:he:' : 'w:en:';
   return itemsOfKind('word')
     .map((x) => x.data)
@@ -494,7 +496,7 @@ function wordDistractors(w: Word, ctx: GenContext, n = 3): Word[] {
 }
 
 function heWordDisplay(w: Word, extra: Partial<Display> = {}): Display {
-  return he(w.heNiqqud || w.he, { translit: w.translit, ...extra });
+  return he(w.heNiqqud || w.he, { translit: w.translit, plain: w.he, ...extra });
 }
 
 function wordTeach(item: Extract<AnyItem, { kind: 'word' }>, ctx: GenContext): Exercise[] {
@@ -551,7 +553,7 @@ function wordPractice(item: Extract<AnyItem, { kind: 'word' }>, ctx: GenContext,
       return choice(w.id, t('ex.howSay', { word: w.en }), w.emoji ? en(w.emoji, { size: 'glyph' }) : null, heWordDisplay(w), others.map((x) => heWordDisplay(x)), { reveal });
     }
     if (variant === 2) {
-      return choice(w.id, t('ex.whichWordHeard'), null, he(heText), others.map((x) => he(x.heNiqqud || x.he)), {
+      return choice(w.id, t('ex.whichWordHeard'), null, heWordDisplay(w, { translit: undefined }), others.map((x) => heWordDisplay(x, { translit: undefined })), {
         audio: { text: heText, lang: 'he' },
         reveal,
       });
@@ -678,7 +680,11 @@ function sentenceTeach(item: Extract<AnyItem, { kind: 'sentence' | 'phrase' }>, 
 function sentencePractice(item: Extract<AnyItem, { kind: 'sentence' | 'phrase' }>, ctx: GenContext, level: number): Exercise {
   const s = item.data as SentenceLike;
   const pool = sentencePool(item.kind);
-  const others = distractors(pool, 3, (x) => x.id === s.id || x.en === s.en, [], (x) => x.id);
+  // Distractors the learner can read: same lesson first, then sentences of similar length.
+  const peers = new Set(ctx.peers ?? []);
+  const len = s.en.length;
+  const near = pool.filter((x) => peers.has(x.id) || Math.abs(x.en.length - len) < 12).slice(0, 400);
+  const others = distractors(near.length >= 3 ? near : pool, 3, (x) => x.id === s.id || x.en === s.en, pool.filter((x) => peers.has(x.id)), (x) => x.id);
   const variant = level === 0 ? 0 : level === 1 ? randomOf([1, 2]) : randomOf([1, 2, 3]);
   const heText = s.heNiqqud || s.he;
   if (ctx.pair === 'en-he') {

@@ -4,6 +4,7 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useAppTheme, usePreferences } from '../context/PreferencesContext';
 import type { AppNav } from '../navigation/types';
 import { useProgress } from '../progress/ProgressContext';
+import { ensureCourseContent, ensurePhrases } from '../content/packs';
 
 /** Waits for saved progress and preferences, then opens Home or Onboarding. */
 export function BootstrapScreen() {
@@ -14,6 +15,9 @@ export function BootstrapScreen() {
 
   useEffect(() => {
     if (!loaded || !preferencesLoaded) return;
+    ensurePhrases();
+    // Words and sentences download in the background; letters work offline.
+    if (state.activePair) void ensureCourseContent(state.activePair);
     navigation.dispatch(
       CommonActions.reset({ index: 0, routes: [{ name: state.activePair ? 'Home' : 'Onboarding' }] }),
     );

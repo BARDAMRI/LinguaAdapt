@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppTheme, usePreferences } from '../context/PreferencesContext';
 import { nativeOf, type PairId } from '../content/types';
 import { buildCourse } from '../course/build';
+import { ensureCourseContent } from '../content/packs';
 import type { AppNav } from '../navigation/types';
 import { useProgress } from '../progress/ProgressContext';
 import { isRTL, t } from '../services/i18n';
@@ -25,6 +26,7 @@ export function OnboardingScreen() {
     await setAppLanguage(nativeOf(p), { remount: false });
     setActivePair(p);
     setPair(p);
+    void ensureCourseContent(p);
   };
 
   const start = (knowSome: boolean) => {

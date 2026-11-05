@@ -1,0 +1,1536 @@
+{
+"situations": [
+{
+"key": "greetings",
+"en": "Saying hello",
+"he": "שלום ולהתראות",
+"emoji": "👋"
+},
+{
+"key": "introductions",
+"en": "Getting to know someone",
+"he": "היכרות",
+"emoji": "🤝"
+},
+{
+"key": "courtesy",
+"en": "Being polite",
+"he": "נימוס",
+"emoji": "🙏"
+},
+{
+"key": "learning",
+"en": "Learning the language",
+"he": "ללמוד שפה",
+"emoji": "📚"
+},
+{
+"key": "cafe",
+"en": "At the café",
+"he": "בבית קפה",
+"emoji": "☕"
+},
+{
+"key": "shopping",
+"en": "Shopping",
+"he": "קניות",
+"emoji": "🛍️"
+},
+{
+"key": "directions",
+"en": "Finding your way",
+"he": "הכוונה",
+"emoji": "🧭"
+},
+{
+"key": "transport",
+"en": "Getting around",
+"he": "תחבורה",
+"emoji": "🚌"
+},
+{
+"key": "hotel",
+"en": "At the hotel",
+"he": "במלון",
+"emoji": "🏨"
+},
+{
+"key": "health",
+"en": "Health",
+"he": "בריאות",
+"emoji": "🩺"
+},
+{
+"key": "emergency",
+"en": "Emergencies",
+"he": "חירום",
+"emoji": "🚨"
+},
+{
+"key": "phone",
+"en": "On the phone",
+"he": "בטלפון",
+"emoji": "📞"
+},
+{
+"key": "time",
+"en": "Time and days",
+"he": "זמן וימים",
+"emoji": "🕐"
+},
+{
+"key": "small talk",
+"en": "Small talk",
+"he": "שיחת חולין",
+"emoji": "💬"
+},
+{
+"key": "feelings",
+"en": "Feelings",
+"he": "רגשות",
+"emoji": "❤️"
+},
+{
+"key": "home",
+"en": "At home",
+"he": "בבית",
+"emoji": "🏠"
+},
+{
+"key": "work",
+"en": "At work",
+"he": "בעבודה",
+"emoji": "💼"
+}
+],
+"phrases": [
+{
+"id": "p:greetings:1",
+"situation": "greetings",
+"he": "שלום",
+"heNiqqud": "שָׁלוֹם",
+"translit": "shalom",
+"en": "Hello",
+"noteEn": "Also means \"goodbye\" and \"peace\"."
+},
+{
+"id": "p:greetings:2",
+"situation": "greetings",
+"he": "היי",
+"heNiqqud": "הַיי",
+"translit": "hai",
+"en": "Hi"
+},
+{
+"id": "p:greetings:3",
+"situation": "greetings",
+"he": "בוקר טוב",
+"heNiqqud": "בּוֹקֶר טוֹב",
+"translit": "boker tov",
+"en": "Good morning",
+"noteEn": "Answer: בוקר אור (boker or) — \"morning of light\"."
+},
+{
+"id": "p:greetings:4",
+"situation": "greetings",
+"he": "צהריים טובים",
+"heNiqqud": "צׇהֳרַיִים טוֹבִים",
+"translit": "tsohorayim tovim",
+"en": "Good afternoon"
+},
+{
+"id": "p:greetings:5",
+"situation": "greetings",
+"he": "ערב טוב",
+"heNiqqud": "עֶרֶב טוֹב",
+"translit": "erev tov",
+"en": "Good evening"
+},
+{
+"id": "p:greetings:6",
+"situation": "greetings",
+"he": "לילה טוב",
+"heNiqqud": "לַיְלָה טוֹב",
+"translit": "laila tov",
+"en": "Good night"
+},
+{
+"id": "p:greetings:7",
+"situation": "greetings",
+"he": "מה שלומך?",
+"heNiqqud": "מָה שְׁלוֹמְךָ?",
+"translit": "ma shlomkha?",
+"en": "How are you?",
+"noteEn": "To a woman: ma shlomekh? (same spelling)",
+"noteHe": "לאישה: מה שלומֵךְ"
+},
+{
+"id": "p:greetings:8",
+"situation": "greetings",
+"he": "מה נשמע?",
+"heNiqqud": "מָה נִשְׁמָע?",
+"translit": "ma nishma?",
+"en": "What's up?",
+"noteEn": "Literally \"what is heard?\""
+},
+{
+"id": "p:greetings:9",
+"situation": "greetings",
+"he": "מה קורה?",
+"heNiqqud": "מָה קוֹרֶה?",
+"translit": "ma kore?",
+"en": "What's happening?"
+},
+{
+"id": "p:greetings:10",
+"situation": "greetings",
+"he": "הכול בסדר",
+"heNiqqud": "הַכּוֹל בְּסֵדֶר",
+"translit": "hakol beseder",
+"en": "Everything is fine"
+},
+{
+"id": "p:greetings:11",
+"situation": "greetings",
+"he": "טוב, תודה",
+"heNiqqud": "טוֹב, תּוֹדָה",
+"translit": "tov, toda",
+"en": "Good, thanks"
+},
+{
+"id": "p:greetings:12",
+"situation": "greetings",
+"he": "ככה ככה",
+"heNiqqud": "כָּכָה כָּכָה",
+"translit": "kakha kakha",
+"en": "So-so"
+},
+{
+"id": "p:greetings:13",
+"situation": "greetings",
+"he": "להתראות",
+"heNiqqud": "לְהִתְרָאוֹת",
+"translit": "lehitraot",
+"en": "See you / Goodbye"
+},
+{
+"id": "p:greetings:14",
+"situation": "greetings",
+"he": "ביי",
+"heNiqqud": "בַּיי",
+"translit": "bai",
+"en": "Bye"
+},
+{
+"id": "p:greetings:15",
+"situation": "greetings",
+"he": "נתראה מחר",
+"heNiqqud": "נִתְרָאֶה מָחָר",
+"translit": "nitrae makhar",
+"en": "See you tomorrow"
+},
+{
+"id": "p:greetings:16",
+"situation": "greetings",
+"he": "שבת שלום",
+"heNiqqud": "שַׁבַּת שָׁלוֹם",
+"translit": "shabat shalom",
+"en": "Have a peaceful Shabbat",
+"noteEn": "Said from Friday afternoon until Saturday night."
+},
+{
+"id": "p:greetings:17",
+"situation": "greetings",
+"he": "שבוע טוב",
+"heNiqqud": "שָׁבוּעַ טוֹב",
+"translit": "shavua tov",
+"en": "Have a good week",
+"noteEn": "Said on Saturday night and Sunday."
+},
+{
+"id": "p:greetings:18",
+"situation": "greetings",
+"he": "חג שמח",
+"heNiqqud": "חַג שָׂמֵחַ",
+"translit": "khag sameach",
+"en": "Happy holiday"
+},
+{
+"id": "p:greetings:19",
+"situation": "greetings",
+"he": "ברוך הבא",
+"heNiqqud": "בָּרוּךְ הַבָּא",
+"translit": "barukh haba",
+"en": "Welcome",
+"noteEn": "To a woman: brukha haba'a",
+"noteHe": "לאישה: ברוכה הבאה"
+},
+{
+"id": "p:introductions:1",
+"situation": "introductions",
+"he": "איך קוראים לך?",
+"heNiqqud": "אֵיךְ קוֹרְאִים לְךָ?",
+"translit": "eikh korim lekha?",
+"en": "What's your name?",
+"noteEn": "To a woman: eikh korim lakh?"
+},
+{
+"id": "p:introductions:2",
+"situation": "introductions",
+"he": "קוראים לי דני",
+"heNiqqud": "קוֹרְאִים לִי דָּנִי",
+"translit": "korim li dani",
+"en": "My name is Danny",
+"noteEn": "Literally \"they call me Danny\"."
+},
+{
+"id": "p:introductions:3",
+"situation": "introductions",
+"he": "נעים מאוד",
+"heNiqqud": "נָעִים מְאוֹד",
+"translit": "na'im me'od",
+"en": "Nice to meet you"
+},
+{
+"id": "p:introductions:4",
+"situation": "introductions",
+"he": "מאיפה אתה?",
+"heNiqqud": "מֵאֵיפֹה אַתָּה?",
+"translit": "me'eifo ata?",
+"en": "Where are you from?",
+"noteEn": "To a woman: me'eifo at?",
+"noteHe": "לאישה: מאיפה את?"
+},
+{
+"id": "p:introductions:5",
+"situation": "introductions",
+"he": "אני מאנגליה",
+"heNiqqud": "אֲנִי מֵאַנְגְּלִיָּה",
+"translit": "ani me'anglia",
+"en": "I'm from England"
+},
+{
+"id": "p:introductions:6",
+"situation": "introductions",
+"he": "אני גר בתל אביב",
+"heNiqqud": "אֲנִי גָּר בְּתֵל אָבִיב",
+"translit": "ani gar betel aviv",
+"en": "I live in Tel Aviv",
+"noteEn": "A woman says: ani gara",
+"noteHe": "אישה אומרת: אני גרה"
+},
+{
+"id": "p:introductions:7",
+"situation": "introductions",
+"he": "בן כמה אתה?",
+"heNiqqud": "בֶּן כַּמָּה אַתָּה?",
+"translit": "ben kama ata?",
+"en": "How old are you?",
+"noteEn": "To a woman: bat kama at?"
+},
+{
+"id": "p:introductions:8",
+"situation": "introductions",
+"he": "אני בן עשרים",
+"heNiqqud": "אֲנִי בֶּן עֶשְׂרִים",
+"translit": "ani ben esrim",
+"en": "I'm twenty years old",
+"noteEn": "A woman says: ani bat esrim"
+},
+{
+"id": "p:introductions:9",
+"situation": "introductions",
+"he": "אני לומד עברית",
+"heNiqqud": "אֲנִי לוֹמֵד עִבְרִית",
+"translit": "ani lomed ivrit",
+"en": "I'm learning Hebrew",
+"noteEn": "A woman says: ani lomedet",
+"noteHe": "אישה אומרת: אני לומדת"
+},
+{
+"id": "p:introductions:10",
+"situation": "introductions",
+"he": "אני מדבר קצת עברית",
+"heNiqqud": "אֲנִי מְדַבֵּר קְצָת עִבְרִית",
+"translit": "ani medaber ktsat ivrit",
+"en": "I speak a little Hebrew",
+"noteEn": "A woman says: ani medaberet",
+"noteHe": "אישה אומרת: אני מדברת"
+},
+{
+"id": "p:introductions:11",
+"situation": "introductions",
+"he": "אתה מדבר אנגלית?",
+"heNiqqud": "אַתָּה מְדַבֵּר אַנְגְּלִית?",
+"translit": "ata medaber anglit?",
+"en": "Do you speak English?",
+"noteEn": "To a woman: at medaberet anglit?"
+},
+{
+"id": "p:introductions:12",
+"situation": "introductions",
+"he": "מה אתה עושה?",
+"heNiqqud": "מָה אַתָּה עוֹשֶׂה?",
+"translit": "ma ata ose?",
+"en": "What do you do?",
+"noteEn": "To a woman: ma at osa?"
+},
+{
+"id": "p:introductions:13",
+"situation": "introductions",
+"he": "אני סטודנט",
+"heNiqqud": "אֲנִי סְטוּדֵנְט",
+"translit": "ani student",
+"en": "I'm a student",
+"noteEn": "A woman says: ani studentit"
+},
+{
+"id": "p:courtesy:1",
+"situation": "courtesy",
+"he": "תודה",
+"heNiqqud": "תּוֹדָה",
+"translit": "toda",
+"en": "Thank you"
+},
+{
+"id": "p:courtesy:2",
+"situation": "courtesy",
+"he": "תודה רבה",
+"heNiqqud": "תּוֹדָה רַבָּה",
+"translit": "toda raba",
+"en": "Thank you very much"
+},
+{
+"id": "p:courtesy:3",
+"situation": "courtesy",
+"he": "בבקשה",
+"heNiqqud": "בְּבַקָּשָׁה",
+"translit": "bevakasha",
+"en": "Please / You're welcome"
+},
+{
+"id": "p:courtesy:4",
+"situation": "courtesy",
+"he": "על לא דבר",
+"heNiqqud": "עַל לֹא דְּבֵּר",
+"translit": "al lo davar",
+"en": "Don't mention it"
+},
+{
+"id": "p:courtesy:5",
+"situation": "courtesy",
+"he": "סליחה",
+"heNiqqud": "סְלִיחָה",
+"translit": "slikha",
+"en": "Excuse me / Sorry"
+},
+{
+"id": "p:courtesy:6",
+"situation": "courtesy",
+"he": "אני מצטער",
+"heNiqqud": "אֲנִי מִצְטַעֵר",
+"translit": "ani mitsta'er",
+"en": "I'm sorry",
+"noteEn": "A woman says: ani mitsta'eret",
+"noteHe": "אישה אומרת: אני מצטערת"
+},
+{
+"id": "p:courtesy:7",
+"situation": "courtesy",
+"he": "אין בעיה",
+"heNiqqud": "אֵין בְּעָיָה",
+"translit": "ein be'aya",
+"en": "No problem"
+},
+{
+"id": "p:courtesy:8",
+"situation": "courtesy",
+"he": "בסדר",
+"heNiqqud": "בְּסֵדֶר",
+"translit": "beseder",
+"en": "Okay"
+},
+{
+"id": "p:courtesy:9",
+"situation": "courtesy",
+"he": "כן",
+"heNiqqud": "כֵּן",
+"translit": "ken",
+"en": "Yes"
+},
+{
+"id": "p:courtesy:10",
+"situation": "courtesy",
+"he": "לא",
+"heNiqqud": "לֹא",
+"translit": "lo",
+"en": "No"
+},
+{
+"id": "p:courtesy:11",
+"situation": "courtesy",
+"he": "אולי",
+"heNiqqud": "אוּלַי",
+"translit": "ulai",
+"en": "Maybe"
+},
+{
+"id": "p:courtesy:12",
+"situation": "courtesy",
+"he": "בטח",
+"heNiqqud": "בֶּטַח",
+"translit": "betakh",
+"en": "Sure"
+},
+{
+"id": "p:courtesy:13",
+"situation": "courtesy",
+"he": "רגע",
+"heNiqqud": "רֶגַע",
+"translit": "rega",
+"en": "Just a moment"
+},
+{
+"id": "p:courtesy:14",
+"situation": "courtesy",
+"he": "בהצלחה",
+"heNiqqud": "בְּהַצְלָחָה",
+"translit": "behatslakha",
+"en": "Good luck"
+},
+{
+"id": "p:courtesy:15",
+"situation": "courtesy",
+"he": "בתיאבון",
+"heNiqqud": "בְּתֵיאָבוֹן",
+"translit": "beteavon",
+"en": "Enjoy your meal"
+},
+{
+"id": "p:courtesy:16",
+"situation": "courtesy",
+"he": "לבריאות",
+"heNiqqud": "לַבְּרִיאוּת",
+"translit": "labriut",
+"en": "Bless you / Cheers",
+"noteEn": "Said after a sneeze and when raising a glass."
+},
+{
+"id": "p:courtesy:17",
+"situation": "courtesy",
+"he": "מזל טוב",
+"heNiqqud": "מַזָּל טוֹב",
+"translit": "mazal tov",
+"en": "Congratulations"
+},
+{
+"id": "p:learning:1",
+"situation": "learning",
+"he": "אני לא מבין",
+"heNiqqud": "אֲנִי לֹא מֵבִין",
+"translit": "ani lo mevin",
+"en": "I don't understand",
+"noteEn": "A woman says: ani lo mevina",
+"noteHe": "אישה אומרת: אני לא מבינה"
+},
+{
+"id": "p:learning:2",
+"situation": "learning",
+"he": "אתה יכול לדבר לאט?",
+"heNiqqud": "אַתָּה יָכוֹל לְדַבֵּר לְאַט?",
+"translit": "ata yakhol ledaber le'at?",
+"en": "Can you speak slowly?",
+"noteEn": "To a woman: at yekhola…"
+},
+{
+"id": "p:learning:3",
+"situation": "learning",
+"he": "אפשר לחזור על זה?",
+"heNiqqud": "אֶפְשָׁר לַחֲזוֹר עַל זֶה?",
+"translit": "efshar lakhzor al ze?",
+"en": "Can you repeat that?"
+},
+{
+"id": "p:learning:4",
+"situation": "learning",
+"he": "מה זה?",
+"heNiqqud": "מָה זֶה?",
+"translit": "ma ze?",
+"en": "What is this?"
+},
+{
+"id": "p:learning:5",
+"situation": "learning",
+"he": "מה זה אומר?",
+"heNiqqud": "מָה זֶה אוֹמֵר?",
+"translit": "ma ze omer?",
+"en": "What does it mean?"
+},
+{
+"id": "p:learning:6",
+"situation": "learning",
+"he": "איך אומרים את זה בעברית?",
+"heNiqqud": "אֵיךְ אוֹמְרִים אֶת זֶה בְּעִבְרִית?",
+"translit": "eikh omrim et ze be'ivrit?",
+"en": "How do you say this in Hebrew?"
+},
+{
+"id": "p:learning:7",
+"situation": "learning",
+"he": "איך כותבים את זה?",
+"heNiqqud": "אֵיךְ כּוֹתְבִים אֶת זֶה?",
+"translit": "eikh kotvim et ze?",
+"en": "How do you write this?"
+},
+{
+"id": "p:learning:8",
+"situation": "learning",
+"he": "אני לא יודע",
+"heNiqqud": "אֲנִי לֹא יוֹדֵעַ",
+"translit": "ani lo yode'a",
+"en": "I don't know",
+"noteEn": "A woman says: ani lo yoda'at",
+"noteHe": "אישה אומרת: אני לא יודעת"
+},
+{
+"id": "p:learning:9",
+"situation": "learning",
+"he": "הבנתי",
+"heNiqqud": "הֵבַנְתִּי",
+"translit": "hevanti",
+"en": "I got it"
+},
+{
+"id": "p:cafe:1",
+"situation": "cafe",
+"he": "אפשר תפריט?",
+"heNiqqud": "אֶפְשָׁר תַּפְרִיט?",
+"translit": "efshar tafrit?",
+"en": "Can I have a menu?"
+},
+{
+"id": "p:cafe:2",
+"situation": "cafe",
+"he": "אני רוצה קפה",
+"heNiqqud": "אֲנִי רוֹצֶה קָפֶה",
+"translit": "ani rotse kafe",
+"en": "I want a coffee",
+"noteEn": "A woman says: ani rotsa",
+"noteHe": "אישה אומרת: אני רוצה (rotsa)"
+},
+{
+"id": "p:cafe:3",
+"situation": "cafe",
+"he": "קפה הפוך, בבקשה",
+"heNiqqud": "קָפֶה הָפוּךְ, בְּבַקָּשָׁה",
+"translit": "kafe hafukh, bevakasha",
+"en": "A latte, please",
+"noteEn": "\"Hafukh\" (upside-down) is the Israeli latte."
+},
+{
+"id": "p:cafe:4",
+"situation": "cafe",
+"he": "כוס מים, בבקשה",
+"heNiqqud": "כּוֹס מַיִם, בְּבַקָּשָׁה",
+"translit": "kos mayim, bevakasha",
+"en": "A glass of water, please"
+},
+{
+"id": "p:cafe:5",
+"situation": "cafe",
+"he": "מה אתה ממליץ?",
+"heNiqqud": "מָה אַתָּה מַמְלִיץ?",
+"translit": "ma ata mamlits?",
+"en": "What do you recommend?",
+"noteEn": "To a woman: ma at mamlitsa?"
+},
+{
+"id": "p:cafe:6",
+"situation": "cafe",
+"he": "אני צמחוני",
+"heNiqqud": "אֲנִי צִמְחוֹנִי",
+"translit": "ani tsimkhoni",
+"en": "I'm vegetarian",
+"noteEn": "A woman says: ani tsimkhonit"
+},
+{
+"id": "p:cafe:7",
+"situation": "cafe",
+"he": "בלי סוכר",
+"heNiqqud": "בְּלִי סוּכָּר",
+"translit": "bli sukar",
+"en": "Without sugar"
+},
+{
+"id": "p:cafe:8",
+"situation": "cafe",
+"he": "זה טעים מאוד",
+"heNiqqud": "זֶה טָעִים מְאוֹד",
+"translit": "ze ta'im me'od",
+"en": "This is very tasty"
+},
+{
+"id": "p:cafe:9",
+"situation": "cafe",
+"he": "אפשר את החשבון?",
+"heNiqqud": "אֶפְשָׁר אֶת הַחֶשְׁבּוֹן?",
+"translit": "efshar et hakheshbon?",
+"en": "Can I have the bill?"
+},
+{
+"id": "p:cafe:10",
+"situation": "cafe",
+"he": "אפשר לשלם בכרטיס?",
+"heNiqqud": "אֶפְשָׁר לְשַׁלֵּם בַּכַּרְטִיס?",
+"translit": "efshar leshalem bekartis?",
+"en": "Can I pay by card?"
+},
+{
+"id": "p:cafe:11",
+"situation": "cafe",
+"he": "שולחן לשניים, בבקשה",
+"heNiqqud": "שׁוּלְחָן לִשְׁנַיִים, בְּבַקָּשָׁה",
+"translit": "shulkhan lishnayim, bevakasha",
+"en": "A table for two, please"
+},
+{
+"id": "p:cafe:12",
+"situation": "cafe",
+"he": "לשבת או לקחת?",
+"heNiqqud": "לָשֶׁבֶת אוֹ לָקַחַת?",
+"translit": "lashevet o lakakhat?",
+"en": "For here or to go?"
+},
+{
+"id": "p:cafe:13",
+"situation": "cafe",
+"he": "אני רעב",
+"heNiqqud": "אֲנִי רָעֵב",
+"translit": "ani ra'ev",
+"en": "I'm hungry",
+"noteEn": "A woman says: ani re'eva",
+"noteHe": "אישה אומרת: אני רעבה"
+},
+{
+"id": "p:cafe:14",
+"situation": "cafe",
+"he": "אני צמא",
+"heNiqqud": "אֲנִי צָמֵא",
+"translit": "ani tsame",
+"en": "I'm thirsty",
+"noteEn": "A woman says: ani tsme'a",
+"noteHe": "אישה אומרת: אני צמאה"
+},
+{
+"id": "p:shopping:1",
+"situation": "shopping",
+"he": "כמה זה עולה?",
+"heNiqqud": "כַּמָּה זֶה עוֹלֶה?",
+"translit": "kama ze ole?",
+"en": "How much does it cost?"
+},
+{
+"id": "p:shopping:2",
+"situation": "shopping",
+"he": "זה יקר מדי",
+"heNiqqud": "זֶה יָקָר מִדַּי",
+"translit": "ze yakar midai",
+"en": "It's too expensive"
+},
+{
+"id": "p:shopping:3",
+"situation": "shopping",
+"he": "יש לכם את זה במידה אחרת?",
+"heNiqqud": "יֵשׁ לָכֶם אֶת זֶה בְּמִידָּה אַחֶרֶת?",
+"translit": "yesh lakhem et ze bemida akheret?",
+"en": "Do you have this in another size?"
+},
+{
+"id": "p:shopping:4",
+"situation": "shopping",
+"he": "אני רק מסתכל",
+"heNiqqud": "אֲנִי רַק מִסְתַּכֵּל",
+"translit": "ani rak mistakel",
+"en": "I'm just looking",
+"noteEn": "A woman says: ani rak mistakelet"
+},
+{
+"id": "p:shopping:5",
+"situation": "shopping",
+"he": "אני אקח את זה",
+"heNiqqud": "אֲנִי אֶקַּח אֶת זֶה",
+"translit": "ani ekakh et ze",
+"en": "I'll take it"
+},
+{
+"id": "p:shopping:6",
+"situation": "shopping",
+"he": "אפשר קבלה?",
+"heNiqqud": "אֶפְשָׁר קַבָּלָה?",
+"translit": "efshar kabala?",
+"en": "Can I have a receipt?"
+},
+{
+"id": "p:shopping:7",
+"situation": "shopping",
+"he": "איפה הקופה?",
+"heNiqqud": "אֵיפֹה הַקּוּפָּה?",
+"translit": "eifo hakupa?",
+"en": "Where is the checkout?"
+},
+{
+"id": "p:shopping:8",
+"situation": "shopping",
+"he": "יש הנחה?",
+"heNiqqud": "יֵשׁ הֲנָּחָה?",
+"translit": "yesh hanakha?",
+"en": "Is there a discount?"
+},
+{
+"id": "p:shopping:9",
+"situation": "shopping",
+"he": "שקית, בבקשה",
+"heNiqqud": "שַׂקִּית, בְּבַקָּשָׁה",
+"translit": "sakit, bevakasha",
+"en": "A bag, please"
+},
+{
+"id": "p:directions:1",
+"situation": "directions",
+"he": "איפה השירותים?",
+"heNiqqud": "אֵיפֹה הַשֵּׁירוּתִים?",
+"translit": "eifo hasherutim?",
+"en": "Where is the bathroom?"
+},
+{
+"id": "p:directions:2",
+"situation": "directions",
+"he": "איפה התחנה?",
+"heNiqqud": "אֵיפֹה הַתַּחֲנָה?",
+"translit": "eifo hatakhana?",
+"en": "Where is the station?"
+},
+{
+"id": "p:directions:3",
+"situation": "directions",
+"he": "איך מגיעים לים?",
+"heNiqqud": "אֵיךְ מַגִּיעִים לַיָּם?",
+"translit": "eikh magi'im layam?",
+"en": "How do I get to the beach?"
+},
+{
+"id": "p:directions:4",
+"situation": "directions",
+"he": "זה רחוק?",
+"heNiqqud": "זֶה רָחוֹק?",
+"translit": "ze rakhok?",
+"en": "Is it far?"
+},
+{
+"id": "p:directions:5",
+"situation": "directions",
+"he": "זה קרוב",
+"heNiqqud": "זֶה קָרוֹב",
+"translit": "ze karov",
+"en": "It's close"
+},
+{
+"id": "p:directions:6",
+"situation": "directions",
+"he": "ישר",
+"heNiqqud": "יָשָׁר",
+"translit": "yashar",
+"en": "Straight ahead"
+},
+{
+"id": "p:directions:7",
+"situation": "directions",
+"he": "ימינה",
+"heNiqqud": "יָמִינָה",
+"translit": "yamina",
+"en": "To the right"
+},
+{
+"id": "p:directions:8",
+"situation": "directions",
+"he": "שמאלה",
+"heNiqqud": "שְׂמֹאלָה",
+"translit": "smola",
+"en": "To the left"
+},
+{
+"id": "p:directions:9",
+"situation": "directions",
+"he": "ברמזור הבא",
+"heNiqqud": "בָּרַמְזוֹר הַבָּא",
+"translit": "baramzor haba",
+"en": "At the next traffic light"
+},
+{
+"id": "p:directions:10",
+"situation": "directions",
+"he": "אני הולך לאיבוד",
+"heNiqqud": "אֲנִי הוֹלֵךְ לְאִיבּוּד",
+"translit": "ani holekh le'ibud",
+"en": "I'm getting lost",
+"noteEn": "A woman says: ani holekhet"
+},
+{
+"id": "p:directions:11",
+"situation": "directions",
+"he": "אפשר לעזור לך?",
+"heNiqqud": "אֶפְשָׁר לַעֲזוֹר לְךָ?",
+"translit": "efshar la'azor lekha?",
+"en": "Can I help you?",
+"noteEn": "To a woman: la'azor lakh"
+},
+{
+"id": "p:transport:1",
+"situation": "transport",
+"he": "מתי האוטובוס הבא?",
+"heNiqqud": "מָתַי הָאוֹטוֹבּוּס הַבָּא?",
+"translit": "matai ha'otobus haba?",
+"en": "When is the next bus?"
+},
+{
+"id": "p:transport:2",
+"situation": "transport",
+"he": "כרטיס אחד לירושלים",
+"heNiqqud": "כַּרְטִיס אֶחָד לִירוּשָׁלַיִם",
+"translit": "kartis ekhad lirushalayim",
+"en": "One ticket to Jerusalem"
+},
+{
+"id": "p:transport:3",
+"situation": "transport",
+"he": "האוטובוס הזה נוסע לחיפה?",
+"heNiqqud": "הָאוֹטוֹבּוּס הַזֶּה נוֹסֵעַ לְחֵיפָה?",
+"translit": "ha'otobus haze nose'a lekhaifa?",
+"en": "Does this bus go to Haifa?"
+},
+{
+"id": "p:transport:4",
+"situation": "transport",
+"he": "תעצור כאן, בבקשה",
+"heNiqqud": "תַּעֲצוֹר כָּאן, בְּבַקָּשָׁה",
+"translit": "ta'atsor kan, bevakasha",
+"en": "Stop here, please",
+"noteEn": "To a woman driver: ta'atsri"
+},
+{
+"id": "p:transport:5",
+"situation": "transport",
+"he": "כמה זמן הנסיעה?",
+"heNiqqud": "כַּמָּה זְמַן הַנְּסִיעָה?",
+"translit": "kama zman hanesi'a?",
+"en": "How long is the ride?"
+},
+{
+"id": "p:transport:6",
+"situation": "transport",
+"he": "אני צריך מונית",
+"heNiqqud": "אֲנִי צָרִיךְ מוֹנִית",
+"translit": "ani tsarikh monit",
+"en": "I need a taxi",
+"noteEn": "A woman says: ani tsrikha"
+},
+{
+"id": "p:transport:7",
+"situation": "transport",
+"he": "איפה עוצרת הרכבת?",
+"heNiqqud": "אֵיפֹה עוֹצֶרֶת הָרַכֶּבֶת?",
+"translit": "eifo otseret harakevet?",
+"en": "Where does the train stop?"
+},
+{
+"id": "p:transport:8",
+"situation": "transport",
+"he": "הטיסה התעכבה",
+"heNiqqud": "הַטִּיסָה הִתְעַכְּבָה",
+"translit": "hatisa hit'akva",
+"en": "The flight was delayed"
+},
+{
+"id": "p:hotel:1",
+"situation": "hotel",
+"he": "יש לי הזמנה",
+"heNiqqud": "יֵשׁ לִי הַזְמָנָה",
+"translit": "yesh li hazmana",
+"en": "I have a reservation"
+},
+{
+"id": "p:hotel:2",
+"situation": "hotel",
+"he": "יש חדר פנוי?",
+"heNiqqud": "יֵשׁ חֶדֶר פָּנוּי?",
+"translit": "yesh kheder panui?",
+"en": "Is there a free room?"
+},
+{
+"id": "p:hotel:3",
+"situation": "hotel",
+"he": "לכמה לילות?",
+"heNiqqud": "לְכַמָּה לַילוֹת?",
+"translit": "lekhama leilot?",
+"en": "For how many nights?"
+},
+{
+"id": "p:hotel:4",
+"situation": "hotel",
+"he": "מה הסיסמה של הוויפי?",
+"heNiqqud": "מָה הַסִּיסְמָה שֶׁל הַוִּויפִּי?",
+"translit": "ma hasisma shel ha-wifi?",
+"en": "What's the Wi-Fi password?"
+},
+{
+"id": "p:hotel:5",
+"situation": "hotel",
+"he": "מתי ארוחת הבוקר?",
+"heNiqqud": "מָתַי אֲרוּחַת הַבּוֹקֶר?",
+"translit": "matai arukhat haboker?",
+"en": "When is breakfast?"
+},
+{
+"id": "p:hotel:6",
+"situation": "hotel",
+"he": "המזגן לא עובד",
+"heNiqqud": "הַמַּזְגָן לֹא עוֹבֵד",
+"translit": "hamazgan lo oved",
+"en": "The air conditioner doesn't work"
+},
+{
+"id": "p:health:1",
+"situation": "health",
+"he": "אני לא מרגיש טוב",
+"heNiqqud": "אֲנִי לֹא מַרְגִּישׁ טוֹב",
+"translit": "ani lo margish tov",
+"en": "I don't feel well",
+"noteEn": "A woman says: ani lo margisha tov"
+},
+{
+"id": "p:health:2",
+"situation": "health",
+"he": "כואב לי הראש",
+"heNiqqud": "כּוֹאֵב לִי הָרֹאשׁ",
+"translit": "ko'ev li harosh",
+"en": "I have a headache",
+"noteEn": "Literally \"the head hurts me\"."
+},
+{
+"id": "p:health:3",
+"situation": "health",
+"he": "כואבת לי הבטן",
+"heNiqqud": "כּוֹאֶבֶת לִי הַבֶּטֶן",
+"translit": "ko'evet li habeten",
+"en": "I have a stomachache"
+},
+{
+"id": "p:health:4",
+"situation": "health",
+"he": "אני צריך רופא",
+"heNiqqud": "אֲנִי צָרִיךְ רוֹפֵא",
+"translit": "ani tsarikh rofe",
+"en": "I need a doctor",
+"noteEn": "A woman says: ani tsrikha rofe"
+},
+{
+"id": "p:health:5",
+"situation": "health",
+"he": "איפה בית המרקחת?",
+"heNiqqud": "אֵיפֹה בֵּית הַמִּרְקַחַת?",
+"translit": "eifo beit hamirkakhat?",
+"en": "Where is the pharmacy?"
+},
+{
+"id": "p:health:6",
+"situation": "health",
+"he": "יש לי חום",
+"heNiqqud": "יֵשׁ לִי חוֹם",
+"translit": "yesh li khom",
+"en": "I have a fever"
+},
+{
+"id": "p:health:7",
+"situation": "health",
+"he": "אני אלרגי לבוטנים",
+"heNiqqud": "אֲנִי אַלֶרְגִּי לַבּוטְנִים",
+"translit": "ani alergi lebotnim",
+"en": "I'm allergic to peanuts",
+"noteEn": "A woman says: ani alergit"
+},
+{
+"id": "p:health:8",
+"situation": "health",
+"he": "רפואה שלמה",
+"heNiqqud": "רְפוּאָה שְׁלֵמָה",
+"translit": "refua shlema",
+"en": "Get well soon"
+},
+{
+"id": "p:emergency:1",
+"situation": "emergency",
+"he": "הצילו!",
+"heNiqqud": "הַצִּילוּ!",
+"translit": "hatsilu!",
+"en": "Help!"
+},
+{
+"id": "p:emergency:2",
+"situation": "emergency",
+"he": "תתקשר למשטרה!",
+"heNiqqud": "תִּתְקַשֵּׁר לַמִּשְׁטָרָה!",
+"translit": "titkasher lamishtara!",
+"en": "Call the police!",
+"noteEn": "To a woman: titkashri"
+},
+{
+"id": "p:emergency:3",
+"situation": "emergency",
+"he": "תזמינו אמבולנס!",
+"heNiqqud": "תַּזְמִינוּ אַמְבּוּלַנְס!",
+"translit": "tazminu ambulans!",
+"en": "Call an ambulance!"
+},
+{
+"id": "p:emergency:4",
+"situation": "emergency",
+"he": "זה מקרה חירום",
+"heNiqqud": "זֶה מִקְרֵה חֵירוּם",
+"translit": "ze mikre kherum",
+"en": "It's an emergency"
+},
+{
+"id": "p:emergency:5",
+"situation": "emergency",
+"he": "איבדתי את הדרכון",
+"heNiqqud": "אִיבַּדְתִּי אֶת הַדַּרְכּוֹן",
+"translit": "ibadti et hadarkon",
+"en": "I lost my passport"
+},
+{
+"id": "p:emergency:6",
+"situation": "emergency",
+"he": "גנבו לי את הארנק",
+"heNiqqud": "גָּנְבוּ לִי אֶת הָאַרְנָק",
+"translit": "ganvu li et ha'arnak",
+"en": "My wallet was stolen"
+},
+{
+"id": "p:emergency:7",
+"situation": "emergency",
+"he": "זהירות!",
+"heNiqqud": "זְהִירוּת!",
+"translit": "zehirut!",
+"en": "Careful!"
+},
+{
+"id": "p:phone:1",
+"situation": "phone",
+"he": "הלו?",
+"heNiqqud": "הָלוֹ?",
+"translit": "halo?",
+"en": "Hello? (on the phone)"
+},
+{
+"id": "p:phone:2",
+"situation": "phone",
+"he": "מי מדבר?",
+"heNiqqud": "מִי מְדַבֵּר?",
+"translit": "mi medaber?",
+"en": "Who is speaking?"
+},
+{
+"id": "p:phone:3",
+"situation": "phone",
+"he": "אפשר לדבר עם דנה?",
+"heNiqqud": "אֶפְשָׁר לְדַבֵּר עִם דָּנָה?",
+"translit": "efshar ledaber im dana?",
+"en": "Can I speak with Dana?"
+},
+{
+"id": "p:phone:4",
+"situation": "phone",
+"he": "אני אתקשר אחר כך",
+"heNiqqud": "אֲנִי אֶתְקַשֵּׁר אַחַר כָּךְ",
+"translit": "ani etkasher akhar kakh",
+"en": "I'll call later"
+},
+{
+"id": "p:phone:5",
+"situation": "phone",
+"he": "לא שומעים טוב",
+"heNiqqud": "לֹא שׁוֹמְעִים טוֹב",
+"translit": "lo shom'im tov",
+"en": "I can't hear you well",
+"noteEn": "Literally \"one doesn't hear well\"."
+},
+{
+"id": "p:phone:6",
+"situation": "phone",
+"he": "שלח לי הודעה",
+"heNiqqud": "שְׁלַח לִי הוֹדָעָה",
+"translit": "shlakh li hoda'a",
+"en": "Send me a message",
+"noteEn": "To a woman: shilkhi li"
+},
+{
+"id": "p:time:1",
+"situation": "time",
+"he": "מה השעה?",
+"heNiqqud": "מָה הַשָּׁעָה?",
+"translit": "ma hasha'a?",
+"en": "What time is it?"
+},
+{
+"id": "p:time:2",
+"situation": "time",
+"he": "השעה שלוש",
+"heNiqqud": "הַשָּׁעָה שָׁלוֹשׁ",
+"translit": "hasha'a shalosh",
+"en": "It's three o'clock"
+},
+{
+"id": "p:time:3",
+"situation": "time",
+"he": "היום",
+"heNiqqud": "הַיּוֹם",
+"translit": "hayom",
+"en": "Today"
+},
+{
+"id": "p:time:4",
+"situation": "time",
+"he": "מחר",
+"heNiqqud": "מָחָר",
+"translit": "makhar",
+"en": "Tomorrow"
+},
+{
+"id": "p:time:5",
+"situation": "time",
+"he": "אתמול",
+"heNiqqud": "אֶתְמוֹל",
+"translit": "etmol",
+"en": "Yesterday"
+},
+{
+"id": "p:time:6",
+"situation": "time",
+"he": "עכשיו",
+"heNiqqud": "עַכְשָׁיו",
+"translit": "akhshav",
+"en": "Now"
+},
+{
+"id": "p:time:7",
+"situation": "time",
+"he": "אחר כך",
+"heNiqqud": "אַחַר כָּךְ",
+"translit": "akhar kakh",
+"en": "Later"
+},
+{
+"id": "p:time:8",
+"situation": "time",
+"he": "בעוד חמש דקות",
+"heNiqqud": "בְּעוֹד חָמֵשׁ דַּקּוֹת",
+"translit": "be'od khamesh dakot",
+"en": "In five minutes"
+},
+{
+"id": "p:time:9",
+"situation": "time",
+"he": "באיזה יום?",
+"heNiqqud": "בְּאֵיזֶה יוֹם?",
+"translit": "be'eize yom?",
+"en": "On which day?"
+},
+{
+"id": "p:time:10",
+"situation": "time",
+"he": "בסוף השבוע",
+"heNiqqud": "בְּסוֹף הַשָּׁבוּעַ",
+"translit": "besof hashavua",
+"en": "At the weekend"
+},
+{
+"id": "p:small-talk:1",
+"situation": "small talk",
+"he": "איזה יופי!",
+"heNiqqud": "אֵיזֶה יוֹפִי!",
+"translit": "eize yofi!",
+"en": "How lovely!"
+},
+{
+"id": "p:small-talk:2",
+"situation": "small talk",
+"he": "חם היום",
+"heNiqqud": "חַם הַיּוֹם",
+"translit": "kham hayom",
+"en": "It's hot today"
+},
+{
+"id": "p:small-talk:3",
+"situation": "small talk",
+"he": "קר בחוץ",
+"heNiqqud": "קַר בַּחוּץ",
+"translit": "kar bakhuts",
+"en": "It's cold outside"
+},
+{
+"id": "p:small-talk:4",
+"situation": "small talk",
+"he": "יורד גשם",
+"heNiqqud": "יוֹרֵד גֶּשֶׁם",
+"translit": "yored geshem",
+"en": "It's raining"
+},
+{
+"id": "p:small-talk:5",
+"situation": "small talk",
+"he": "מה אתה עושה בסוף השבוע?",
+"heNiqqud": "מָה אַתָּה עוֹשֶׂה בְּסוֹף הַשָּׁבוּעַ?",
+"translit": "ma ata ose besof hashavua?",
+"en": "What are you doing this weekend?",
+"noteEn": "To a woman: ma at osa…"
+},
+{
+"id": "p:small-talk:6",
+"situation": "small talk",
+"he": "אני אוהב את ישראל",
+"heNiqqud": "אֲנִי אוֹהֵב אֶת יִשְׂרָאֵל",
+"translit": "ani ohev et yisrael",
+"en": "I love Israel",
+"noteEn": "A woman says: ani ohevet"
+},
+{
+"id": "p:small-talk:7",
+"situation": "small talk",
+"he": "מה הטלפון שלך?",
+"heNiqqud": "מָה הַטֵּלֵפוֹן שֶׁלְּךָ?",
+"translit": "ma hatelefon shelkha?",
+"en": "What's your phone number?",
+"noteEn": "To a woman: shelakh"
+},
+{
+"id": "p:small-talk:8",
+"situation": "small talk",
+"he": "בוא נלך",
+"heNiqqud": "בּוֹא נֵלֵךְ",
+"translit": "bo nelekh",
+"en": "Let's go",
+"noteEn": "To a woman: bo'i nelekh"
+},
+{
+"id": "p:small-talk:9",
+"situation": "small talk",
+"he": "יאללה",
+"heNiqqud": "יַאלְלָה",
+"translit": "yalla",
+"en": "Come on / Let's go",
+"noteEn": "Very common Israeli slang (from Arabic)."
+},
+{
+"id": "p:small-talk:10",
+"situation": "small talk",
+"he": "סבבה",
+"heNiqqud": "סַבֶּבָּה",
+"translit": "sababa",
+"en": "Cool / Great",
+"noteEn": "Slang."
+},
+{
+"id": "p:small-talk:11",
+"situation": "small talk",
+"he": "אחלה",
+"heNiqqud": "אַחְלָה",
+"translit": "akhla",
+"en": "Awesome",
+"noteEn": "Slang."
+},
+{
+"id": "p:small-talk:12",
+"situation": "small talk",
+"he": "באמת?",
+"heNiqqud": "בֶּאֱמֶת?",
+"translit": "be'emet?",
+"en": "Really?"
+},
+{
+"id": "p:small-talk:13",
+"situation": "small talk",
+"he": "אין מצב!",
+"heNiqqud": "אֵין מַצָּב!",
+"translit": "ein matsav!",
+"en": "No way!",
+"noteEn": "Slang."
+},
+{
+"id": "p:small-talk:14",
+"situation": "small talk",
+"he": "כל הכבוד",
+"heNiqqud": "כׇּל הַכָּבוֹד",
+"translit": "kol hakavod",
+"en": "Well done"
+},
+{
+"id": "p:feelings:1",
+"situation": "feelings",
+"he": "אני שמח",
+"heNiqqud": "אֲנִי שָׂמֵחַ",
+"translit": "ani sameach",
+"en": "I'm happy",
+"noteEn": "A woman says: ani smekha",
+"noteHe": "אישה אומרת: אני שמחה"
+},
+{
+"id": "p:feelings:2",
+"situation": "feelings",
+"he": "אני עייף",
+"heNiqqud": "אֲנִי עָיֵיף",
+"translit": "ani ayef",
+"en": "I'm tired",
+"noteEn": "A woman says: ani ayefa",
+"noteHe": "אישה אומרת: אני עייפה"
+},
+{
+"id": "p:feelings:3",
+"situation": "feelings",
+"he": "אני עצוב",
+"heNiqqud": "אֲנִי עָצוּב",
+"translit": "ani atsuv",
+"en": "I'm sad",
+"noteEn": "A woman says: ani atsuva"
+},
+{
+"id": "p:feelings:4",
+"situation": "feelings",
+"he": "אני לחוץ",
+"heNiqqud": "אֲנִי לָחוּץ",
+"translit": "ani lakhuts",
+"en": "I'm stressed",
+"noteEn": "A woman says: ani lakhutsa"
+},
+{
+"id": "p:feelings:5",
+"situation": "feelings",
+"he": "אני מתגעגע אליך",
+"heNiqqud": "אֲנִי מִתְגַּעְגֵּעַ אֵלֶיךָ",
+"translit": "ani mitga'agea elekha",
+"en": "I miss you",
+"noteEn": "A woman says: ani mitga'aga'at"
+},
+{
+"id": "p:feelings:6",
+"situation": "feelings",
+"he": "אני אוהב אותך",
+"heNiqqud": "אֲנִי אוֹהֵב אוֹתְךָ",
+"translit": "ani ohev otakh",
+"en": "I love you",
+"noteEn": "Man to a woman. Woman to a man: ani ohevet otkha"
+},
+{
+"id": "p:feelings:7",
+"situation": "feelings",
+"he": "לא נורא",
+"heNiqqud": "לֹא נוֹרָא",
+"translit": "lo nora",
+"en": "Never mind / It's not so bad"
+},
+{
+"id": "p:feelings:8",
+"situation": "feelings",
+"he": "אל תדאג",
+"heNiqqud": "אַל תִּדְאַג",
+"translit": "al tid'ag",
+"en": "Don't worry",
+"noteEn": "To a woman: al tid'agi"
+},
+{
+"id": "p:home:1",
+"situation": "home",
+"he": "תיכנס, בבקשה",
+"heNiqqud": "תִּיכָּנֵס, בְּבַקָּשָׁה",
+"translit": "tikanes, bevakasha",
+"en": "Come in, please",
+"noteEn": "To a woman: tikansi"
+},
+{
+"id": "p:home:2",
+"situation": "home",
+"he": "תרגיש בבית",
+"heNiqqud": "תַּרְגִּישׁ בַּבַּיִת",
+"translit": "targish babayit",
+"en": "Make yourself at home",
+"noteEn": "To a woman: targishi"
+},
+{
+"id": "p:home:3",
+"situation": "home",
+"he": "אתה רוצה משהו לשתות?",
+"heNiqqud": "אַתָּה רוֹצֶה מַשֶּׁהוּ לִשְׁתּוֹת?",
+"translit": "ata rotse mashehu lishtot?",
+"en": "Would you like something to drink?",
+"noteEn": "To a woman: at rotsa…"
+},
+{
+"id": "p:home:4",
+"situation": "home",
+"he": "הארוחה מוכנה",
+"heNiqqud": "הָאֲרוּחָה מוּכָנָה",
+"translit": "ha'arukha mukhana",
+"en": "Dinner is ready"
+},
+{
+"id": "p:home:5",
+"situation": "home",
+"he": "לילה טוב, חלומות פז",
+"heNiqqud": "לַיְלָה טוֹב, חֲלוֹמוֹת פָּז",
+"translit": "laila tov, khalomot paz",
+"en": "Good night, sweet dreams",
+"noteEn": "Literally \"golden dreams\"."
+},
+{
+"id": "p:work:1",
+"situation": "work",
+"he": "יש לי פגישה",
+"heNiqqud": "יֵשׁ לִי פְּגִישָׁה",
+"translit": "yesh li pgisha",
+"en": "I have a meeting"
+},
+{
+"id": "p:work:2",
+"situation": "work",
+"he": "אני בעבודה",
+"heNiqqud": "אֲנִי בָּעֲבוֹדָה",
+"translit": "ani ba'avoda",
+"en": "I'm at work"
+},
+{
+"id": "p:work:3",
+"situation": "work",
+"he": "מתי אתה מסיים?",
+"heNiqqud": "מָתַי אַתָּה מְסַיֵּים?",
+"translit": "matai ata mesayem?",
+"en": "When do you finish?",
+"noteEn": "To a woman: at mesayemet"
+},
+{
+"id": "p:work:4",
+"situation": "work",
+"he": "אני מאחר",
+"heNiqqud": "אֲנִי מְאַחֵר",
+"translit": "ani me'akher",
+"en": "I'm running late",
+"noteEn": "A woman says: ani me'akheret"
+},
+{
+"id": "p:work:5",
+"situation": "work",
+"he": "נדבר מחר",
+"heNiqqud": "נְדַבֵּר מָחָר",
+"translit": "nedaber makhar",
+"en": "We'll talk tomorrow"
+}
+]
+}

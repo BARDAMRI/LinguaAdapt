@@ -1,12 +1,13 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import { useMemo, useState } from 'react';
-import { Alert, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Card, ProgressBar, type IconName } from '../components/ui';
 import { useAppTheme } from '../context/PreferencesContext';
 import { useCourseContentVersion } from '../content/courseContent';
+import { ensureCourseContent, usePackState } from '../content/packs';
 import type { PairId } from '../content/types';
 import { buildCourse } from '../course/build';
 import { computePath, type NodeState } from '../course/progress';
@@ -61,6 +62,7 @@ export function HomeScreen() {
   const course = useMemo(() => buildCourse(pair), [pair, contentVersion]);
   const path = useMemo(() => computePath(course, progress), [course, progress]);
   const [stage, setStage] = useState<StageId>(() => route.params?.stage ?? path.next?.stage.id ?? 'letters');
+  const pack = usePackState();
   const due = dueItemIds().length;
   const goal = state.settings.dailyGoalXp;
   const stageIndex = STAGES.indexOf(stage);
@@ -123,7 +125,7 @@ export function HomeScreen() {
             <Animated.View entering={FadeInUp}>
               <Pressable
                 onPress={() => navigation.navigate('Lesson', { mode: 'lesson', lessonId: path.next!.lesson.id })}
-                style={({ pressed }) => [styles.continueCard, { backgroundColor: c.stage[STAGES.indexOf(path.next!.stage.id)], opacity: pressed ? 0.9 : 1 }]}
+                style={({ pressed }) => [styles.continueCard, { flexDirection: rowDir(isRTL), backgroundColor: c.stage[STAGES.indexOf(path.next!.stage.id)], opacity: pressed ? 0.9 : 1 }]}
                 testID="home_btn_continue"
               >
                 <View style={{ flex: 1, gap: 2 }}>
@@ -244,10 +246,16 @@ export function HomeScreen() {
                 </View>
               );
             })
+          ) : pack.course === 'error' ? (
+            <Card style={{ alignItems: 'center', gap: 10 }}>
+              <Text style={{ fontSize: 36 }}>📡</Text>
+              <Text style={{ color: c.textSecondary, fontSize: 15, textAlign: 'center' }}>{t('home.downloadError')}</Text>
+              <Button label={t('common.retry')} onPress={() => void ensureCourseContent(pair)} />
+            </Card>
           ) : (
-            <Card style={{ alignItems: 'center', gap: 8 }}>
-              <Text style={{ fontSize: 40 }}>🚧</Text>
-              <Text style={{ color: c.textSecondary, fontSize: 16 }}>{t('home.comingSoon')}</Text>
+            <Card style={{ alignItems: 'center', gap: 10 }}>
+              <ActivityIndicator color={c.primary} />
+              <Text style={{ color: c.textSecondary, fontSize: 15, textAlign: 'center' }}>{t('home.downloading')}</Text>
             </Card>
           )}
 

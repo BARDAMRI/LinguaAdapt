@@ -1,0 +1,41 @@
+{
+ "version": 1,
+ "files": {
+  "dictionary.json": {
+   "hash": "b4805ffa9cc8",
+   "bytes": 2317715,
+   "count": 11505
+  },
+  "words-en-he.json": {
+   "hash": "4c80828058c1",
+   "bytes": 415903,
+   "count": 2471
+  },
+  "words-he-en.json": {
+   "hash": "4022aa22d9ec",
+   "bytes": 340143,
+   "count": 2459
+  },
+  "sentences.json": {
+   "hash": "0b3e89993d70",
+   "bytes": 3113239,
+   "count": 12215
+  },
+  "course-en-he.json": {
+   "hash": "936b4d4d1955",
+   "bytes": 207268,
+   "count": null
+  },
+  "course-he-en.json": {
+   "hash": "23c72f826c4a",
+   "bytes": 208560,
+   "count": null
+  }
+ },
+ "counts": {
+  "dictionary": 11505,
+  "sentences": 12215,
+  "wordsEnHe": 2471,
+  "wordsHeEn": 2459
+ }
+}
