@@ -35,6 +35,9 @@ export function buildCatalog(): CatalogItem[] {
     if (!text) return;
     const clean = cleanSpeech(text);
     if (!clean) return;
+    // A few dictionary glosses quote Hebrew ("to participate [with בְּ־]"); the
+    // English voice cannot read those, so they stay with the device voice.
+    if (lang === 'en' && /[֐-׿]/.test(clean)) return;
     const k = `${lang}|${clean}`;
     if (seen.has(k)) return;
     seen.add(k);
