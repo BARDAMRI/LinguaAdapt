@@ -145,7 +145,7 @@ async function runPool<T>(items: T[], concurrency: number, fn: (item: T, i: numb
 
 function writeManifest(voices: Record<ClipLang, string> = VOICES): { he: number; en: number } {
   const keys = (lang: ClipLang) =>
-    existsSync(join(OUT, lang)) ? readdirSync(join(OUT, lang)).filter((f) => f.endsWith('.mp3')).map((f) => f.slice(0, -4)).sort() : [];
+    existsSync(join(OUT, lang)) ? readdirSync(join(OUT, lang)).filter((f) => /^[0-9a-z]+\.mp3$/.test(f)).map((f) => f.slice(0, -4)).sort() : []; // skips a recording run's half-written x.mp3.tmp.mp3
   const he = keys('he');
   const en = keys('en');
   const manifest = { version: 1, voices, generated: new Date().toISOString().slice(0, 10), he, en };
