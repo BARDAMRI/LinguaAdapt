@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
 import { isSupabaseConfigured, supabase } from '../services/supabase';
+import { t } from '../services/i18n';
 import { getAuthEmailRedirectTo } from '../utils/authRedirect';
 
 export type AuthContextValue = {
@@ -31,7 +32,27 @@ export type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-const NOT_CONFIGURED = 'Sign-in is not available in this build.';
+/** Supabase and fetch errors → a short message in the learner's language. */
+function friendlyAuthError(e: unknown): string {
+  const msg = (e instanceof Error ? e.message : typeof e === 'string' ? e : String((e as { message?: unknown })?.message ?? e)).toLowerCase();
+  if (/failed to fetch|network request failed|networkerror|load failed|fetch failed|timed? ?out|enotfound|retryable/.test(msg)) return t('auth.networkError');
+  if (/invalid login credentials|invalid credentials/.test(msg)) return t('auth.wrongCredentials');
+  if (/email not confirmed/.test(msg)) return t('auth.notConfirmed');
+  if (/already registered|already exists/.test(msg)) return t('auth.alreadyRegistered');
+  if (/password should be at least|weak password/.test(msg)) return t('auth.shortPassword');
+  if (/invalid email|email address .* invalid|unable to validate email/.test(msg)) return t('auth.invalidEmail');
+  return t('auth.genericError');
+}
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/** Checks the form before any network call. */
+function validateCredentials(email: string, password: string): string | null {
+  if (!email || !password) return t('auth.missingFields');
+  if (!EMAIL_RE.test(email)) return t('auth.invalidEmail');
+  if (password.length < 6) return t('auth.shortPassword');
+  return null;
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
@@ -71,18 +92,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signIn = useCallback(async (email: string, password: string) => {
     setAuthError(null);
     if (!supabase) {
-      setAuthError(NOT_CONFIGURED);
+      setAuthError(t('auth.unavailable'));
+      return false;
+    }
+    const invalid = validateCredentials(email, password);
+    if (invalid) {
+      setAuthError(invalid);
       return false;
     }
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
-        setAuthError(error.message);
+        setAuthError(friendlyAuthError(error));
         return false;
       }
       return true;
     } catch (e) {
-      setAuthError(e instanceof Error ? e.message : String(e));
+      setAuthError(friendlyAuthError(e));
       return false;
     }
   }, []);
@@ -91,7 +117,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async (email: string, password: string, displayName: string) => {
       setAuthError(null);
       if (!supabase) {
-        setAuthError(NOT_CONFIGURED);
+        setAuthError(t('auth.unavailable'));
+        return { ok: false, needsEmailConfirmation: false };
+      }
+      const invalid = validateCredentials(email, password);
+      if (invalid) {
+        setAuthError(invalid);
         return { ok: false, needsEmailConfirmation: false };
       }
       try {
@@ -104,12 +135,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           },
         });
         if (error) {
-          setAuthError(error.message);
+          setAuthError(friendlyAuthError(error));
           return { ok: false, needsEmailConfirmation: false };
         }
         return { ok: true, needsEmailConfirmation: !data.session };
       } catch (e) {
-        setAuthError(e instanceof Error ? e.message : String(e));
+        setAuthError(friendlyAuthError(e));
         return { ok: false, needsEmailConfirmation: false };
       }
     },
@@ -121,7 +152,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!supabase) return true;
     const { error } = await supabase.auth.signOut();
     if (error) {
-      setAuthError(error.message);
+      setAuthError(friendlyAuthError(error));
       return false;
     }
     return true;
@@ -132,7 +163,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!supabase) return false;
     const { error } = await supabase.rpc('delete_own_account');
     if (error) {
-      setAuthError(error.message);
+      setAuthError(friendlyAuthError(error));
       return false;
     }
     await supabase.auth.signOut();

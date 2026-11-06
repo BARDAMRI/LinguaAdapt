@@ -1,11 +1,14 @@
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Share, StyleSheet, Text, View } from 'react-native';
 import Animated, { BounceIn, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Button, Card } from '../components/ui';
+import { Button, Pill, Stat, tint, type IconName } from '../components/ui';
 import { useAppTheme } from '../context/PreferencesContext';
+import { goBackOrHome } from '../navigation/goBack';
 import type { AppNav, AppStackParamList } from '../navigation/types';
-import { t } from '../services/i18n';
+import { isRTL, t } from '../services/i18n';
+import { rowDir } from '../utils/platformStyles';
 import { CHECKPOINT_PASS } from '../engine/lesson';
 
 export function LessonCompleteScreen() {
@@ -24,23 +27,20 @@ export function LessonCompleteScreen() {
       : params.mode === 'lesson'
         ? t('complete.title')
         : params.mode === 'speed'
-          ? t('complete.speedDone', { count: params.xp })
+          ? t('complete.speedDone', { count: params.correct ?? params.xp })
           : t('complete.reviewTitle');
 
-  const stat = (label: string, value: string, color: string, emoji: string) => (
-    <Card style={[styles.stat, { borderColor: color }]}>
-      <Text style={styles.statEmoji}>{emoji}</Text>
-      <Text style={[styles.statValue, { color }]}>{value}</Text>
-      <Text style={[styles.statLabel, { color: c.textSecondary }]}>{label}</Text>
-    </Card>
-  );
+  const heroIcon: IconName = failed ? 'barbell' : params.mode === 'checkpoint' ? 'trophy' : params.mode === 'speed' ? 'flash' : accuracy === 100 ? 'star' : 'checkmark';
+  const heroColor = failed ? c.primary : params.mode === 'speed' || accuracy === 100 ? c.secondary : c.success;
 
   return (
-    <View style={[styles.root, { backgroundColor: c.background, paddingTop: insets.top + 32, paddingBottom: insets.bottom + 20 }]} testID="complete_root">
+    <View style={[styles.root, { backgroundColor: c.background, paddingTop: insets.top + 40, paddingBottom: insets.bottom + 20 }]} testID="complete_root">
       <View style={styles.column}>
-        <Animated.Text entering={BounceIn.duration(700)} style={styles.hero}>
-          {failed ? '💪' : params.mode === 'checkpoint' ? '🏆' : accuracy === 100 ? '🌟' : '🎉'}
-        </Animated.Text>
+        <Animated.View entering={BounceIn.duration(700)} style={[styles.heroRing, { backgroundColor: tint(theme, heroColor) }]}>
+          <View style={[styles.heroDisc, { backgroundColor: heroColor }]}>
+            <Ionicons name={heroIcon} size={52} color="#FFFFFF" />
+          </View>
+        </Animated.View>
         <Animated.Text entering={FadeInUp.delay(150)} style={[styles.title, { color: c.text }]}>
           {title}
         </Animated.Text>
@@ -50,13 +50,13 @@ export function LessonCompleteScreen() {
           </Text>
         ) : null}
         {params.streakExtended && !failed ? (
-          <Text style={[styles.sub, { color: c.warning }]}>🔥 {t('complete.streakUp')}</Text>
+          <Pill icon="flame" label={t('complete.streakUp')} color={c.warning} />
         ) : null}
 
-        <Animated.View entering={FadeInUp.delay(300)} style={styles.stats}>
-          {stat(t('complete.accuracy'), `${accuracy}%`, c.success, '🎯')}
-          {stat(t('complete.xpEarned'), `+${params.xp}`, c.secondary, '⚡')}
-          {stat(t('complete.streak'), String(params.streak), c.warning, '🔥')}
+        <Animated.View entering={FadeInUp.delay(300)} style={[styles.stats, { flexDirection: rowDir(isRTL) }]}>
+          <Stat icon="locate" color={c.success} value={`${accuracy}%`} label={t('complete.accuracy')} />
+          <Stat icon="flash" color={c.secondary} value={`+${params.xp}`} label={t('complete.xpEarned')} />
+          <Stat icon="flame" color={c.warning} value={String(params.streak)} label={t('complete.streak')} />
         </Animated.View>
 
         {params.learned.length > 0 ? (
@@ -64,8 +64,8 @@ export function LessonCompleteScreen() {
             <Text style={[styles.learnedTitle, { color: c.textSecondary }]}>{t('complete.learned')}</Text>
             <View style={styles.chips}>
               {params.learned.map((l) => (
-                <View key={l} style={[styles.chip, { backgroundColor: c.primarySoft }]}>
-                  <Text style={[styles.chipText, { color: c.primary }]}>{l}</Text>
+                <View key={l} style={[styles.chip, { backgroundColor: c.surface, borderColor: c.border }]}>
+                  <Text style={[styles.chipText, { color: c.text }]}>{l}</Text>
                 </View>
               ))}
             </View>
@@ -73,7 +73,7 @@ export function LessonCompleteScreen() {
         ) : null}
       </View>
       <View style={[styles.column, styles.buttons]}>
-        <Button label={t('complete.next')} onPress={() => navigation.goBack()} testID="complete_btn_continue" />
+        <Button label={t('complete.next')} onPress={() => goBackOrHome(navigation)} testID="complete_btn_continue" />
         {!failed ? (
           <Button
             label={t('complete.share')}
@@ -89,19 +89,16 @@ export function LessonCompleteScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, paddingHorizontal: 20, justifyContent: 'space-between' },
-  column: { width: '100%', maxWidth: 520, alignSelf: 'center', gap: 14, alignItems: 'center' },
-  hero: { fontSize: 88 },
-  title: { fontSize: 30, fontWeight: '800', textAlign: 'center' },
-  sub: { fontSize: 16, textAlign: 'center', fontWeight: '600' },
-  stats: { flexDirection: 'row', gap: 10, width: '100%' },
-  stat: { flex: 1, alignItems: 'center', gap: 2, borderWidth: 2, paddingVertical: 14 },
-  statEmoji: { fontSize: 22 },
-  statValue: { fontSize: 24, fontWeight: '800' },
-  statLabel: { fontSize: 12, fontWeight: '700', textAlign: 'center' },
-  learned: { width: '100%', gap: 8, alignItems: 'center' },
-  learnedTitle: { fontSize: 14, fontWeight: '700' },
+  column: { width: '100%', maxWidth: 520, alignSelf: 'center', gap: 16, alignItems: 'center' },
+  heroRing: { width: 136, height: 136, borderRadius: 68, alignItems: 'center', justifyContent: 'center', marginBottom: 4 },
+  heroDisc: { width: 100, height: 100, borderRadius: 50, alignItems: 'center', justifyContent: 'center' },
+  title: { fontSize: 28, lineHeight: 36, fontWeight: '800', textAlign: 'center' },
+  sub: { fontSize: 16, lineHeight: 23, textAlign: 'center', fontWeight: '500' },
+  stats: { gap: 10, width: '100%', marginTop: 8 },
+  learned: { width: '100%', gap: 10, alignItems: 'center', marginTop: 4 },
+  learnedTitle: { fontSize: 13, fontWeight: '700', letterSpacing: 0.3 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'center' },
-  chip: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 999 },
+  chip: { paddingHorizontal: 14, paddingVertical: 6, borderRadius: 12, borderWidth: StyleSheet.hairlineWidth },
   chipText: { fontSize: 20, fontWeight: '700' },
   buttons: { alignItems: 'stretch', gap: 6 },
 });

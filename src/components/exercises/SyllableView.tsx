@@ -8,7 +8,7 @@ import { t } from '../../services/i18n';
 import { speak } from '../../services/tts';
 import { tapHaptic } from '../../utils/exerciseFeedback';
 import { Button } from '../ui';
-import { ExerciseFrame, type DoneResult } from './common';
+import { choiceSurface, ExerciseFrame, type DoneResult } from './common';
 
 /** Pick a consonant and a vowel sign, see and hear the syllable. */
 export function SyllableView({ exercise, onDone }: { exercise: SyllableExercise; onDone: (r: DoneResult) => void }) {
@@ -41,11 +41,12 @@ export function SyllableView({ exercise, onDone }: { exercise: SyllableExercise;
         {SYLLABLE_CONSONANTS.map((cc) => (
           <Pressable
             key={cc}
+            testID={`syllable_cons_${cc}`}
             onPress={() => {
               setCons(cc);
               play(cc, sign);
             }}
-            style={[styles.chip, { borderColor: cc === cons ? c.primary : c.border, backgroundColor: cc === cons ? c.primarySoft : c.surface }]}
+            style={[styles.chip, choiceSurface(theme, cc === cons ? 'selected' : 'idle')]}
           >
             <Text style={[styles.chipText, { color: c.text }]}>{cc}</Text>
           </Pressable>
@@ -55,11 +56,12 @@ export function SyllableView({ exercise, onDone }: { exercise: SyllableExercise;
         {signs.map((s) => (
           <Pressable
             key={s.key}
+            testID={`syllable_sign_${s.key}`}
             onPress={() => {
               setSign(s);
               play(cons, s);
             }}
-            style={[styles.signChip, { borderColor: s.key === sign.key ? c.primary : c.border, backgroundColor: s.key === sign.key ? c.primarySoft : c.surface }]}
+            style={[styles.signChip, choiceSurface(theme, s.key === sign.key ? 'selected' : 'idle')]}
           >
             <Text style={[styles.chipText, { color: c.text }]}>{buildSyllable('ב', s).replace('ב', '◌')}</Text>
             <Text style={[styles.signName, { color: c.textSecondary }]}>{s.nameEn}</Text>
@@ -71,11 +73,11 @@ export function SyllableView({ exercise, onDone }: { exercise: SyllableExercise;
 }
 
 const styles = StyleSheet.create({
-  result: { alignSelf: 'center', width: 160, height: 160, borderRadius: 32, alignItems: 'center', justifyContent: 'center' },
+  result: { alignSelf: 'center', width: 160, height: 160, borderRadius: 36, alignItems: 'center', justifyContent: 'center' },
   resultText: { fontSize: 84, lineHeight: 120, fontWeight: '600' },
   row: { flexDirection: 'row-reverse', flexWrap: 'wrap', gap: 10, justifyContent: 'center' },
-  chip: { width: 56, height: 56, borderRadius: 14, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
-  signChip: { minWidth: 76, paddingVertical: 6, borderRadius: 14, borderWidth: 2, alignItems: 'center' },
+  chip: { width: 56, height: 56, alignItems: 'center', justifyContent: 'center' },
+  signChip: { minWidth: 76, paddingVertical: 6, alignItems: 'center' },
   chipText: { fontSize: 30, lineHeight: 42 },
   signName: { fontSize: 12, fontWeight: '600' },
 });

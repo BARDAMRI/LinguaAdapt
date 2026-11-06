@@ -70,8 +70,8 @@ export function TypeView({ exercise, onDone }: { exercise: TypeExercise; onDone:
 const styles = StyleSheet.create({
   prompt: { alignItems: 'center', gap: 10 },
   input: {
-    borderWidth: 2,
-    borderRadius: 14,
+    borderWidth: 1.5,
+    borderRadius: 16,
     paddingHorizontal: 14,
     paddingVertical: 14,
     fontSize: 20,

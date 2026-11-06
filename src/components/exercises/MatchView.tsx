@@ -6,12 +6,11 @@ import type { MatchExercise } from '../../engine/types';
 import { speak } from '../../services/tts';
 import { playSfx, tapHaptic, triggerAnswerHaptics } from '../../utils/exerciseFeedback';
 import { DisplayView } from '../DisplayView';
-import { CheckFooter, ExerciseFrame, type DoneResult, type Verdict } from './common';
+import { CheckFooter, choiceSurface, ExerciseFrame, type DoneResult, type Verdict } from './common';
 
 /** Tap a card on the left, then its partner on the right. */
 export function MatchView({ exercise, onDone }: { exercise: MatchExercise; onDone: (r: DoneResult) => void }) {
   const theme = useAppTheme();
-  const c = theme.colors;
   const { soundEnabled } = usePreferences();
   const left = useMemo(() => shuffle(exercise.pairs), [exercise.pairs]);
   const right = useMemo(() => shuffle(exercise.pairs), [exercise.pairs]);
@@ -54,11 +53,8 @@ export function MatchView({ exercise, onDone }: { exercise: MatchExercise; onDon
     const isFlash = flash && (side === 'l' ? flash.l === id : flash.r === id);
     return [
       styles.card,
-      {
-        borderColor: isFlash ? c.danger : picked ? c.primary : c.border,
-        backgroundColor: isFlash ? c.dangerSoft : isMatched ? c.successSoft : picked ? c.primarySoft : c.surface,
-        opacity: isMatched ? 0.45 : 1,
-      },
+      choiceSurface(theme, isFlash ? 'wrong' : isMatched ? 'done' : picked ? 'selected' : 'idle'),
+      { opacity: isMatched ? 0.5 : 1 },
     ];
   };
 
@@ -121,12 +117,9 @@ export function MatchView({ exercise, onDone }: { exercise: MatchExercise; onDon
 
 const styles = StyleSheet.create({
   columns: { flexDirection: 'row', gap: 12 },
-  col: { flex: 1, gap: 10 },
+  col: { flex: 1, gap: 12 },
   card: {
     minHeight: 64,
-    borderWidth: 2,
-    borderBottomWidth: 4,
-    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 8,

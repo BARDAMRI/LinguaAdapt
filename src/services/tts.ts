@@ -14,7 +14,7 @@ export type SpeechLang = 'he' | 'en';
 const LOCALE: Record<SpeechLang, string> = { he: 'he-IL', en: 'en-US' };
 
 /** Speed multipliers relative to the platform's normal rate. */
-export const SPEECH_RATES = { normal: 0.95, slow: 0.65 } as const;
+export const SPEECH_RATES = { normal: 0.9, slow: 0.7 } as const;
 export type SpeechSpeed = keyof typeof SPEECH_RATES;
 
 let speed: SpeechSpeed = 'normal';
@@ -106,9 +106,29 @@ export type SpeakOptions = {
   onDone?: () => void;
 };
 
+const POINTED_VOWEL = /[\u05B0-\u05BB\u05C7]/;
+
+/**
+ * A lone consonant with a vowel sign (בָּ, בִּ, בֹּ…) is read badly by speech engines:
+ * they spell the sign or skip it. Spoken Hebrew writes open syllables with a
+ * silent ending letter (בָּה, בִּי, בּוֹ, בּוּ), which every voice reads correctly.
+ */
+export function spokenHebrew(text: string): string {
+  const t = text.trim();
+  const base = t.replace(/[\u0591-\u05C7]/g, '');
+  if (base.length !== 1 || !POINTED_VOWEL.test(t)) return t;
+  if (/[\u05B4]/.test(t)) return `${t}י`; // hiriq → i
+  if (/[\u05B9\u05BA]/.test(t)) return `${t.replace(/[\u05B9\u05BA]/g, '')}וֹ`; // holam → o
+  if (/[\u05BB]/.test(t)) return `${t.replace(/[\u05BB]/g, '')}וּ`; // kubutz → u
+  if (/[\u05B3\u05C7]/.test(t)) return `${t.replace(/[\u05B3\u05C7]/g, '')}וֹ`; // hataf kamatz / kamatz katan → o
+  if (/[\u05B0]/.test(t)) return `${t.replace(/[\u05B0]/g, '\u05B6')}ה`; // shva na → short e
+  return `${t}ה`; // a / e sounds
+}
+
 /** Speaks `text` in the given language, interrupting anything already playing. */
 export async function speak(text: string, lang: SpeechLang, opts: SpeakOptions = {}): Promise<void> {
-  const clean = text.replace(/\*\*/g, '').trim();
+  const stripped = text.replace(/\*\*/g, '').trim();
+  const clean = lang === 'he' ? spokenHebrew(stripped) : stripped;
   if (!clean) return;
   await ensureAudioMode();
   try {

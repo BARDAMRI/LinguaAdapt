@@ -4,7 +4,7 @@ import { useAppTheme } from '../../context/PreferencesContext';
 import type { TraceExercise } from '../../engine/types';
 import { t } from '../../services/i18n';
 import { SpeakButton, useAutoplay } from '../DisplayView';
-import { Button } from '../ui';
+import { Button, IconButton } from '../ui';
 import { ExerciseFrame, type DoneResult } from './common';
 
 type Dot = { x: number; y: number };
@@ -42,7 +42,7 @@ export function TraceView({ exercise, onDone }: { exercise: TraceExercise; onDon
       instruction={`${exercise.instruction}: ${exercise.label}`}
       footer={
         <View style={styles.buttons}>
-          <Button label="↺" variant="secondary" onPress={() => setDots([])} style={styles.clear} />
+          <IconButton icon="refresh" label={t('common.retry')} onPress={() => setDots([])} style={styles.clear} color={theme.colors.primary} />
           <Button
             label={t('common.continue')}
             onPress={() => onDone({ correct: true })}
@@ -70,10 +70,10 @@ export function TraceView({ exercise, onDone }: { exercise: TraceExercise; onDon
 
 const styles = StyleSheet.create({
   speakRow: { alignItems: 'center' },
-  canvas: { height: 300, borderWidth: 2, borderRadius: 20, overflow: 'hidden' },
+  canvas: { height: 300, borderWidth: 1, borderRadius: 22, overflow: 'hidden' },
   guide: { ...StyleSheet.absoluteFillObject, alignItems: 'center', justifyContent: 'center' },
   guideText: { fontSize: 210, fontWeight: '600', opacity: 0.35 },
   dot: { position: 'absolute', width: 18, height: 18, borderRadius: 9, opacity: 0.8 },
-  buttons: { flexDirection: 'row', gap: 10 },
-  clear: { width: 64 },
+  buttons: { flexDirection: 'row', gap: 10, alignItems: 'center', paddingTop: 10 },
+  clear: { width: 54, height: 54, borderRadius: 14 },
 });

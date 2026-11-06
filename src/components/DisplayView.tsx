@@ -5,7 +5,9 @@ import { useAppTheme } from '../context/PreferencesContext';
 import type { Display, Speakable } from '../engine/types';
 import { useProgress } from '../progress/ProgressContext';
 import { speak } from '../services/tts';
+import { t } from '../services/i18n';
 import { stripNiqqud } from '../utils/hebrew';
+import { cardShadowStyle } from '../utils/platformStyles';
 
 const SIZES = {
   glyph: { fontSize: 88, lineHeight: 120 },
@@ -71,15 +73,19 @@ export function SpeakButton({
       onPress={() => void speak(speakable.text, speakable.lang, { slow })}
       hitSlop={8}
       accessibilityRole="button"
-      accessibilityLabel={label ?? 'Play audio'}
+      accessibilityLabel={label ?? t('common.listen')}
       style={({ pressed }) => [
         styles.speakBtn,
+        size === 'lg' ? cardShadowStyle(theme, true) : null,
         {
           width: dim,
           height: dim,
           borderRadius: dim / 2,
-          backgroundColor: size === 'lg' ? theme.colors.primary : theme.colors.primarySoft,
+          backgroundColor: size === 'lg' ? theme.colors.primary : size === 'md' ? theme.colors.surface : theme.colors.primarySoft,
+          borderWidth: size === 'md' ? StyleSheet.hairlineWidth : 0,
+          borderColor: theme.colors.border,
           opacity: pressed ? 0.75 : 1,
+          transform: [{ scale: pressed ? 0.95 : 1 }],
         },
       ]}
     >

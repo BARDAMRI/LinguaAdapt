@@ -5,7 +5,7 @@ import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, TextInput, Vi
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LangText, SpeakButton } from '../components/DisplayView';
 import { ScreenHeader } from '../components/ScreenHeader';
-import { Button } from '../components/ui';
+import { Button, IconBadge } from '../components/ui';
 import { useAppTheme } from '../context/PreferencesContext';
 import { ensureDictionary, usePackState, type DictEntry } from '../content/packs';
 import { getItem } from '../content/registry';
@@ -14,7 +14,7 @@ import type { AppNav } from '../navigation/types';
 import { useProgress } from '../progress/ProgressContext';
 import { isRTL, t } from '../services/i18n';
 import { hasHebrew, stripNiqqud, unfinal } from '../utils/hebrew';
-import { rowDir, textStart } from '../utils/platformStyles';
+import { cardShadowStyle, rowDir, textStart } from '../utils/platformStyles';
 
 function normHe(s: string): string {
   return unfinal(stripNiqqud(s)).replace(/[\s־'׳"״]/g, '');
@@ -57,21 +57,24 @@ export function WordRow({ w, onPress }: { w: Word; onPress: () => void }) {
   const c = theme.colors;
   const { state } = useProgress();
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => [styles.row, { borderColor: c.border, backgroundColor: c.surface, opacity: pressed ? 0.8 : 1, flexDirection: rowDir(isRTL) }]}>
+    <View style={[styles.row, cardShadowStyle(theme), { borderColor: c.border, backgroundColor: c.surface, flexDirection: rowDir(isRTL) }]}>
       <SpeakButton speakable={{ text: w.heNiqqud || w.he, lang: 'he' }} size="sm" />
-      <View style={{ flex: 1, gap: 2 }}>
-        <View style={[styles.rowTop, { flexDirection: rowDir(isRTL) }]}>
-          <LangText display={{ text: w.heNiqqud || w.he, plain: w.he, lang: 'he', size: 'normal' }} align={isRTL ? 'right' : 'left'} style={{ fontWeight: '700' }} />
-          {w.emoji ? <Text style={styles.emoji}>{w.emoji}</Text> : null}
+      <Pressable onPress={onPress} accessibilityRole="button" testID={`word_row_${w.id}`} style={({ pressed }) => [styles.rowMain, { flexDirection: rowDir(isRTL), opacity: pressed ? 0.6 : 1 }]}>
+        <View style={{ flex: 1, gap: 2 }}>
+          <View style={[styles.rowTop, { flexDirection: rowDir(isRTL) }]}>
+            <LangText display={{ text: w.heNiqqud || w.he, plain: w.he, lang: 'he', size: 'normal' }} align={isRTL ? 'right' : 'left'} style={{ fontWeight: '700' }} />
+            {w.emoji ? <Text style={styles.emoji}>{w.emoji}</Text> : null}
+          </View>
+          {w.translit && state.settings.showTranslit ? (
+            <Text style={[styles.translit, { color: c.textSecondary }, textStart(isRTL)]}>{w.translit}</Text>
+          ) : null}
+          <Text style={[styles.meaning, { color: c.textSecondary }]} numberOfLines={2}>
+            {w.en}
+          </Text>
         </View>
-        {w.translit && state.settings.showTranslit ? (
-          <Text style={[styles.translit, { color: c.textSecondary }, textStart(isRTL)]}>{w.translit}</Text>
-        ) : null}
-        <Text style={[styles.meaning, { color: c.text }]} numberOfLines={2}>
-          {w.en}
-        </Text>
-      </View>
-    </Pressable>
+        <Ionicons name={isRTL ? 'chevron-back' : 'chevron-forward'} size={18} color={c.textTertiary} />
+      </Pressable>
+    </View>
   );
 }
 
@@ -99,7 +102,7 @@ export function DictionaryScreen() {
     <View style={{ flex: 1, backgroundColor: c.background }}>
       <ScreenHeader title={t('dictionary.title')} />
       <View style={styles.column}>
-        <View style={[styles.searchBox, { borderColor: c.border, backgroundColor: c.surface, flexDirection: rowDir(isRTL) }]}>
+        <View style={[styles.searchBox, cardShadowStyle(theme), { borderColor: c.border, backgroundColor: c.surface, flexDirection: rowDir(isRTL) }]}>
           <Ionicons name="search" size={20} color={c.textSecondary} />
           <TextInput
             value={q}
@@ -120,6 +123,7 @@ export function DictionaryScreen() {
           </View>
         ) : pack.dictionary === 'error' && !dict ? (
           <View style={styles.center}>
+            <IconBadge icon="cloud-offline-outline" color={c.textSecondary} size={48} round />
             <Text style={{ color: c.textSecondary, textAlign: 'center' }}>{t('dictionary.offline')}</Text>
             {__DEV__ && pack.error ? <Text style={{ color: c.danger, fontSize: 12 }}>{pack.error}</Text> : null}
             <Button label={t('common.retry')} onPress={load} />
@@ -143,7 +147,10 @@ export function DictionaryScreen() {
           ListHeaderComponent={
             <View style={{ gap: 10, marginBottom: 6 }}>
               {dict ? <Text style={[styles.count, { color: c.textSecondary }, textStart(isRTL)]}>{t('dictionary.hint', { count: dict.length.toLocaleString() })}</Text> : null}
-              <Text style={[styles.section, { color: c.text }, textStart(isRTL)]}>⭐ {t('dictionary.myWords')}</Text>
+              <View style={[styles.sectionRow, { flexDirection: rowDir(isRTL) }]}>
+                <Ionicons name="star" size={18} color={c.secondary} />
+                <Text style={[styles.section, { color: c.text }, textStart(isRTL)]}>{t('dictionary.myWords')}</Text>
+              </View>
               {myWords.length >= 3 ? (
                 <Button
                   label={t('dictionary.practiceMyWords')}
@@ -164,15 +171,17 @@ export function DictionaryScreen() {
 
 const styles = StyleSheet.create({
   column: { width: '100%', maxWidth: 640, alignSelf: 'center', paddingHorizontal: 16, gap: 10 },
-  searchBox: { alignItems: 'center', gap: 8, borderWidth: 2, borderRadius: 14, paddingHorizontal: 12 },
-  input: { flex: 1, fontSize: 18, paddingVertical: 12 },
+  searchBox: { alignItems: 'center', gap: 8, borderWidth: StyleSheet.hairlineWidth, borderRadius: 14, paddingHorizontal: 14 },
+  input: { flex: 1, fontSize: 17, paddingVertical: 13 },
   center: { alignItems: 'center', gap: 10, paddingVertical: 24 },
-  list: { width: '100%', maxWidth: 640, alignSelf: 'center', paddingHorizontal: 16, gap: 8, paddingTop: 8 },
+  list: { width: '100%', maxWidth: 640, alignSelf: 'center', paddingHorizontal: 16, gap: 10, paddingTop: 12 },
   count: { fontSize: 13 },
-  section: { fontSize: 17, fontWeight: '800' },
-  row: { alignItems: 'center', gap: 12, borderWidth: 1, borderRadius: 14, padding: 12 },
+  section: { fontSize: 17, fontWeight: '700' },
+  sectionRow: { alignItems: 'center', gap: 8, marginTop: 4 },
+  row: { alignItems: 'center', gap: 12, borderWidth: StyleSheet.hairlineWidth, borderRadius: 16, paddingVertical: 12, paddingHorizontal: 14 },
   rowTop: { alignItems: 'center', gap: 8 },
+  rowMain: { flex: 1, alignItems: 'center', gap: 10 },
   emoji: { fontSize: 20 },
   translit: { fontSize: 13, fontStyle: 'italic' },
-  meaning: { fontSize: 15, textAlign: 'left', writingDirection: 'ltr' },
+  meaning: { fontSize: 15, textAlign: 'left', writingDirection: 'ltr', alignSelf: isRTL ? 'flex-end' : 'flex-start' },
 });

@@ -1,11 +1,10 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { CommonActions, useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Platform, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, SlideInRight } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ExerciseView, type DoneResult } from '../components/exercises/ExerciseView';
-import { ProgressBar } from '../components/ui';
+import { IconButton, Pill, ProgressBar } from '../components/ui';
 import { useAppTheme, usePreferences } from '../context/PreferencesContext';
 import { getItem } from '../content/registry';
 import { useCourseContentVersion } from '../content/courseContent';
@@ -15,6 +14,7 @@ import { checkpointItems } from '../course/progress';
 import { buildCheckpoint, buildLesson, buildPractice, buildReview, buildSpeed, CHECKPOINT_PASS, SPEED_SECONDS } from '../engine/lesson';
 import { resolveItems } from '../engine/generate';
 import { exerciseItemIds, isGraded, type Exercise } from '../engine/types';
+import { goBackOrHome } from '../navigation/goBack';
 import type { AppNav, AppStackParamList } from '../navigation/types';
 import { useProgress, type ItemResult } from '../progress/ProgressContext';
 import { isRTL, t } from '../services/i18n';
@@ -111,7 +111,8 @@ export function LessonScreen() {
     finished.current = true;
     const answers = [...firstAttempt.current.values()];
     const correct = answers.filter(Boolean).length;
-    const accuracy = answers.length ? correct / answers.length : 1;
+    // A speed round with no answers scores 0, not 100%.
+    const accuracy = answers.length ? correct / answers.length : params.mode === 'speed' ? 0 : 1;
     const passed = params.mode === 'checkpoint' ? accuracy >= CHECKPOINT_PASS : undefined;
     const base = params.mode === 'lesson' ? 10 : params.mode === 'checkpoint' ? (passed ? 20 : 0) : params.mode === 'speed' ? 0 : 5;
     const xp = base + correct + (accuracy === 1 && answers.length >= 5 ? 5 : 0);
@@ -145,6 +146,7 @@ export function LessonScreen() {
               mode: params.mode,
               accuracy,
               xp,
+              correct,
               streak,
               streakExtended,
               passed,
@@ -194,7 +196,7 @@ export function LessonScreen() {
   );
 
   const quit = () => {
-    const leave = () => navigation.goBack();
+    const leave = () => goBackOrHome(navigation);
     if (doneGraded === 0) return leave();
     if (Platform.OS === 'web') {
       if (typeof window !== 'undefined' && window.confirm(`${t('lesson.quitTitle')}\n${t('lesson.quitBody')}`)) leave();
@@ -222,7 +224,7 @@ export function LessonScreen() {
     const waiting = pack.course === 'loading' || pack.course === 'idle';
     return (
       <View style={[styles.root, { backgroundColor: c.background, paddingTop: insets.top + 16 }]}>
-        <Ionicons name="close" size={30} color={c.textSecondary} onPress={() => navigation.goBack()} accessibilityLabel={t('common.close')} />
+        <IconButton icon="close" size={24} variant="plain" color={c.textSecondary} onPress={() => goBackOrHome(navigation)} label={t('common.close')} />
         {waiting ? <ActivityIndicator style={{ marginTop: 40 }} color={c.primary} /> : null}
         <Text style={[styles.empty, { color: c.textSecondary }]}>{waiting ? t('home.downloading') : t('home.reviewNone')}</Text>
       </View>
@@ -232,18 +234,19 @@ export function LessonScreen() {
   return (
     <View style={[styles.root, { backgroundColor: c.background, paddingTop: insets.top + 8 }]} testID="lesson_root">
       <View style={[styles.header, { flexDirection: rowDir(isRTL) }]}>
-        <Ionicons name="close" size={30} color={c.textSecondary} onPress={quit} accessibilityLabel={t('common.close')} testID="lesson_btn_close" />
-        <View style={{ flex: 1, transform: [{ scaleX: isRTL ? -1 : 1 }] }}>
+        <IconButton icon="close" size={24} variant="plain" color={c.textSecondary} onPress={quit} label={t('common.close')} testID="lesson_btn_close" />
+        <View style={{ flex: 1 }}>
           <ProgressBar
+            height={10}
             value={params.mode === 'speed' ? timeLeft / SPEED_SECONDS : graded ? doneGraded / graded : 0}
-            color={params.mode === 'speed' ? (timeLeft <= 10 ? c.danger : c.secondary) : undefined}
+            color={params.mode === 'speed' ? (timeLeft <= 10 ? c.danger : c.secondary) : c.success}
           />
         </View>
-        {params.mode === 'speed' ? <Text style={[styles.combo, { color: timeLeft <= 10 ? c.danger : c.text }]}>⏱ {timeLeft}</Text> : null}
+        {params.mode === 'speed' ? <Pill icon="timer-outline" label={String(timeLeft)} color={timeLeft <= 10 ? c.danger : c.text} /> : null}
         {combo >= 3 ? (
-          <Animated.Text entering={FadeIn} exiting={FadeOut} style={[styles.combo, { color: c.secondary }]}>
-            🔥 {combo}
-          </Animated.Text>
+          <Animated.View entering={FadeIn} exiting={FadeOut}>
+            <Pill icon="flame" label={String(combo)} color={c.warning} />
+          </Animated.View>
         ) : null}
       </View>
       {title ? <Text style={[styles.modeTitle, { color: c.textSecondary }]}>{title}</Text> : null}
@@ -260,9 +263,8 @@ export function LessonScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, paddingHorizontal: 18 },
-  header: { alignItems: 'center', gap: 12, marginBottom: 8 },
-  combo: { fontSize: 16, fontWeight: '800' },
-  modeTitle: { textAlign: 'center', fontSize: 14, fontWeight: '700', marginBottom: 4 },
+  header: { alignItems: 'center', gap: 10, marginBottom: 10, marginHorizontal: -8 },
+  modeTitle: { textAlign: 'center', fontSize: 13, fontWeight: '700', marginBottom: 6, letterSpacing: 0.3 },
   body: { flex: 1, width: '100%', maxWidth: 640, alignSelf: 'center' },
   flex: { flex: 1 },
   empty: { textAlign: 'center', fontSize: 17, marginTop: 40 },

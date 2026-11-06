@@ -1,21 +1,30 @@
 export type ThemeColors = {
   primary: string;
+  /** Pressed / darker brand tone. */
+  primaryStrong: string;
   primaryMuted: string;
   primarySoft: string;
+  /** Accent for XP, stars and the daily goal. */
   secondary: string;
   secondaryMuted: string;
+  secondarySoft: string;
   background: string;
   surface: string;
+  /** Tonal fill for tracks, chips and segmented controls. */
   surfaceElevated: string;
   text: string;
   textSecondary: string;
+  textTertiary: string;
   border: string;
+  /** Hairline separators inside cards. */
+  divider: string;
   onPrimary: string;
   skeleton: string;
   success: string;
   successSoft: string;
   danger: string;
   dangerSoft: string;
+  /** Streak / fire tone. */
   warning: string;
   warningSoft: string;
   /** One color per course stage: letters, reading, words, sentences. */
@@ -31,16 +40,21 @@ type Shadow = {
   elevation: number;
 };
 
+type TextToken = { fontSize: number; lineHeight: number; fontWeight: '400' | '500' | '600' | '700' | '800' };
+
 export type AppTheme = {
   colors: ThemeColors;
   radii: { sm: number; md: number; lg: number; xl: number; full: number };
-  spacing: {
-    xs: number;
-    sm: number;
-    md: number;
-    lg: number;
-    xl: number;
-    xxl: number;
+  spacing: { xs: number; sm: number; md: number; lg: number; xl: number; xxl: number };
+  /** Type scale shared by every screen (system font: SF Pro / SF Hebrew on iOS). */
+  type: {
+    display: TextToken;
+    title: TextToken;
+    headline: TextToken;
+    body: TextToken;
+    callout: TextToken;
+    caption: TextToken;
+    overline: TextToken;
   };
   typography: {
     title: { fontSize: number; fontWeight: '700'; lineHeight: number };
@@ -51,33 +65,48 @@ export type AppTheme = {
   isDark: boolean;
 };
 
+const type: AppTheme['type'] = {
+  display: { fontSize: 30, lineHeight: 38, fontWeight: '800' },
+  title: { fontSize: 22, lineHeight: 28, fontWeight: '700' },
+  headline: { fontSize: 17, lineHeight: 22, fontWeight: '600' },
+  body: { fontSize: 16, lineHeight: 23, fontWeight: '400' },
+  callout: { fontSize: 15, lineHeight: 21, fontWeight: '500' },
+  caption: { fontSize: 13, lineHeight: 18, fontWeight: '500' },
+  overline: { fontSize: 12, lineHeight: 16, fontWeight: '700' },
+};
+
 export const lightTheme: AppTheme = {
   isDark: false,
   colors: {
-    primary: '#4f46e5',
-    primaryMuted: '#a5b4fc',
-    primarySoft: '#eef2ff',
-    secondary: '#d97706',
-    secondaryMuted: '#fcd34d',
-    background: '#f8f8fc',
-    surface: '#ffffff',
-    surfaceElevated: '#f1f0fb',
-    text: '#0f0f1a',
-    textSecondary: '#5b6475',
-    border: '#e4e4f0',
-    onPrimary: '#ffffff',
-    skeleton: '#e8e8f2',
-    success: '#059669',
-    successSoft: '#ecfdf5',
-    danger: '#e11d48',
-    dangerSoft: '#fff1f2',
-    warning: '#b45309',
-    warningSoft: '#fffbeb',
-    stage: ['#4f46e5', '#0891b2', '#16a34a', '#db2777'],
-    locked: '#c7c7d6',
+    primary: '#4F46E5',
+    primaryStrong: '#4338CA',
+    primaryMuted: '#A5B4FC',
+    primarySoft: '#EEF0FE',
+    secondary: '#F59E0B',
+    secondaryMuted: '#FCD34D',
+    secondarySoft: '#FEF6E4',
+    background: '#F5F6FA',
+    surface: '#FFFFFF',
+    surfaceElevated: '#EEF0F5',
+    text: '#111827',
+    textSecondary: '#5B6475',
+    textTertiary: '#9AA1AE',
+    border: '#E3E6ED',
+    divider: '#EDEFF3',
+    onPrimary: '#FFFFFF',
+    skeleton: '#E8EAF0',
+    success: '#16A34A',
+    successSoft: '#EAF7EF',
+    danger: '#DC2626',
+    dangerSoft: '#FDEEEE',
+    warning: '#EA580C',
+    warningSoft: '#FFF1E8',
+    stage: ['#4F46E5', '#0284C7', '#059669', '#DB2777'],
+    locked: '#C9CED8',
   },
-  radii: { sm: 8, md: 12, lg: 18, xl: 24, full: 9999 },
-  spacing: { xs: 6, sm: 12, md: 16, lg: 24, xl: 36, xxl: 52 },
+  radii: { sm: 8, md: 12, lg: 16, xl: 22, full: 9999 },
+  spacing: { xs: 4, sm: 8, md: 16, lg: 24, xl: 32, xxl: 48 },
+  type,
   typography: {
     title: { fontSize: 28, fontWeight: '700', lineHeight: 36 },
     body: { fontSize: 16, lineHeight: 24 },
@@ -85,16 +114,16 @@ export const lightTheme: AppTheme = {
   },
   shadows: {
     card: {
-      shadowColor: '#4f46e5',
+      shadowColor: '#101828',
       shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.06,
-      shadowRadius: 12,
-      elevation: 3,
+      shadowOpacity: 0.05,
+      shadowRadius: 8,
+      elevation: 2,
     },
     strong: {
-      shadowColor: '#4f46e5',
-      shadowOffset: { width: 0, height: 6 },
-      shadowOpacity: 0.14,
+      shadowColor: '#101828',
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.12,
       shadowRadius: 20,
       elevation: 8,
     },
@@ -105,42 +134,47 @@ export const darkTheme: AppTheme = {
   ...lightTheme,
   isDark: true,
   colors: {
-    primary: '#818cf8',
-    primaryMuted: '#6366f1',
-    primarySoft: '#1e1b4b',
-    secondary: '#fbbf24',
-    secondaryMuted: '#fcd34d',
-    background: '#0b0b14',
-    surface: '#13131f',
-    surfaceElevated: '#1c1c2e',
-    text: '#f0f0ff',
-    textSecondary: '#9a9ab8',
-    border: '#2a2a40',
-    onPrimary: '#0b0b14',
-    skeleton: '#1c1c2e',
-    success: '#34d399',
-    successSoft: '#052e22',
-    danger: '#fb7185',
-    dangerSoft: '#3a0d18',
-    warning: '#fbbf24',
-    warningSoft: '#33240a',
-    stage: ['#818cf8', '#22d3ee', '#4ade80', '#f472b6'],
-    locked: '#3a3a52',
+    primary: '#8B93F8',
+    primaryStrong: '#A5ABFA',
+    primaryMuted: '#4F46E5',
+    primarySoft: '#1F2147',
+    secondary: '#FBBF24',
+    secondaryMuted: '#FCD34D',
+    secondarySoft: '#2E2410',
+    background: '#0C0D12',
+    surface: '#16181F',
+    surfaceElevated: '#20232C',
+    text: '#F2F4F8',
+    textSecondary: '#A0A7B5',
+    textTertiary: '#6B7280',
+    border: '#2A2E39',
+    divider: '#22252E',
+    onPrimary: '#0C0D12',
+    skeleton: '#20232C',
+    success: '#4ADE80',
+    successSoft: '#0E2A1A',
+    danger: '#F87171',
+    dangerSoft: '#341515',
+    warning: '#FB923C',
+    warningSoft: '#33200F',
+    // Filled surfaces carry white text, so stage colors stay mid-tone in dark mode too.
+    stage: ['#6366F1', '#0284C7', '#059669', '#DB2777'],
+    locked: '#3A3F4B',
   },
   shadows: {
     card: {
       shadowColor: '#000000',
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.4,
-      shadowRadius: 16,
-      elevation: 6,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+      elevation: 2,
     },
     strong: {
       shadowColor: '#000000',
       shadowOffset: { width: 0, height: 8 },
-      shadowOpacity: 0.6,
-      shadowRadius: 24,
-      elevation: 12,
+      shadowOpacity: 0.45,
+      shadowRadius: 20,
+      elevation: 8,
     },
   },
 };

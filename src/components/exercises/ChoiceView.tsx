@@ -5,11 +5,10 @@ import type { ChoiceExercise } from '../../engine/types';
 import { speak } from '../../services/tts';
 import { tapHaptic } from '../../utils/exerciseFeedback';
 import { DisplayView, SpeakButton, useAutoplay } from '../DisplayView';
-import { CheckFooter, ExerciseFrame, useVerdictFeedback, type DoneResult, type Verdict } from './common';
+import { CheckFooter, choiceSurface, ExerciseFrame, useVerdictFeedback, type DoneResult, type Verdict } from './common';
 
 export function ChoiceView({ exercise, onDone, instant }: { exercise: ChoiceExercise; onDone: (r: DoneResult) => void; instant?: boolean }) {
   const theme = useAppTheme();
-  const c = theme.colors;
   const [selected, setSelected] = useState<string | null>(null);
   const [verdict, setVerdict] = useState<Verdict | null>(null);
   const feedback = useVerdictFeedback();
@@ -75,11 +74,8 @@ export function ChoiceView({ exercise, onDone, instant }: { exercise: ChoiceExer
               style={({ pressed }) => [
                 styles.option,
                 grid && styles.gridOption,
-                {
-                  borderColor: showRight ? c.success : showWrong ? c.danger : isSel ? c.primary : c.border,
-                  backgroundColor: showRight ? c.successSoft : showWrong ? c.dangerSoft : isSel ? c.primarySoft : c.surface,
-                  transform: [{ scale: pressed ? 0.97 : 1 }],
-                },
+                choiceSurface(theme, showRight ? 'right' : showWrong ? 'wrong' : isSel ? 'selected' : 'idle'),
+                { transform: [{ scale: pressed ? 0.98 : 1 }] },
               ]}
             >
               <DisplayView display={{ ...opt.display, speak: undefined, size: opt.display.size === 'glyph' ? 'glyph' : opt.display.size }} showSpeaker={false} />
@@ -94,17 +90,14 @@ export function ChoiceView({ exercise, onDone, instant }: { exercise: ChoiceExer
 const styles = StyleSheet.create({
   prompt: { alignItems: 'center', gap: 12, paddingVertical: 8 },
   audioRow: { flexDirection: 'row', alignItems: 'center', gap: 16 },
-  options: { gap: 10 },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
+  options: { gap: 12 },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 0 },
   option: {
-    borderWidth: 2,
-    borderBottomWidth: 4,
-    borderRadius: 16,
     paddingVertical: 14,
     paddingHorizontal: 14,
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: 64,
   },
-  gridOption: { width: '48%', minHeight: 96 },
+  gridOption: { width: '48%', minHeight: 100, marginBottom: 12 },
 });

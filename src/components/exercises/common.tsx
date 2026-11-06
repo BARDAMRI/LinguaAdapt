@@ -1,17 +1,34 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import type { ReactNode } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, type ViewStyle } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppTheme, usePreferences } from '../../context/PreferencesContext';
 import type { Display } from '../../engine/types';
 import { isRTL, t } from '../../services/i18n';
 import { answerFeedback } from '../../utils/exerciseFeedback';
-import { rowDir, textStart } from '../../utils/platformStyles';
+import type { AppTheme } from '../../theme/theme';
+import { cardShadowStyle, rowDir, textStart } from '../../utils/platformStyles';
 import { DisplayView } from '../DisplayView';
 import { Button } from '../ui';
 
 export type DoneResult = { correct: boolean; typo?: boolean; wrongItemIds?: string[] };
+
+export type ChoiceState = 'idle' | 'selected' | 'right' | 'wrong' | 'done';
+
+/** Shared look of every tappable answer (options, match cards, tiles). */
+export function choiceSurface(theme: AppTheme, state: ChoiceState): ViewStyle {
+  const c = theme.colors;
+  const border = state === 'right' ? c.success : state === 'wrong' ? c.danger : state === 'selected' ? c.primary : c.border;
+  const bg = state === 'right' || state === 'done' ? c.successSoft : state === 'wrong' ? c.dangerSoft : state === 'selected' ? c.primarySoft : c.surface;
+  return {
+    borderWidth: state === 'idle' || state === 'done' ? 1 : 2,
+    borderColor: state === 'done' ? 'transparent' : border,
+    backgroundColor: bg,
+    borderRadius: 16,
+    ...(state === 'idle' ? cardShadowStyle(theme) : null),
+  };
+}
 
 export type Verdict = { correct: boolean; typo?: boolean };
 
@@ -78,11 +95,13 @@ export function CheckFooter({
   return (
     <Animated.View
       entering={FadeInDown.duration(220)}
-      style={[styles.banner, { backgroundColor: good ? c.successSoft : c.dangerSoft, borderColor: good ? c.success : c.danger }]}
+      style={[styles.banner, { backgroundColor: good ? c.successSoft : c.dangerSoft }]}
       testID={good ? 'exercise_banner_correct' : 'exercise_banner_wrong'}
     >
       <View style={[styles.bannerHead, { flexDirection: rowDir(isRTL) }]}>
-        <Ionicons name={good ? 'checkmark-circle' : 'close-circle'} size={28} color={good ? c.success : c.danger} />
+        <View style={[styles.bannerIcon, { backgroundColor: good ? c.success : c.danger }]}>
+          <Ionicons name={good ? 'checkmark' : 'close'} size={20} color="#FFFFFF" />
+        </View>
         <Text style={[styles.bannerTitle, { color: good ? c.success : c.danger }, textStart(isRTL)]}>{title}</Text>
       </View>
       {showAnswer ? (
@@ -109,18 +128,13 @@ export function useVerdictFeedback() {
 const styles = StyleSheet.create({
   frame: { flex: 1 },
   body: { flex: 1 },
-  bodyContent: { paddingBottom: 24, gap: 18 },
-  instruction: { fontSize: 22, fontWeight: '700', lineHeight: 30 },
-  footerPad: { paddingTop: 8 },
-  banner: {
-    borderTopWidth: 2,
-    borderRadius: 18,
-    padding: 16,
-    gap: 12,
-    marginTop: 8,
-  },
-  bannerHead: { alignItems: 'center', gap: 8 },
-  bannerTitle: { fontSize: 20, fontWeight: '800', flex: 1 },
+  bodyContent: { paddingTop: 4, paddingBottom: 24, gap: 20 },
+  instruction: { fontSize: 21, fontWeight: '700', lineHeight: 28 },
+  footerPad: { paddingTop: 10 },
+  banner: { borderRadius: 20, padding: 16, gap: 12, marginTop: 8, marginHorizontal: -4 },
+  bannerHead: { alignItems: 'center', gap: 10 },
+  bannerIcon: { width: 30, height: 30, borderRadius: 15, alignItems: 'center', justifyContent: 'center' },
+  bannerTitle: { fontSize: 19, fontWeight: '800', flex: 1 },
   bannerAnswer: { gap: 4 },
-  answerLabel: { fontSize: 14, fontWeight: '700' },
+  answerLabel: { fontSize: 13, fontWeight: '700' },
 });

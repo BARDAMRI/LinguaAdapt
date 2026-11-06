@@ -107,7 +107,8 @@ const heLetters = HEBREW_LETTERS;
 function heLetterTeach(item: Extract<AnyItem, { kind: 'he-letter' }>): Exercise[] {
   const l = item.data;
   const rows = [
-    { label: t('teach.name'), value: en(l.nameEn, { note: l.nameHe, noteLang: 'he' }) },
+    // Learners cannot read Hebrew yet: the name is written in English and heard in Hebrew.
+    { label: t('teach.name'), value: en(l.nameEn, { speak: { text: l.nameHe, lang: 'he' } }) },
     { label: t('teach.sound'), value: en(l.soundEn) },
   ];
   if (l.finalForm) {
@@ -182,7 +183,7 @@ function heFinalTeach(item: Extract<AnyItem, { kind: 'he-final' }>): Exercise[] 
       teach: {
         badge: t('teach.finalForm'),
         glyph: glyph(f.char, 'he'),
-        title: he(f.nameHe, { keepNiqqud: true, note: f.nameEn, noteLang: 'en' }),
+        title: en(f.nameEn, { speak: { text: f.nameHe, lang: 'he' } }),
         rows: [{ label: t('teach.letter'), value: en(t('teach.finalExplain', { base: f.baseChar, final: f.char })) }],
         examples: [he(f.example.he, { keepNiqqud: true, translit: f.example.translit, note: f.example.en, noteLang: 'en', emoji: f.example.emoji, speak: { text: f.example.he, lang: 'he' } })],
         speak: [{ text: f.nameHe, lang: 'he' }, { text: f.example.he, lang: 'he' }],
@@ -242,7 +243,7 @@ function heVowelTeach(item: Extract<AnyItem, { kind: 'he-vowel' }>): Exercise[] 
       teach: {
         badge: t('teach.vowel'),
         glyph: glyph(s.key === 'chataf' ? 'אֲ' : sample, 'he'),
-        title: he(s.nameHe, { keepNiqqud: true, note: s.nameEn, noteLang: 'en' }),
+        title: en(s.nameEn, { note: s.nameHe, noteLang: 'he', speak: { text: s.nameHe, lang: 'he' } }),
         rows: [{ label: t('teach.sound'), value: en(s.explainEn) }],
         examples: [
           ...s.syllables.map((syl) => he(syl, { keepNiqqud: true, size: 'big', speak: { text: syl, lang: 'he' } })),
@@ -348,7 +349,8 @@ function enLetterTeach(item: Extract<AnyItem, { kind: 'en-letter' }>): Exercise[
         badge: t('teach.letter'),
         glyph: glyph(`${l.upper} ${l.lower}`, 'en'),
         rows: [
-          { label: t('teach.name'), value: en(l.name, { note: l.nameHe, noteLang: 'he' }) },
+          // Learners cannot read English yet: the name is written in Hebrew and heard in English.
+          { label: t('teach.name'), value: he(l.nameHe, { keepNiqqud: true, speak: { text: l.upper, lang: 'en' } }) },
           { label: t('teach.sound'), value: he(l.soundHe) },
         ],
         examples: [en(l.example.en, { size: 'big', note: l.example.he, noteLang: 'he', emoji: l.example.emoji, speak: { text: l.example.en, lang: 'en' } })],
@@ -392,7 +394,8 @@ function enLetterPractice(item: Extract<AnyItem, { kind: 'en-letter' }>, ctx: Ge
       reveal: en(`${l.upper} ${l.lower}`, { note: l.example.en }),
     });
   }
-  return choice(l.id, t('ex.whichLetter'), glyph(l.upper, 'en'), en(l.name, { note: l.nameHe, noteLang: 'he' }), others.map((x) => en(x.name, { note: x.nameHe, noteLang: 'he' })), { layout: 'grid' });
+  const nameOf = (x: typeof l) => he(x.nameHe, { keepNiqqud: true, size: 'big', speak: { text: x.upper, lang: 'en' } });
+  return choice(l.id, t('ex.whichLetter'), glyph(l.upper, 'en'), nameOf(l), others.map(nameOf), { layout: 'grid' });
 }
 
 // ──────────────────────────────────────────────────────────── Phonics ──
@@ -817,7 +820,7 @@ function matchPair(item: AnyItem, ctx: GenContext): { left: Display; right: Disp
     case 'en-letter':
       return ctx.kind === 'en-case'
         ? { left: glyph(item.data.upper, 'en'), right: glyph(item.data.lower, 'en') }
-        : { left: glyph(item.data.upper, 'en'), right: en(item.data.name, { note: item.data.nameHe, noteLang: 'he' }) };
+        : { left: glyph(item.data.upper, 'en'), right: he(item.data.nameHe, { keepNiqqud: true, size: 'big' }) };
     case 'en-phonics': {
       const w = item.data.words[0];
       return { left: en(w.en), right: he(w.he, { emoji: w.emoji }) };
@@ -855,7 +858,7 @@ export function traceExercise(item: AnyItem): Exercise | null {
     return { id: uid('trace'), type: 'trace', itemId: item.data.id, instruction: t('ex.traceLetter'), glyph: item.data.char, lang: 'he', speak: { text: item.data.nameHe, lang: 'he' }, label: item.data.nameEn };
   }
   if (item.kind === 'en-letter') {
-    return { id: uid('trace'), type: 'trace', itemId: item.data.id, instruction: t('ex.traceLetter'), glyph: item.data.upper, lang: 'en', speak: { text: item.data.upper, lang: 'en' }, label: item.data.name };
+    return { id: uid('trace'), type: 'trace', itemId: item.data.id, instruction: t('ex.traceLetter'), glyph: item.data.upper, lang: 'en', speak: { text: item.data.upper, lang: 'en' }, label: item.data.nameHe };
   }
   return null;
 }

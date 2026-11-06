@@ -6,7 +6,7 @@ import type { TilesExercise } from '../../engine/types';
 import { tapHaptic } from '../../utils/exerciseFeedback';
 import { normalizeAnswer } from '../../utils/hebrew';
 import { DisplayView, SpeakButton, useAutoplay } from '../DisplayView';
-import { CheckFooter, ExerciseFrame, useVerdictFeedback, type DoneResult, type Verdict } from './common';
+import { CheckFooter, choiceSurface, ExerciseFrame, useVerdictFeedback, type DoneResult, type Verdict } from './common';
 
 /** Build a word from letter tiles or a sentence from word tiles. */
 export function TilesView({ exercise, onDone }: { exercise: TilesExercise; onDone: (r: DoneResult) => void }) {
@@ -61,7 +61,7 @@ export function TilesView({ exercise, onDone }: { exercise: TilesExercise; onDon
       <View
         style={[
           styles.answerArea,
-          { borderColor: c.border, flexDirection: rtl ? 'row-reverse' : 'row', justifyContent: letters ? 'center' : 'flex-start' },
+          { borderColor: c.locked, flexDirection: rtl ? 'row-reverse' : 'row', justifyContent: letters ? 'center' : 'flex-start' },
         ]}
         testID="tiles_answer"
       >
@@ -73,7 +73,7 @@ export function TilesView({ exercise, onDone }: { exercise: TilesExercise; onDon
                 tapHaptic();
                 setPicked((p) => p.filter((_, j) => j !== k));
               }}
-              style={[styles.tile, { backgroundColor: c.primarySoft, borderColor: c.primary }]}
+              style={[styles.tile, choiceSurface(theme, 'idle')]}
             >
               {tileText(tok)}
             </Pressable>
@@ -95,10 +95,10 @@ export function TilesView({ exercise, onDone }: { exercise: TilesExercise; onDon
               }}
               style={[
                 styles.tile,
-                { backgroundColor: used ? c.border : c.surface, borderColor: c.border, opacity: used ? 0.35 : 1 },
+                used ? { backgroundColor: c.surfaceElevated, borderRadius: 16, borderWidth: 1, borderColor: 'transparent' } : choiceSurface(theme, 'idle'),
               ]}
             >
-              {tileText(tok)}
+              <View style={{ opacity: used ? 0 : 1 }}>{tileText(tok)}</View>
             </Pressable>
           );
         })}
@@ -111,8 +111,11 @@ const styles = StyleSheet.create({
   prompt: { alignItems: 'center', gap: 10 },
   audioRow: { flexDirection: 'row', alignItems: 'center', gap: 16 },
   answerArea: {
-    minHeight: 72,
-    borderBottomWidth: 2,
+    minHeight: 76,
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    borderRadius: 16,
+    paddingHorizontal: 10,
     flexWrap: 'wrap',
     alignItems: 'center',
     gap: 8,
@@ -124,9 +127,6 @@ const styles = StyleSheet.create({
     minHeight: 50,
     paddingHorizontal: 14,
     paddingVertical: 8,
-    borderWidth: 2,
-    borderBottomWidth: 4,
-    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },

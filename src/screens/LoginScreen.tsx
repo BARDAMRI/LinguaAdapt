@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { goBackOrHome } from '../navigation/goBack';
 import { AuthLayout } from '../components/AuthLayout';
 import { LabeledInput } from '../components/LabeledInput';
 import { useAuth } from '../context/AuthContext';
@@ -25,7 +26,7 @@ export function LoginScreen() {
     clearAuthError();
     setSubmitting(true);
     try {
-      if (await signIn(email.trim(), password)) navigation.goBack();
+      if (await signIn(email.trim(), password)) goBackOrHome(navigation);
     } finally {
       setSubmitting(false);
     }
@@ -94,7 +95,7 @@ export function LoginScreen() {
           <Text style={styles.linkAccent}>{t('auth.switchSignup')}</Text>
         </Pressable>
       </View>
-      <Pressable onPress={() => navigation.goBack()} hitSlop={8} style={styles.guest} testID="login_btn_guest">
+      <Pressable onPress={() => goBackOrHome(navigation)} hitSlop={8} style={styles.guest} testID="login_btn_guest">
         <Text style={styles.switchText}>{t('auth.continueAsGuest')}</Text>
       </Pressable>
     </AuthLayout>

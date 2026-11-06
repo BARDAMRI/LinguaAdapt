@@ -12,6 +12,8 @@ export type LessonCompleteParams = {
   mode: LessonParams['mode'];
   accuracy: number;
   xp: number;
+  /** First-try correct answers (the speed round headline). */
+  correct?: number;
   streak: number;
   streakExtended: boolean;
   passed?: boolean;
