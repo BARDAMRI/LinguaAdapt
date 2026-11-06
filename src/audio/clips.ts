@@ -90,11 +90,15 @@ function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
 }
 
 const inflight = new Map<string, Promise<string>>();
+/** Web: clips the prefetch could not load, so they go to the device voice instead of silence. */
+const webMissing = new Set<string>();
 
 /** Local file URI of a clip (downloads it once). Web plays the URL directly. */
 function clipUri(lang: ClipLang, key: string): Promise<string> {
   const remote = `${audioBase()}/${lang}/${key}.mp3`;
-  if (Platform.OS === 'web') return Promise.resolve(remote);
+  if (Platform.OS === 'web') {
+    return webMissing.has(`${lang}/${key}`) ? Promise.reject(new Error('clip unavailable')) : Promise.resolve(remote);
+  }
   const id = `${lang}/${key}`;
   const pending = inflight.get(id);
   if (pending) return pending;
@@ -182,10 +186,12 @@ export function prefetchClips(list: Speakable[]): void {
     while (next < keys.length) {
       const { lang, key } = keys[next++];
       try {
-        if (Platform.OS === 'web') await fetch(`${audioBase()}/${lang}/${key}.mp3`);
-        else await clipUri(lang, key);
+        if (Platform.OS === 'web') {
+          const res = await fetch(`${audioBase()}/${lang}/${key}.mp3`);
+          if (!res.ok) webMissing.add(`${lang}/${key}`);
+        } else await clipUri(lang, key);
       } catch {
-        /* best effort */
+        /* best effort: offline is not "missing", the browser may still have it cached */
       }
     }
   };

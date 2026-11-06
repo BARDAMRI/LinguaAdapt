@@ -8,6 +8,7 @@ import Constants from 'expo-constants';
 import { NativeModules, Platform } from 'react-native';
 import { useSyncExternalStore } from 'react';
 import type { UnitDef } from '../course/types';
+import { WEB_BASE_PATH } from '../utils/webBase';
 import { setCourseContent } from './courseContent';
 import { registerPhrases, registerSentences, registerWords } from './registry';
 import type { PairId, Phrase, Sentence, Word } from './types';
@@ -22,8 +23,7 @@ export function siteRoot(): string {
   if (override) return override.replace(/\/$/, '').replace(/\/content\/v1$/, '');
   if (Platform.OS === 'web' && typeof window !== 'undefined') {
     // Same site as the app: /LinguaAdapt on GitHub Pages, the bare origin locally.
-    const onPages = window.location.pathname.startsWith('/LinguaAdapt');
-    return `${window.location.origin}${onPages ? '/LinguaAdapt' : ''}`;
+    return `${window.location.origin}${WEB_BASE_PATH}`;
   }
   if (__DEV__) {
     // Development: the Metro server that served the JS bundle also serves public/.

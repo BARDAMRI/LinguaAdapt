@@ -7,7 +7,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "predeploy": "npx expo export -p web --output-dir dist && node -e \"require('fs').writeFileSync(require('path').join('dist','.nojekyll'),'')\"",
+    "predeploy": "npx expo export -p web --output-dir dist && node -e \"const fs=require('fs');fs.writeFileSync('dist/.nojekyll','');fs.copyFileSync('dist/index.html','dist/404.html')\"",
     "deploy:web": "npm run predeploy && gh-pages -d dist --dotfiles",
     "deploy:ios": "eas build --platform ios --profile production --non-interactive",
     "deploy:ios:preview": "eas build --platform ios --profile preview --non-interactive",
