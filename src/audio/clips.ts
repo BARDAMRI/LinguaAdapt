@@ -1,7 +1,7 @@
 /**
- * Recorded voice clips: natural Hebrew and English voices (Google Cloud
- * Text-to-Speech, Chirp 3 HD) generated once by scripts/audio and published on
- * the website next to the content packs. A clip is downloaded the first time it
+ * Recorded voice clips: natural Hebrew and English voices generated once by
+ * scripts/audio with free local models (Chatterbox for Hebrew, Kokoro for
+ * English) and published on the website next to the content packs. A clip is downloaded the first time it
  * is needed (or ahead of time for the current lesson) and kept on the device.
  * Anything without a clip, or any failure, falls back to the device voice.
  */

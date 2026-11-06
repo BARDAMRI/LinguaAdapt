@@ -14,7 +14,7 @@ import { NIQQUD_SIGNS, READING_MARKS, SYLLABLE_CONSONANTS, buildSyllable } from 
 
 export type CatalogItem = { lang: ClipLang; text: string; category: string };
 
-export const CATEGORIES = ['core', 'phrases', 'course-words', 'sentences', 'dictionary'] as const;
+export const CATEGORIES = ['core', 'phrases', 'course-words', 'lesson-sentences', 'sentences', 'dictionary'] as const;
 export type Category = (typeof CATEGORIES)[number];
 
 type PackWord = { he: string; heNiqqud?: string; en: string };
@@ -80,8 +80,18 @@ export function buildCatalog(): CatalogItem[] {
   for (const w of json<PackWord[]>(join(PACKS, 'words-en-he.json'))) add('course-words', 'he', w.heNiqqud || w.he);
   for (const w of json<PackWord[]>(join(PACKS, 'words-he-en.json'))) add('course-words', 'en', w.en);
 
-  // ── sentences (lessons and dictionary examples) ──
-  for (const s of json<PackSentence[]>(join(PACKS, 'sentences.json'))) {
+  // ── sentences: those taught in lessons first, then the dictionary examples ──
+  const sentences = json<(PackSentence & { id: string })[]>(join(PACKS, 'sentences.json'));
+  const inLessons = new Set<string>();
+  for (const pair of ['en-he', 'he-en']) {
+    const course = json<{ sentenceUnits: { lessons: { itemIds: string[] }[] }[] }>(join(PACKS, `course-${pair}.json`));
+    for (const u of course.sentenceUnits) for (const l of u.lessons) l.itemIds.forEach((id) => inLessons.add(id));
+  }
+  for (const s of sentences.filter((x) => inLessons.has(x.id))) {
+    add('lesson-sentences', 'he', s.heNiqqud || s.he);
+    add('lesson-sentences', 'en', s.en);
+  }
+  for (const s of sentences) {
     add('sentences', 'he', s.heNiqqud || s.he);
     add('sentences', 'en', s.en);
   }

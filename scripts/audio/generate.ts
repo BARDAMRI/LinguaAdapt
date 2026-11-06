@@ -1,19 +1,22 @@
 /**
- * Records every text in the catalog with Google Cloud Text-to-Speech (Chirp 3 HD)
- * into public/audio/v1/<lang>/<key>.mp3 and writes public/audio/v1/manifest.json.
- * The app plays these files and falls back to the device voice for anything else.
+ * Records every text in the catalog into public/audio/v1/<lang>/<key>.mp3 and
+ * writes public/audio/v1/manifest.json. The app plays these files and falls back
+ * to the device voice for anything else.
  *
- *   npm run audio:count                      # clips and characters, no API calls
- *   npm run audio:sample                     # ~100 clips in several voices → .cache/audio-sample
- *   npm run audio:generate                   # everything not recorded yet (resumable)
- *   npm run audio:generate -- --only core,phrases --limit 200
+ * Default engine: free local voices on this Mac (scripts/audio/local_tts.py):
+ *   Hebrew  — Chatterbox Multilingual (MIT), English — Kokoro-82M (Apache-2.0).
+ *   One-time setup: npm run audio:setup-local
  *
- * Needs GOOGLE_TTS_API_KEY in .env (never EXPO_PUBLIC_: the key must not ship in
- * the app). The key is sent in a header, never in the URL, and is never printed.
- * Characters are billed (1M free per month for Chirp 3 HD), so the script prints
- * the total before it starts and stops on the first auth or quota error.
+ *   npm run audio:count                      # clips still to record, no recording
+ *   npm run audio:generate                   # everything missing, by priority (resumable)
+ *   npm run audio:generate -- --only core,phrases,course-words,lesson-sentences
+ *   npm run audio:generate -- --lang en      # one language only
+ *   npm run audio:manifest                   # rebuild manifest.json from the files present
+ *
+ * Optional engine: --engine google (Chirp 3 HD, needs GOOGLE_TTS_API_KEY in .env,
+ * never EXPO_PUBLIC_; billed per character above the free tier).
  */
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { clipKey, spokenHebrew, type ClipLang } from '../../src/audio/text';
@@ -35,13 +38,26 @@ const SPEAKING_RATE = 0.92;
 /** Spoken only on the word page for Hebrew speakers; left to the device voice to stay in the free tier. */
 const SKIP = new Set(['dictionary en']);
 
-type Args = { sample: boolean; dryRun: boolean; only: Set<string> | null; limit: number; concurrency: number; voices: Partial<Record<ClipLang, string>> };
+type Args = {
+  engine: 'local' | 'google';
+  sample: boolean;
+  dryRun: boolean;
+  manifestOnly: boolean;
+  only: Set<string> | null;
+  lang: ClipLang | null;
+  limit: number;
+  concurrency: number;
+  voices: Partial<Record<ClipLang, string>>;
+};
 
 function parseArgs(argv: string[]): Args {
-  const a: Args = { sample: false, dryRun: false, only: null, limit: Infinity, concurrency: 6, voices: {} };
+  const a: Args = { engine: 'local', sample: false, dryRun: false, manifestOnly: false, only: null, lang: null, limit: Infinity, concurrency: 6, voices: {} };
   for (let i = 0; i < argv.length; i++) {
     const v = argv[i];
-    if (v === '--sample') a.sample = true;
+    if (v === '--engine') a.engine = argv[++i] === 'google' ? 'google' : 'local';
+    else if (v === '--manifest') a.manifestOnly = true;
+    else if (v === '--lang') a.lang = argv[++i] === 'he' ? 'he' : 'en';
+    else if (v === '--sample') a.sample = true;
     else if (v === '--dry-run') a.dryRun = true;
     else if (v === '--only') a.only = new Set(argv[++i].split(','));
     else if (v === '--limit') a.limit = Number(argv[++i]);
@@ -127,12 +143,12 @@ async function runPool<T>(items: T[], concurrency: number, fn: (item: T, i: numb
   if (stopped) throw stopped;
 }
 
-function writeManifest(): { he: number; en: number } {
+function writeManifest(voices: Record<ClipLang, string> = VOICES): { he: number; en: number } {
   const keys = (lang: ClipLang) =>
     existsSync(join(OUT, lang)) ? readdirSync(join(OUT, lang)).filter((f) => f.endsWith('.mp3')).map((f) => f.slice(0, -4)).sort() : [];
   const he = keys('he');
   const en = keys('en');
-  const manifest = { version: 1, voices: VOICES, generated: new Date().toISOString().slice(0, 10), he, en };
+  const manifest = { version: 1, voices, generated: new Date().toISOString().slice(0, 10), he, en };
   writeFileSync(join(OUT, 'manifest.json'), JSON.stringify(manifest));
   return { he: he.length, en: en.length };
 }
@@ -158,10 +174,87 @@ const SAMPLE_VOICES: Record<ClipLang, string[]> = {
   en: ['Kore', 'Charon'].map((v) => `en-US-Chirp3-HD-${v}`),
 };
 
+// ── Local engine ────────────────────────────────────────────────────────────
+
+const LOCAL_ENGINES: Record<ClipLang, { python: string; voice: string; label: string }> = {
+  he: { python: join(ROOT, '.cache', 'tts-he', 'bin', 'python'), voice: 'chatterbox-multilingual', label: 'Chatterbox Multilingual' },
+  en: { python: join(ROOT, '.cache', 'tts-en', 'bin', 'python'), voice: 'af_heart', label: 'Kokoro-82M af_heart' },
+};
+
+const bareLetters = (t: string) => t.replace(/[\u0591-\u05C7]/g, '').replace(/[^\p{L}]/gu, '').length;
+const stripNiqqud = (t: string) => t.replace(/[\u0591-\u05C7]/g, '');
+
+/** Takes to try, best first. Syllables and short words need their vowels; sentences read best unpointed. */
+function hebrewAttempts(it: CatalogItem): string[] {
+  const spoken = spokenHebrew(it.text);
+  const letters = bareLetters(spoken);
+  if (it.category === 'lesson-sentences' || it.category === 'sentences') return [stripNiqqud(spoken), stripNiqqud(spoken), spoken];
+  if (letters >= 4) return [spoken, spoken, stripNiqqud(spoken)];
+  // Lone syllables and very short words: punctuation changes the model's take (measured on בָּה/מֶה/לִי/סוֹ/רוּ).
+  return [spoken, `${spoken}!`, spoken, `${spoken}.`];
+}
+
+function runLocal(lang: ClipLang, jobsPath: string): Promise<number> {
+  const engine = LOCAL_ENGINES[lang];
+  if (!existsSync(engine.python)) throw new Error(`Missing ${engine.python}: run npm run audio:setup-local first.`);
+  const args = ['-i', engine.python, '-I', join(ROOT, 'scripts', 'audio', 'local_tts.py'), lang, jobsPath];
+  if (lang === 'en') args.push('--voice', engine.voice);
+  return new Promise((resolve) => {
+    // caffeinate keeps the Mac awake while recording (hours for Hebrew).
+    const child = spawn('caffeinate', args, {
+      env: { ...process.env, HF_HOME: join(ROOT, '.cache', 'hf'), PYTORCH_ENABLE_MPS_FALLBACK: '1', PYTHONWARNINGS: 'ignore' },
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+    const relay = (buf: Buffer) => {
+      for (const line of buf.toString().split('\n')) {
+        if (/^(he|en): |Error|Traceback|error:/.test(line)) console.log(line);
+      }
+    };
+    child.stdout.on('data', relay);
+    child.stderr.on('data', relay);
+    child.on('close', (code) => resolve(code ?? 1));
+  });
+}
+
+async function generateLocal(args: Args, all: CatalogItem[]): Promise<void> {
+  const langs: ClipLang[] = args.lang ? [args.lang] : ['he', 'en'];
+  const jobsDir = join(ROOT, '.cache', 'audio-jobs');
+  mkdirSync(jobsDir, { recursive: true });
+  const runs: Promise<number>[] = [];
+  for (const lang of langs) {
+    let todo = all.filter((it) => it.lang === lang && (!args.only || args.only.has(it.category)));
+    todo = todo.filter((it) => !existsSync(join(OUT, lang, `${clipKey(lang, it.text)}.mp3`)));
+    if (Number.isFinite(args.limit)) todo = todo.slice(0, args.limit);
+    const byCat = todo.reduce<Record<string, number>>((m, it) => ({ ...m, [it.category]: (m[it.category] ?? 0) + 1 }), {});
+    console.log(`${lang}: ${todo.length} clips to record with ${LOCAL_ENGINES[lang].label}`, byCat);
+    if (args.dryRun || todo.length === 0) continue;
+    const jobs = todo.map((it) => ({
+      out: join(OUT, lang, `${clipKey(lang, it.text)}.mp3`),
+      letters: lang === 'he' ? bareLetters(spokenHebrew(it.text)) : it.text.length,
+      attempts: lang === 'he' ? hebrewAttempts(it) : [it.text],
+    }));
+    const jobsPath = join(jobsDir, `${lang}.json`);
+    writeFileSync(jobsPath, JSON.stringify(jobs));
+    runs.push(runLocal(lang, jobsPath));
+  }
+  const codes = await Promise.all(runs);
+  if (!args.dryRun) console.log('Manifest:', writeManifest({ he: LOCAL_ENGINES.he.label, en: LOCAL_ENGINES.en.label }));
+  if (codes.some((c) => c !== 0)) process.exitCode = 1;
+}
+
 async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2));
   const voices = { ...VOICES, ...args.voices };
   const all = buildCatalog();
+
+  if (args.manifestOnly) {
+    console.log('Manifest:', writeManifest({ he: LOCAL_ENGINES.he.label, en: LOCAL_ENGINES.en.label }));
+    return;
+  }
+  if (args.engine === 'local' && !args.sample) {
+    await generateLocal(args, all);
+    return;
+  }
 
   if (args.sample) {
     const items = sampleItems(all);

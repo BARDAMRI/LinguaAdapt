@@ -40,20 +40,30 @@ export const CREDITS: Credit[] = [
     url: 'https://huggingface.co/dicta-il/dictabert-large-char-menaked',
   },
   {
-    name: 'Google Cloud Text-to-Speech',
+    name: 'Chatterbox Multilingual (Resemble AI)',
     what: {
-      en: 'The Hebrew and English voices are computer-generated (AI) with Google Cloud Text-to-Speech, recorded ahead of time. Where no recording exists, your device’s built-in voice reads the text.',
-      he: 'הקולות בעברית ובאנגלית נוצרו במחשב (בינה מלאכותית) בעזרת Google Cloud Text-to-Speech והוקלטו מראש. כשאין הקלטה, הקול המובנה של המכשיר מקריא את הטקסט.',
+      en: 'The Hebrew voice is computer-generated (AI) with Resemble AI’s open Chatterbox model, recorded ahead of time. Where no recording exists, your device’s built-in voice reads the text.',
+      he: 'הקול בעברית נוצר במחשב (בינה מלאכותית) בעזרת המודל הפתוח Chatterbox של Resemble AI, והוקלט מראש. כשאין הקלטה, הקול המובנה של המכשיר מקריא את הטקסט.',
     },
-    license: 'Google Cloud Terms of Service',
-    licenseUrl: 'https://cloud.google.com/terms',
-    url: 'https://cloud.google.com/text-to-speech',
+    license: 'MIT',
+    licenseUrl: 'https://github.com/resemble-ai/chatterbox/blob/master/LICENSE',
+    url: 'https://github.com/resemble-ai/chatterbox',
+  },
+  {
+    name: 'Kokoro-82M (hexgrad)',
+    what: {
+      en: 'The English voice is computer-generated (AI) with the open Kokoro model, recorded ahead of time.',
+      he: 'הקול באנגלית נוצר במחשב (בינה מלאכותית) בעזרת המודל הפתוח Kokoro, והוקלט מראש.',
+    },
+    license: 'Apache 2.0',
+    licenseUrl: 'https://www.apache.org/licenses/LICENSE-2.0',
+    url: 'https://huggingface.co/hexgrad/Kokoro-82M',
   },
 ];
 
 export const OWN_CONTENT_NOTE = {
-  en: 'Letters, niqqud and reading lessons, the phrasebook, the course order and the sounds were written for LinguaAdapt. Speech uses the voices built into your device.',
-  he: 'שיעורי האותיות, הניקוד והקריאה, השיחון, סדר הקורס והצלילים נכתבו עבור LinguaAdapt. ההשמעה משתמשת בקולות שמובנים במכשיר שלכם.',
+  en: 'Letters, niqqud and reading lessons, the phrasebook, the course order and the sounds were written for LinguaAdapt. Text without a recording is read by the voice built into your device.',
+  he: 'שיעורי האותיות, הניקוד והקריאה, השיחון, סדר הקורס והצלילים נכתבו עבור LinguaAdapt. טקסט שאין לו הקלטה מוקרא בקול המובנה במכשיר שלכם.',
 };
 
 export const PRIVACY_TEXT = {

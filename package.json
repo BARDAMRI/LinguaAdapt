@@ -22,8 +22,9 @@
     "content:niqqud": "HF_HOME=.cache/hf HF_HUB_OFFLINE=1 .cache/venv/bin/python -I scripts/content/niqqud.py .cache/niqqud-todo.txt scripts/content/niqqud-cache.json",
     "content:build": "python3 -I scripts/content/build.py",
     "audio:count": "tsx scripts/audio/generate.ts --dry-run",
-    "audio:sample": "tsx scripts/audio/generate.ts --sample",
-    "audio:generate": "tsx scripts/audio/generate.ts"
+    "audio:generate": "tsx scripts/audio/generate.ts",
+    "audio:setup-local": "sh scripts/audio/setup-local.sh",
+    "audio:manifest": "tsx scripts/audio/generate.ts --manifest"
   },
   "homepage": "https://BARDAMRI.github.io/LinguaAdapt",
   "dependencies": {

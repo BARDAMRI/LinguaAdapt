@@ -125,25 +125,37 @@ unit in which all its words have been taught.
 
 ## Voice recordings
 
-Letters, syllables, words, sentences and phrases are recorded once with Google
-Cloud Text-to-Speech (Chirp 3 HD voices) and published next to the packs at
-`/audio/v1/<lang>/<key>.mp3` with a `manifest.json`. The app downloads a clip the
-first time it is needed (and the current lesson's clips ahead of time), keeps it
-on the device, and uses the device voice for anything without a clip or when
-offline. The "slow" button plays the same clip at 0.72× speed.
+Letters, syllables, words, sentences and phrases are recorded once on a Mac with
+free, open models — Hebrew: [Chatterbox Multilingual](https://github.com/resemble-ai/chatterbox)
+(MIT), English: [Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M) (Apache-2.0) —
+and published next to the packs at `/audio/v1/<lang>/<key>.mp3` with a
+`manifest.json`. The app downloads a clip the first time it is needed (and the
+current lesson's clips ahead of time), keeps it on the device, and uses the
+device voice for anything without a clip or when offline. "Slow" plays the same
+clip at 0.72× speed.
 
 ```bash
-# .env (Mac only, never EXPO_PUBLIC_): GOOGLE_TTS_API_KEY=...
-npm run audio:count              # clips and characters, no API calls
-npm run audio:sample             # listening test: ~120 clips in several voices → .cache/audio-sample
-npm run audio:generate           # record everything missing into public/audio/v1 (resumable)
+npm run audio:setup-local        # one time: two Python envs (.cache/tts-he, .cache/tts-en)
+npm run audio:count              # clips still to record per language and category
+npm run audio:generate -- --lang he --only core,phrases,course-words,lesson-sentences
+npm run audio:generate -- --lang en
+npm run audio:manifest           # rebuild manifest.json from the files present
 npm run deploy:web               # publishes the clips with the site
 ```
 
-`public/audio/` is not in git (≈37k files); the published copy lives on the
-`gh-pages` branch. The catalog (`scripts/audio/catalog.ts`) mirrors the app's
-speak calls; keys come from `src/audio/text.ts`, shared by the app and the script.
-About 0.9M characters — inside the 1M free characters per month.
+Chatterbox sometimes rambles past a short text or stops early, so every Hebrew
+clip is length-capped and checked against the length its text should have; a bad
+take is retried (another take, punctuation variants for lone syllables, the
+unpointed spelling for words) and a clip that never passes is left out (device
+voice). Rejections go to `.cache/audio-jobs/he.json.rejected.jsonl`. On an M1 Pro
+Hebrew takes ~10 s per clip (the priority set is a long overnight run); English
+~100 clips per minute. `--engine google` records with Google Cloud TTS instead
+(needs `GOOGLE_TTS_API_KEY` in `.env`).
+
+`public/audio/` is not in git (tens of thousands of files); the published copy
+lives on the `gh-pages` branch. The catalog (`scripts/audio/catalog.ts`) mirrors
+the app's speak calls; keys come from `src/audio/text.ts`, shared by the app and
+the script.
 
 ## Sources and licenses
 
@@ -153,7 +165,8 @@ About 0.9M characters — inside the 1M free characters per month.
 | [Wiktionary](https://en.wiktionary.org) via [kaikki.org](https://kaikki.org/dictionary/Hebrew/) | dictionary, niqqud, transliteration, gender, plural, root | CC BY-SA 4.0 | Required, and the adapted dictionary is published under CC BY-SA 4.0 (`public/content/v1`) |
 | [Dicta DictaBERT-large-char-menaked](https://huggingface.co/dicta-il/dictabert-large-char-menaked) | automatic niqqud for sentences and phrases | CC BY 4.0 | Credited |
 | Own content | letters, niqqud, phonics, phrasebook, course order, sounds | — | — |
-| [Google Cloud Text-to-Speech](https://cloud.google.com/text-to-speech) | recorded AI voices (Chirp 3 HD) | Google Cloud terms; output owned by the customer | Credited as AI-generated voices |
+| [Chatterbox Multilingual](https://github.com/resemble-ai/chatterbox) | recorded Hebrew voice | MIT | Credited as AI-generated voice |
+| [Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M) | recorded English voice | Apache-2.0 | Credited as AI-generated voice |
 | Device voices | fallback speech | — | — |
 
 The Wiktionary and Tatoeba data are not inside the app binary; they are
