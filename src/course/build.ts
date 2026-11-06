@@ -97,7 +97,7 @@ function niqqudStage(): StageDef {
       title: { en: 'Shva and special dots', he: 'שווא ודגשים' },
       lessons: [
         lesson('he-r-8', 'he-vowels', { en: 'Shva & Chataf', he: 'שווא וחטפים' }, v(['shva', 'chataf'])),
-        lesson('he-r-9', 'he-marks', { en: 'Dagesh: b/v, k/ch, p/f', he: 'דגש' }, READING_MARKS.slice(0, 3).map((m) => m.id)),
+        lesson('he-r-9', 'he-marks', { en: 'Dagesh: b/v, k/kh, p/f', he: 'דגש' }, READING_MARKS.slice(0, 3).map((m) => m.id)),
         lesson('he-r-10', 'he-marks', { en: 'Shin & Sin', he: 'שׁ ו-שׂ' }, [READING_MARKS[3].id]),
         lesson('he-r-11', 'he-read', { en: 'Read everything', he: 'קוראים הכול' }, NIQQUD_SIGNS.map((s) => s.id), true),
       ],

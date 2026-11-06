@@ -97,8 +97,8 @@ export function SettingsScreen() {
               value={pair}
               onChange={switchCourse}
               options={[
-                { value: 'en-he', label: 'English → עברית' },
-                { value: 'he-en', label: 'עברית → English' },
+                { value: 'en-he', label: 'Learn Hebrew' },
+                { value: 'he-en', label: 'ללמוד אנגלית' },
               ]}
             />
             {pair === 'en-he' ? (

@@ -4,6 +4,7 @@ import type { StageId } from '../course/types';
 export type LessonParams =
   | { mode: 'lesson'; lessonId: string }
   | { mode: 'review' }
+  | { mode: 'speed' }
   | { mode: 'checkpoint'; unitId: string }
   | { mode: 'practice'; itemIds: string[]; title: string };
 

@@ -8,12 +8,12 @@ import { TilesView } from './TilesView';
 import { TraceView } from './TraceView';
 import { TypeView } from './TypeView';
 
-export function ExerciseView({ exercise, onDone }: { exercise: Exercise; onDone: (r: DoneResult) => void }) {
+export function ExerciseView({ exercise, onDone, instant }: { exercise: Exercise; onDone: (r: DoneResult) => void; instant?: boolean }) {
   switch (exercise.type) {
     case 'teach':
       return <TeachView exercise={exercise} onDone={onDone} />;
     case 'choice':
-      return <ChoiceView exercise={exercise} onDone={onDone} />;
+      return <ChoiceView exercise={exercise} onDone={onDone} instant={instant} />;
     case 'match':
       return <MatchView exercise={exercise} onDone={onDone} />;
     case 'tiles':

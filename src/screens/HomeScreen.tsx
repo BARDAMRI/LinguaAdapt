@@ -62,12 +62,18 @@ export function HomeScreen() {
   const course = useMemo(() => buildCourse(pair), [pair, contentVersion]);
   const path = useMemo(() => computePath(course, progress), [course, progress]);
   const [stage, setStage] = useState<StageId>(() => route.params?.stage ?? path.next?.stage.id ?? 'letters');
+  const [extraUnits, setExtraUnits] = useState(0);
   const pack = usePackState();
   const due = dueItemIds().length;
   const goal = state.settings.dailyGoalXp;
   const stageIndex = STAGES.indexOf(stage);
   const stageColor = c.stage[stageIndex];
   const stageDef = course.stages.find((s) => s.id === stage);
+  // Long stages (words: ~90 units): show up to a few units past the learner's position.
+  const firstLocked = stageDef ? stageDef.units.findIndex((u) => path.unit.get(u.id) === 'locked') : -1;
+  const visibleCount = stageDef
+    ? Math.min(stageDef.units.length, (firstLocked === -1 ? stageDef.units.length : firstLocked) + 3 + extraUnits)
+    : 0;
 
   const openLesson = (l: LessonDef, st: NodeState, u: UnitDef) => {
     if (st === 'locked') {
@@ -81,6 +87,7 @@ export function HomeScreen() {
 
   const quick: { icon: IconName; label: string; onPress: () => void; badge?: number }[] = [
     { icon: 'refresh', label: t('home.review'), onPress: () => navigation.navigate('Lesson', { mode: 'review' }), badge: due },
+    { icon: 'flash', label: t('home.speed'), onPress: () => navigation.navigate('Lesson', { mode: 'speed' }) },
     { icon: 'search', label: t('home.dictionary'), onPress: () => navigation.navigate('Dictionary') },
     { icon: 'chatbox-ellipses', label: t('home.phrasebook'), onPress: () => navigation.navigate('Phrasebook') },
     { icon: 'grid', label: t('home.chart'), onPress: () => navigation.navigate('Chart') },
@@ -146,7 +153,7 @@ export function HomeScreen() {
             {quick.map((q) => (
               <Pressable key={q.label} onPress={q.onPress} style={({ pressed }) => [styles.quick, { backgroundColor: c.surface, borderColor: c.border, opacity: pressed ? 0.8 : 1 }]}>
                 <Ionicons name={q.icon} size={24} color={c.primary} />
-                <Text style={[styles.quickLabel, { color: c.text }]} numberOfLines={1}>{q.label}</Text>
+                <Text style={[styles.quickLabel, { color: c.text }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75}>{q.label}</Text>
                 {q.badge ? (
                   <View style={[styles.badge, { backgroundColor: c.danger }]}>
                     <Text style={styles.badgeText}>{q.badge > 99 ? '99+' : q.badge}</Text>
@@ -157,14 +164,17 @@ export function HomeScreen() {
           </View>
 
           {/* Stage tabs */}
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.tabs, { flexDirection: rowDir(isRTL) }]}>
+          <View style={[styles.tabs, { flexDirection: rowDir(isRTL) }]}>
             {STAGES.map((s, i) => {
               const st = path.stage.get(s) ?? 'locked';
               const active = s === stage;
               return (
                 <Pressable
                   key={s}
-                  onPress={() => setStage(s)}
+                  onPress={() => {
+                    setStage(s);
+                    setExtraUnits(0);
+                  }}
                   testID={`home_tab_${s}`}
                   style={[styles.tab, { borderColor: c.stage[i], backgroundColor: active ? c.stage[i] : c.surface }]}
                 >
@@ -173,7 +183,7 @@ export function HomeScreen() {
                 </Pressable>
               );
             })}
-          </ScrollView>
+          </View>
 
           <Text style={[styles.stageSub, { color: c.textSecondary }, textStart(isRTL)]}>{stageSub(stage, pair)}</Text>
           {path.stage.get(stage) === 'locked' && stageIndex > 0 ? (
@@ -184,7 +194,7 @@ export function HomeScreen() {
 
           {/* Units */}
           {stageDef && stageDef.units.length > 0 ? (
-            stageDef.units.map((u, ui) => {
+            stageDef.units.slice(0, visibleCount).map((u, ui) => {
               const ust = path.unit.get(u.id) ?? 'locked';
               const doneCount = u.lessons.filter((l) => path.lesson.get(l.id) === 'done').length;
               return (
@@ -259,6 +269,15 @@ export function HomeScreen() {
             </Card>
           )}
 
+          {stageDef && visibleCount < stageDef.units.length ? (
+            <Button
+              label={t('home.showMore', { count: stageDef.units.length - visibleCount })}
+              variant="ghost"
+              icon="chevron-down"
+              onPress={() => setExtraUnits((n) => n + 10)}
+              testID="home_btn_more_units"
+            />
+          ) : null}
           <Button label={t('home.profile')} variant="secondary" icon="stats-chart" onPress={() => navigation.navigate('Profile')} style={{ marginTop: 12 }} />
         </View>
       </ScrollView>
@@ -272,7 +291,7 @@ const styles = StyleSheet.create({
   column: { width: '100%', maxWidth: 640, alignSelf: 'center', gap: 14 },
   topBar: { alignItems: 'center', gap: 8 },
   pill: { alignItems: 'center', gap: 4, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 999 },
-  pillIcon: { fontSize: 16 },
+  pillIcon: { fontSize: 16, width: 20, textAlign: 'center' },
   pillText: { fontSize: 16, fontWeight: '800' },
   goalCard: { gap: 8 },
   goalHead: { justifyContent: 'space-between', alignItems: 'center' },
@@ -284,18 +303,18 @@ const styles = StyleSheet.create({
   continueTitle: { color: '#fff', fontSize: 22, fontWeight: '800' },
   playCircle: { width: 56, height: 56, borderRadius: 28, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' },
   quickRow: { gap: 10 },
-  quick: { flex: 1, borderWidth: 1, borderRadius: 16, paddingVertical: 12, alignItems: 'center', gap: 4 },
+  quick: { flex: 1, borderWidth: 1, borderRadius: 16, paddingVertical: 12, paddingHorizontal: 2, alignItems: 'center', gap: 4 },
   quickLabel: { fontSize: 12, fontWeight: '700' },
   badge: { position: 'absolute', top: 6, right: 8, minWidth: 20, height: 20, borderRadius: 10, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4 },
   badgeText: { color: '#fff', fontSize: 11, fontWeight: '800' },
-  tabs: { gap: 8, paddingVertical: 2 },
-  tab: { flexDirection: 'row', alignItems: 'center', gap: 6, borderWidth: 2, borderRadius: 999, paddingHorizontal: 14, paddingVertical: 8 },
+  tabs: { gap: 8, paddingVertical: 2, flexWrap: 'wrap' },
+  tab: { flexDirection: 'row', alignItems: 'center', gap: 6, borderWidth: 2, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 7 },
   tabText: { fontSize: 14, fontWeight: '800' },
   stageSub: { fontSize: 14 },
   lockedHint: { fontSize: 14, fontWeight: '600' },
   unit: { gap: 10, marginTop: 6 },
   unitHead: { borderRadius: 18, padding: 14, alignItems: 'center', gap: 12 },
-  unitEmoji: { fontSize: 30 },
+  unitEmoji: { fontSize: 30, width: 40, textAlign: 'center' },
   unitKicker: { fontSize: 12, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 0.5 },
   unitTitle: { fontSize: 19, fontWeight: '800' },
   jumpBtn: { backgroundColor: '#fff', borderWidth: 1, borderRadius: 999, paddingHorizontal: 10, paddingVertical: 6 },

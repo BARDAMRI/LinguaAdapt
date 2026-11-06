@@ -12,7 +12,7 @@ import { useCourseContentVersion } from '../content/courseContent';
 import { ensureCourseContent, usePackState } from '../content/packs';
 import { buildCourse, findLesson } from '../course/build';
 import { checkpointItems } from '../course/progress';
-import { buildCheckpoint, buildLesson, buildPractice, buildReview, CHECKPOINT_PASS } from '../engine/lesson';
+import { buildCheckpoint, buildLesson, buildPractice, buildReview, buildSpeed, CHECKPOINT_PASS, SPEED_SECONDS } from '../engine/lesson';
 import { resolveItems } from '../engine/generate';
 import { exerciseItemIds, isGraded, type Exercise } from '../engine/types';
 import type { AppNav, AppStackParamList } from '../navigation/types';
@@ -22,7 +22,7 @@ import { stopSpeaking } from '../services/tts';
 import { playSfx } from '../utils/exerciseFeedback';
 import { rowDir } from '../utils/platformStyles';
 
-function itemLabel(id: string): string | null {
+function itemLabel(id: string, pair: string): string | null {
   const it = getItem(id);
   if (!it) return null;
   switch (it.kind) {
@@ -32,7 +32,7 @@ function itemLabel(id: string): string | null {
     case 'he-mark': return it.data.titleEn;
     case 'en-letter': return `${it.data.upper}${it.data.lower}`;
     case 'en-phonics': return it.data.pattern;
-    case 'word': return it.data.he;
+    case 'word': return pair === 'he-en' ? it.data.en : it.data.he;
     case 'sentence':
     case 'phrase': return null;
   }
@@ -44,7 +44,7 @@ export function LessonScreen() {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<AppNav>();
   const { params } = useRoute<RouteProp<AppStackParamList, 'Lesson'>>();
-  const { state, finishLesson, unlockUnits, dueItemIds } = useProgress();
+  const { state, course: progressCourse, finishLesson, unlockUnits, dueItemIds } = useProgress();
   const { soundEnabled } = usePreferences();
   const pair = state.activePair ?? 'en-he';
 
@@ -54,8 +54,24 @@ export function LessonScreen() {
       const found = findLesson(course, params.lessonId);
       return found ? buildLesson(found.lesson, pair, dueItemIds().slice(0, 6)) : [];
     }
-    if (params.mode === 'review') return buildReview(dueItemIds().slice(0, 15), pair);
+    if (params.mode === 'review') {
+      const due = dueItemIds();
+      // Nothing due yet: practise the weakest items instead of showing an empty screen.
+      const ids = due.length
+        ? due
+        : Object.entries(progressCourse.items)
+            .sort((a, b) => a[1].box - b[1].box || b[1].lapses - a[1].lapses)
+            .map(([id]) => id);
+      return buildReview(ids.slice(0, 15), pair);
+    }
     if (params.mode === 'checkpoint') return buildCheckpoint(checkpointItems(course, params.unitId).itemIds, pair);
+    if (params.mode === 'speed') {
+      const known = Object.entries(progressCourse.items)
+        .filter(([, st]) => st.box >= 1)
+        .map(([id]) => id);
+      const first = course.stages[0].units.flatMap((u) => u.lessons.flatMap((l) => l.itemIds));
+      return buildSpeed(known.length >= 4 ? known : first, pair);
+    }
     return buildPractice(resolveItems(params.itemIds), { pair, kind: 'review' }, 12);
   };
   const [queue, setQueue] = useState<Exercise[]>(build);
@@ -72,12 +88,20 @@ export function LessonScreen() {
   }, [contentVersion]);
   const [index, setIndex] = useState(0);
   const [combo, setCombo] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(SPEED_SECONDS);
   const firstAttempt = useRef(new Map<string, boolean>());
   const results = useRef<ItemResult[]>([]);
   const retried = useRef(new Set<string>());
   const finished = useRef(false);
 
   useEffect(() => () => stopSpeaking(), []);
+
+  // Speed round clock.
+  useEffect(() => {
+    if (params.mode !== 'speed' || queue.length === 0) return;
+    const timer = setInterval(() => setTimeLeft((n) => Math.max(0, n - 1)), 1000);
+    return () => clearInterval(timer);
+  }, [params.mode, queue.length]);
 
   const graded = useMemo(() => queue.filter(isGraded).length, [queue]);
   const doneGraded = useMemo(() => queue.slice(0, index).filter(isGraded).length, [queue, index]);
@@ -89,7 +113,7 @@ export function LessonScreen() {
     const correct = answers.filter(Boolean).length;
     const accuracy = answers.length ? correct / answers.length : 1;
     const passed = params.mode === 'checkpoint' ? accuracy >= CHECKPOINT_PASS : undefined;
-    const base = params.mode === 'lesson' ? 10 : params.mode === 'checkpoint' ? (passed ? 20 : 0) : 5;
+    const base = params.mode === 'lesson' ? 10 : params.mode === 'checkpoint' ? (passed ? 20 : 0) : params.mode === 'speed' ? 0 : 5;
     const xp = base + correct + (accuracy === 1 && answers.length >= 5 ? 5 : 0);
     const stars = accuracy >= 0.9 ? 3 : accuracy >= 0.7 ? 2 : 1;
     const lessonId = params.mode === 'lesson' ? params.lessonId : null;
@@ -107,7 +131,7 @@ export function LessonScreen() {
     const learned =
       params.mode === 'lesson'
         ? [...new Set(queue.filter((e) => e.type === 'teach').map((e) => (e.type === 'teach' ? e.itemId : '')))]
-            .map(itemLabel)
+            .map((id) => itemLabel(id, pair))
             .filter((x): x is string => Boolean(x))
         : [];
     navigation.dispatch(
@@ -133,6 +157,10 @@ export function LessonScreen() {
     );
   }, [finishLesson, navigation, pair, params, queue, soundEnabled, unlockUnits]);
 
+  useEffect(() => {
+    if (params.mode === 'speed' && timeLeft === 0) finish();
+  }, [finish, params.mode, timeLeft]);
+
   const onDone = useCallback(
     (r: DoneResult) => {
       const ex = queue[index];
@@ -148,8 +176,8 @@ export function LessonScreen() {
           }
         }
         setCombo((n) => (r.correct ? n + 1 : 0));
-        // Mistakes come back once at the end (not in checkpoints).
-        if (!r.correct && params.mode !== 'checkpoint' && !retried.current.has(key)) {
+        // Mistakes come back once at the end (not in checkpoints or speed rounds).
+        if (!r.correct && params.mode !== 'checkpoint' && params.mode !== 'speed' && !retried.current.has(key)) {
           retried.current.add(key);
           willRetry = true;
           setQueue((q) => [...q, { ...ex, id: `${key}~r` } as Exercise]);
@@ -180,7 +208,15 @@ export function LessonScreen() {
 
   const current = queue[index];
   const title =
-    params.mode === 'review' ? t('lesson.reviewTitle') : params.mode === 'checkpoint' ? t('lesson.checkpointTitle') : params.mode === 'practice' ? params.title : '';
+    params.mode === 'review'
+      ? t('lesson.reviewTitle')
+      : params.mode === 'checkpoint'
+        ? t('lesson.checkpointTitle')
+        : params.mode === 'practice'
+          ? params.title
+          : params.mode === 'speed'
+            ? t('lesson.speedTitle')
+            : '';
 
   if (queue.length === 0) {
     const waiting = pack.course === 'loading' || pack.course === 'idle';
@@ -198,8 +234,12 @@ export function LessonScreen() {
       <View style={[styles.header, { flexDirection: rowDir(isRTL) }]}>
         <Ionicons name="close" size={30} color={c.textSecondary} onPress={quit} accessibilityLabel={t('common.close')} testID="lesson_btn_close" />
         <View style={{ flex: 1, transform: [{ scaleX: isRTL ? -1 : 1 }] }}>
-          <ProgressBar value={graded ? doneGraded / graded : 0} />
+          <ProgressBar
+            value={params.mode === 'speed' ? timeLeft / SPEED_SECONDS : graded ? doneGraded / graded : 0}
+            color={params.mode === 'speed' ? (timeLeft <= 10 ? c.danger : c.secondary) : undefined}
+          />
         </View>
+        {params.mode === 'speed' ? <Text style={[styles.combo, { color: timeLeft <= 10 ? c.danger : c.text }]}>⏱ {timeLeft}</Text> : null}
         {combo >= 3 ? (
           <Animated.Text entering={FadeIn} exiting={FadeOut} style={[styles.combo, { color: c.secondary }]}>
             🔥 {combo}
@@ -210,7 +250,7 @@ export function LessonScreen() {
       <View style={styles.body}>
         {current ? (
           <Animated.View key={current.id} entering={SlideInRight.duration(260)} style={styles.flex}>
-            <ExerciseView exercise={current} onDone={onDone} />
+            <ExerciseView exercise={current} onDone={onDone} instant={params.mode === 'speed'} />
           </Animated.View>
         ) : null}
       </View>

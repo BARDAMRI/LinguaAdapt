@@ -84,3 +84,20 @@ export function buildCheckpoint(itemIds: string[], pair: PairId): Exercise[] {
   const items = shuffle(resolveItems(itemIds)).slice(0, 12);
   return items.map((it) => practiceExercise(it, { pair, kind: 'checkpoint' }, 2));
 }
+
+/** Speed round: many quick multiple-choice questions on items the learner knows. */
+export function buildSpeed(itemIds: string[], pair: PairId): Exercise[] {
+  const items = resolveItems(itemIds);
+  if (items.length === 0) return [];
+  const out: Exercise[] = [];
+  let guard = 0;
+  while (out.length < 40 && guard < 400) {
+    guard++;
+    const it = items[Math.floor(Math.random() * items.length)];
+    const ex = practiceExercise(it, { pair, kind: 'review' }, Math.random() < 0.5 ? 0 : 1);
+    if (ex.type === 'choice') out.push(ex);
+  }
+  return out;
+}
+
+export const SPEED_SECONDS = 60;

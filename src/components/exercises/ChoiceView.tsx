@@ -7,13 +7,13 @@ import { tapHaptic } from '../../utils/exerciseFeedback';
 import { DisplayView, SpeakButton, useAutoplay } from '../DisplayView';
 import { CheckFooter, ExerciseFrame, useVerdictFeedback, type DoneResult, type Verdict } from './common';
 
-export function ChoiceView({ exercise, onDone }: { exercise: ChoiceExercise; onDone: (r: DoneResult) => void }) {
+export function ChoiceView({ exercise, onDone, instant }: { exercise: ChoiceExercise; onDone: (r: DoneResult) => void; instant?: boolean }) {
   const theme = useAppTheme();
   const c = theme.colors;
   const [selected, setSelected] = useState<string | null>(null);
   const [verdict, setVerdict] = useState<Verdict | null>(null);
   const feedback = useVerdictFeedback();
-  useAutoplay(exercise.audio ?? exercise.prompt?.speak);
+  useAutoplay(exercise.audio ?? (instant ? undefined : exercise.prompt?.speak));
 
   const check = () => {
     if (!selected) return;
@@ -27,7 +27,7 @@ export function ChoiceView({ exercise, onDone }: { exercise: ChoiceExercise; onD
     <ExerciseFrame
       instruction={exercise.instruction}
       footer={
-        <CheckFooter
+        instant ? null : <CheckFooter
           verdict={verdict}
           canCheck={selected !== null}
           onCheck={check}
@@ -62,6 +62,14 @@ export function ChoiceView({ exercise, onDone }: { exercise: ChoiceExercise; onD
               onPress={() => {
                 tapHaptic();
                 setSelected(opt.id);
+                if (instant) {
+                  // Speed round: answer on tap, move on by itself.
+                  const v = { correct: opt.id === exercise.correctId };
+                  setVerdict(v);
+                  feedback(v);
+                  setTimeout(() => onDone(v), v.correct ? 350 : 900);
+                  return;
+                }
                 if (opt.display.speak) void speak(opt.display.speak.text, opt.display.speak.lang);
               }}
               style={({ pressed }) => [

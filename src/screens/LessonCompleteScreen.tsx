@@ -23,7 +23,9 @@ export function LessonCompleteScreen() {
       ? t('complete.checkpointPassed')
       : params.mode === 'lesson'
         ? t('complete.title')
-        : t('complete.reviewTitle');
+        : params.mode === 'speed'
+          ? t('complete.speedDone', { count: params.xp })
+          : t('complete.reviewTitle');
 
   const stat = (label: string, value: string, color: string, emoji: string) => (
     <Card style={[styles.stat, { borderColor: color }]}>

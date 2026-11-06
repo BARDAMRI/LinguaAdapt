@@ -5,7 +5,7 @@
  * app release. Licenses: Wiktionary (CC BY-SA 4.0), Tatoeba (CC BY 2.0 FR).
  */
 import Constants from 'expo-constants';
-import { Platform } from 'react-native';
+import { NativeModules, Platform } from 'react-native';
 import { useSyncExternalStore } from 'react';
 import type { UnitDef } from '../course/types';
 import { setCourseContent } from './courseContent';
@@ -25,8 +25,12 @@ function baseUrl(): string {
     return `${window.location.origin}${onPages ? '/LinguaAdapt' : ''}/content/v1`;
   }
   if (__DEV__) {
+    // Development: the Metro server that served the JS bundle also serves public/.
     const host = Constants.expoConfig?.hostUri;
     if (host) return `http://${host}/content/v1`;
+    const script: string | undefined = NativeModules.SourceCode?.scriptURL ?? NativeModules.SourceCode?.getConstants?.().scriptURL;
+    const m = script?.match(/^(https?:\/\/[^/]+)\//);
+    if (m) return `${m[1]}/content/v1`;
   }
   return PROD_BASE;
 }
@@ -218,7 +222,7 @@ export function ensureDictionary(): Promise<DictEntry[]> {
       })
       .catch((e) => {
         dictPromise = null;
-        set({ dictionary: 'error', error: e instanceof Error ? e.message : String(e) });
+        set({ dictionary: 'error', error: `${e instanceof Error ? e.message : String(e)} (${baseUrl()})` });
         throw e;
       });
   }

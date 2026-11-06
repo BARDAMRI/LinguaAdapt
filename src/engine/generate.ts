@@ -677,6 +677,47 @@ function sentenceTeach(item: Extract<AnyItem, { kind: 'sentence' | 'phrase' }>, 
   ];
 }
 
+/** Sentence with one word missing; pick the word that fits. */
+function clozeExercise(s: SentenceLike, target: Lang, pool: SentenceLike[]): ChoiceExercise | null {
+  const vowelled = target === 'he' ? s.heNiqqud || s.he : s.en;
+  const words = vowelled.split(/\s+/);
+  const plainWords = words.map((w) => stripNiqqud(w).replace(/^[.,!?;:"“”„()…]+|[.,!?;:"“”„()…]+$/g, ''));
+  // Blank the longest content word (not a one-letter particle).
+  let idx = -1;
+  plainWords.forEach((w, i) => {
+    if (w.length >= 2 && (idx === -1 || w.length > plainWords[idx].length)) idx = i;
+  });
+  if (words.length < 3 || idx === -1) return null;
+  const answer = words[idx].replace(/^[.,!?;:"“”„()…]+|[.,!?;:"“”„()…]+$/g, '');
+  const answerPlain = plainWords[idx];
+  const candidates = shuffle(
+    pool
+      .filter((x) => x.id !== s.id)
+      .slice(0, 300)
+      .flatMap((x) => (target === 'he' ? (x.heNiqqud || x.he) : x.en).split(/\s+/))
+      .map((w) => w.replace(/^[.,!?;:"“”„()…]+|[.,!?;:"“”„()…]+$/g, ''))
+      .filter((w) => {
+        const p = stripNiqqud(w);
+        return p.length >= 2 && p.toLowerCase() !== answerPlain.toLowerCase() && Math.abs(p.length - answerPlain.length) <= 3;
+      }),
+  );
+  const wrong = [...new Map(candidates.map((w) => [stripNiqqud(w).toLowerCase(), w])).values()].slice(0, 3);
+  if (wrong.length < 2) return null;
+  const gapped = words.map((w, i) => (i === idx ? w.replace(answer, '____') : w)).join(' ');
+  const prompt: Display =
+    target === 'he'
+      ? he(gapped, { size: 'big', note: s.en, noteLang: 'en' })
+      : en(gapped, { size: 'big', note: s.he, noteLang: 'he' });
+  const reveal: Display =
+    target === 'he'
+      ? he(s.heNiqqud || s.he, { note: s.en, noteLang: 'en', speak: { text: s.heNiqqud || s.he, lang: 'he' } })
+      : en(s.en, { note: s.he, noteLang: 'he', speak: { text: s.en, lang: 'en' } });
+  return choice(s.id, t('ex.fillBlank'), prompt, target === 'he' ? he(answer, { size: 'big' }) : en(answer, { size: 'big' }), wrong.map((w) => (target === 'he' ? he(w, { size: 'big' }) : en(w, { size: 'big' }))), {
+    layout: 'grid',
+    reveal,
+  });
+}
+
 function sentencePractice(item: Extract<AnyItem, { kind: 'sentence' | 'phrase' }>, ctx: GenContext, level: number): Exercise {
   const s = item.data as SentenceLike;
   const pool = sentencePool(item.kind);
@@ -685,8 +726,12 @@ function sentencePractice(item: Extract<AnyItem, { kind: 'sentence' | 'phrase' }
   const len = s.en.length;
   const near = pool.filter((x) => peers.has(x.id) || Math.abs(x.en.length - len) < 12).slice(0, 400);
   const others = distractors(near.length >= 3 ? near : pool, 3, (x) => x.id === s.id || x.en === s.en, pool.filter((x) => peers.has(x.id)), (x) => x.id);
-  const variant = level === 0 ? 0 : level === 1 ? randomOf([1, 2]) : randomOf([1, 2, 3]);
+  const variant = level === 0 ? 0 : level === 1 ? randomOf([1, 2, 4]) : randomOf([1, 2, 3, 4]);
   const heText = s.heNiqqud || s.he;
+  if (variant === 4) {
+    const cloze = clozeExercise(s, ctx.pair === 'en-he' ? 'he' : 'en', pool);
+    if (cloze) return cloze;
+  }
   if (ctx.pair === 'en-he') {
     const reveal = he(heText, { translit: s.translit, note: s.en, noteLang: 'en', speak: { text: heText, lang: 'he' } });
     if (variant === 0 || others.length < 2) {

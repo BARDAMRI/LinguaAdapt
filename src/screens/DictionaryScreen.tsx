@@ -121,6 +121,7 @@ export function DictionaryScreen() {
         ) : pack.dictionary === 'error' && !dict ? (
           <View style={styles.center}>
             <Text style={{ color: c.textSecondary, textAlign: 'center' }}>{t('dictionary.offline')}</Text>
+            {__DEV__ && pack.error ? <Text style={{ color: c.danger, fontSize: 12 }}>{pack.error}</Text> : null}
             <Button label={t('common.retry')} onPress={load} />
           </View>
         ) : null}

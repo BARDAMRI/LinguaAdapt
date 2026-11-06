@@ -68,8 +68,9 @@ const translations = {
       reviewCount: '%{count} to review',
       reviewNone: 'Nothing due',
       dictionary: 'Dictionary',
-      phrasebook: 'Phrasebook',
-      chart: 'Letter chart',
+      phrasebook: 'Phrases',
+      chart: 'Chart',
+      speed: 'Speed',
       profile: 'Progress',
       settings: 'Settings',
       unit: 'Unit %{n}',
@@ -82,6 +83,7 @@ const translations = {
       comingSoon: 'More coming soon',
       practiceAgain: 'Practice again',
       downloading: 'Downloading words and sentences… (one time only)',
+      showMore: 'Show more units (%{count} more)',
       downloadError: 'Could not download the course content. Check your internet connection.',
     },
     lesson: {
@@ -105,6 +107,7 @@ const translations = {
       reviewTitle: 'Review',
       checkpointTitle: 'Checkpoint',
       practiceTitle: 'Practice',
+      speedTitle: 'Speed round — 60 seconds',
     },
     ex: {
       whichLetter: 'Which letter is this?',
@@ -158,6 +161,7 @@ const translations = {
     complete: {
       title: 'Lesson complete!',
       reviewTitle: 'Review complete!',
+      speedDone: 'Time’s up! %{count} correct',
       checkpointPassed: 'Checkpoint passed!',
       checkpointFailed: 'Not this time',
       checkpointFailedBody: 'You need %{need}% to pass. Keep practising and try again.',
@@ -331,7 +335,8 @@ const translations = {
       reviewNone: 'אין מה לחזור',
       dictionary: 'מילון',
       phrasebook: 'שיחון',
-      chart: 'לוח אותיות',
+      chart: 'לוח',
+      speed: 'מהיר',
       profile: 'התקדמות',
       settings: 'הגדרות',
       unit: 'יחידה %{n}',
@@ -344,6 +349,7 @@ const translations = {
       comingSoon: 'עוד בקרוב',
       practiceAgain: 'לתרגל שוב',
       downloading: 'מוריד מילים ומשפטים… (פעם אחת בלבד)',
+      showMore: 'עוד יחידות (עוד %{count})',
       downloadError: 'לא הצלחנו להוריד את תוכן הקורס. בדקו את החיבור לאינטרנט.',
     },
     lesson: {
@@ -367,6 +373,7 @@ const translations = {
       reviewTitle: 'חזרה',
       checkpointTitle: 'מבחן מעבר',
       practiceTitle: 'תרגול',
+      speedTitle: 'סבב מהיר — 60 שניות',
     },
     ex: {
       whichLetter: 'איזו אות זו?',
@@ -420,6 +427,7 @@ const translations = {
     complete: {
       title: 'סיימתם את השיעור!',
       reviewTitle: 'סיימתם את החזרה!',
+      speedDone: 'נגמר הזמן! %{count} נכונות',
       checkpointPassed: 'עברתם את המבחן!',
       checkpointFailed: 'לא הפעם',
       checkpointFailedBody: 'צריך %{need}% כדי לעבור. תרגלו עוד ונסו שוב.',

@@ -72,7 +72,7 @@ export const NIQQUD_SIGNS: NiqqudSign[] = [
     words: [
       { he: 'סוּס', translit: 'sus', en: 'horse', emoji: '🐎' },
       { he: 'תּוּת', translit: 'tut', en: 'strawberry', emoji: '🍓' },
-      { he: 'חָתוּל', translit: 'chatul', en: 'cat', emoji: '🐈' },
+      { he: 'חָתוּל', translit: 'khatul', en: 'cat', emoji: '🐈' },
     ],
   },
   {
@@ -80,7 +80,7 @@ export const NIQQUD_SIGNS: NiqqudSign[] = [
     explainEn: 'Three diagonal dots under the letter. Also "oo", like shuruk.',
     syllables: ['מֻ', 'לֻ', 'סֻ', 'כֻּ'],
     words: [
-      { he: 'שֻׁלְחָן', translit: 'shulchan', en: 'table', emoji: '🪑' },
+      { he: 'שֻׁלְחָן', translit: 'shulkhan', en: 'table', emoji: '🪑' },
       { he: 'סֻכָּר', translit: 'sukar', en: 'sugar', emoji: '🍬' },
       { he: 'כֻּלָּם', translit: 'kulam', en: 'everyone', emoji: '👥' },
     ],
@@ -101,7 +101,7 @@ export const NIQQUD_SIGNS: NiqqudSign[] = [
     syllables: ['אֲ', 'חֲ', 'אֱ', 'עֲ'],
     words: [
       { he: 'אֲנִי', translit: 'ani', en: 'I', emoji: '🙋' },
-      { he: 'חֲבֵר', translit: 'chaver', en: 'friend', emoji: '🤝' },
+      { he: 'חֲבֵר', translit: 'khaver', en: 'friend', emoji: '🤝' },
       { he: 'אֱמֶת', translit: 'emet', en: 'truth', emoji: '✅' },
     ],
   },
@@ -129,12 +129,12 @@ export const READING_MARKS: ReadingMark[] = [
     ],
   },
   {
-    id: 'he:mark:dagesh-k', key: 'dagesh-k', titleEn: 'כּ = k, כ = ch',
-    explainEn: 'With a dot, כּ is "k". Without it, כ is the throaty "ch".',
+    id: 'he:mark:dagesh-k', key: 'dagesh-k', titleEn: 'כּ = k, כ = kh',
+    explainEn: 'With a dot, כּ is "k". Without it, כ is the throaty "kh".',
     pairs: [
       {
         with: { he: 'כֶּלֶב', translit: 'kelev', en: 'dog', emoji: '🐕' },
-        without: { he: 'מֶלֶךְ', translit: 'melech', en: 'king', emoji: '👑' },
+        without: { he: 'מֶלֶךְ', translit: 'melekh', en: 'king', emoji: '👑' },
       },
     ],
   },
@@ -154,7 +154,7 @@ export const READING_MARKS: ReadingMark[] = [
     pairs: [
       {
         with: { he: 'שֶׁמֶשׁ', translit: 'shemesh', en: 'sun', emoji: '☀️' },
-        without: { he: 'שָׂמֵחַ', translit: 'sameach', en: 'happy', emoji: '😊' },
+        without: { he: 'שָׂמֵחַ', translit: 'sameakh', en: 'happy', emoji: '😊' },
       },
     ],
   },
