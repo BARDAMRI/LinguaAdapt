@@ -13,26 +13,31 @@ import { registerPhrases, registerSentences, registerWords } from './registry';
 import type { PairId, Phrase, Sentence, Word } from './types';
 import phrasesJson from './generated/phrases.json';
 
-const PROD_BASE = 'https://bardamri.github.io/LinguaAdapt/content/v1';
+const PROD_SITE = 'https://bardamri.github.io/LinguaAdapt';
 const CACHE_DIR = 'content-v1';
 
-function baseUrl(): string {
+/** Public website root that serves content packs and recorded audio. */
+export function siteRoot(): string {
   const override = process.env.EXPO_PUBLIC_CONTENT_URL?.trim();
-  if (override) return override.replace(/\/$/, '');
+  if (override) return override.replace(/\/$/, '').replace(/\/content\/v1$/, '');
   if (Platform.OS === 'web' && typeof window !== 'undefined') {
-    // Same site as the app: /LinguaAdapt/content/v1 on GitHub Pages, /content/v1 locally.
+    // Same site as the app: /LinguaAdapt on GitHub Pages, the bare origin locally.
     const onPages = window.location.pathname.startsWith('/LinguaAdapt');
-    return `${window.location.origin}${onPages ? '/LinguaAdapt' : ''}/content/v1`;
+    return `${window.location.origin}${onPages ? '/LinguaAdapt' : ''}`;
   }
   if (__DEV__) {
     // Development: the Metro server that served the JS bundle also serves public/.
     const host = Constants.expoConfig?.hostUri;
-    if (host) return `http://${host}/content/v1`;
+    if (host) return `http://${host}`;
     const script: string | undefined = NativeModules.SourceCode?.scriptURL ?? NativeModules.SourceCode?.getConstants?.().scriptURL;
     const m = script?.match(/^(https?:\/\/[^/]+)\//);
-    if (m) return `${m[1]}/content/v1`;
+    if (m) return m[1];
   }
-  return PROD_BASE;
+  return PROD_SITE;
+}
+
+function baseUrl(): string {
+  return `${siteRoot()}/content/v1`;
 }
 
 type Manifest = { version: number; files: Record<string, { hash: string; bytes: number }>; counts: Record<string, number> };
@@ -62,41 +67,41 @@ export function usePackState(): State {
 
 // ── Device cache ─────────────────────────────────────────────────────────────
 
-async function readCache(name: string): Promise<string | null> {
+export async function readCache(name: string, dir = CACHE_DIR): Promise<string | null> {
   try {
     if (Platform.OS === 'web') {
       if (typeof caches === 'undefined') return null;
-      const c = await caches.open(CACHE_DIR);
+      const c = await caches.open(dir);
       const hit = await c.match(name);
       return hit ? await hit.text() : null;
     }
     const { File, Paths } = await import('expo-file-system');
-    const f = new File(Paths.document, CACHE_DIR, name);
+    const f = new File(Paths.document, dir, name);
     return f.exists ? await f.text() : null;
   } catch {
     return null;
   }
 }
 
-async function writeCache(name: string, body: string): Promise<void> {
+export async function writeCache(name: string, body: string, dir = CACHE_DIR): Promise<void> {
   try {
     if (Platform.OS === 'web') {
       if (typeof caches === 'undefined') return;
-      const c = await caches.open(CACHE_DIR);
+      const c = await caches.open(dir);
       await c.put(name, new Response(body, { headers: { 'content-type': 'application/json' } }));
       return;
     }
     const { Directory, File, Paths } = await import('expo-file-system');
-    const dir = new Directory(Paths.document, CACHE_DIR);
-    if (!dir.exists) dir.create({ intermediates: true, idempotent: true });
-    const f = new File(dir, name);
+    const folder = new Directory(Paths.document, dir);
+    if (!folder.exists) folder.create({ intermediates: true, idempotent: true });
+    const f = new File(folder, name);
     f.write(body);
   } catch {
     /* cache is best effort */
   }
 }
 
-async function fetchText(url: string, timeoutMs = 20000): Promise<string> {
+export async function fetchText(url: string, timeoutMs = 20000): Promise<string> {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs);
   try {

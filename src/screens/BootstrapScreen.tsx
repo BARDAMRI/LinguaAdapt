@@ -5,6 +5,7 @@ import { useAppTheme, usePreferences } from '../context/PreferencesContext';
 import type { AppNav } from '../navigation/types';
 import { useProgress } from '../progress/ProgressContext';
 import { ensureCourseContent, ensurePhrases } from '../content/packs';
+import { loadClipManifest } from '../audio/clips';
 
 /** Waits for saved progress and preferences, then opens Home or Onboarding. */
 export function BootstrapScreen() {
@@ -16,6 +17,8 @@ export function BootstrapScreen() {
   useEffect(() => {
     if (!loaded || !preferencesLoaded) return;
     ensurePhrases();
+    // List of recorded voice clips; until it arrives the device voice is used.
+    void loadClipManifest();
     // Words and sentences download in the background; letters work offline.
     if (state.activePair) void ensureCourseContent(state.activePair);
     navigation.dispatch(

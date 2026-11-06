@@ -39,6 +39,16 @@ export const CREDITS: Credit[] = [
     licenseUrl: 'https://creativecommons.org/licenses/by/4.0/',
     url: 'https://huggingface.co/dicta-il/dictabert-large-char-menaked',
   },
+  {
+    name: 'Google Cloud Text-to-Speech',
+    what: {
+      en: 'The Hebrew and English voices are computer-generated (AI) with Google Cloud Text-to-Speech, recorded ahead of time. Where no recording exists, your device’s built-in voice reads the text.',
+      he: 'הקולות בעברית ובאנגלית נוצרו במחשב (בינה מלאכותית) בעזרת Google Cloud Text-to-Speech והוקלטו מראש. כשאין הקלטה, הקול המובנה של המכשיר מקריא את הטקסט.',
+    },
+    license: 'Google Cloud Terms of Service',
+    licenseUrl: 'https://cloud.google.com/terms',
+    url: 'https://cloud.google.com/text-to-speech',
+  },
 ];
 
 export const OWN_CONTENT_NOTE = {

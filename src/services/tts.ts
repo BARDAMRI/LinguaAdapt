@@ -1,13 +1,15 @@
 /**
  * One text-to-speech entry point for iOS, Android and web.
  *
- * Uses the voices built into the device (iOS: AVSpeechSynthesizer, web:
- * speechSynthesis), so there is no audio to license or download.
- * The best voice per language is picked once and cached.
+ * Plays recorded natural voices when available (audio/clips) and otherwise
+ * the voices built into the device (iOS: AVSpeechSynthesizer, web:
+ * speechSynthesis). The best device voice per language is picked once.
  */
 import { setAudioModeAsync } from 'expo-audio';
 import * as Speech from 'expo-speech';
 import { Platform } from 'react-native';
+import { playClip, stopClip } from '../audio/clips';
+import { cleanSpeech, spokenHebrew } from '../audio/text';
 
 export type SpeechLang = 'he' | 'en';
 
@@ -106,39 +108,25 @@ export type SpeakOptions = {
   onDone?: () => void;
 };
 
-const POINTED_VOWEL = /[\u05B0-\u05BB\u05C7]/;
-
 /**
- * A lone consonant with a vowel sign (בָּ, בִּ, בֹּ…) is read badly by speech engines:
- * they spell the sign or skip it. Spoken Hebrew writes open syllables with a
- * silent ending letter (בָּה, בִּי, בּוֹ, בּוּ), which every voice reads correctly.
+ * Speaks `text` in the given language, interrupting anything already playing.
+ * A recorded natural voice is used when the text has a clip (see audio/clips);
+ * otherwise the device voice reads it.
  */
-export function spokenHebrew(text: string): string {
-  const t = text.trim();
-  const base = t.replace(/[\u0591-\u05C7]/g, '');
-  if (base.length !== 1 || !POINTED_VOWEL.test(t)) return t;
-  if (/[\u05B4]/.test(t)) return `${t}י`; // hiriq → i
-  if (/[\u05B9\u05BA]/.test(t)) return `${t.replace(/[\u05B9\u05BA]/g, '')}וֹ`; // holam → o
-  if (/[\u05BB]/.test(t)) return `${t.replace(/[\u05BB]/g, '')}וּ`; // kubutz → u
-  if (/[\u05B3\u05C7]/.test(t)) return `${t.replace(/[\u05B3\u05C7]/g, '')}וֹ`; // hataf kamatz / kamatz katan → o
-  if (/[\u05B0]/.test(t)) return `${t.replace(/[\u05B0]/g, '\u05B6')}ה`; // shva na → short e
-  return `${t}ה`; // a / e sounds
-}
-
-/** Speaks `text` in the given language, interrupting anything already playing. */
 export async function speak(text: string, lang: SpeechLang, opts: SpeakOptions = {}): Promise<void> {
-  const stripped = text.replace(/\*\*/g, '').trim();
-  const clean = lang === 'he' ? spokenHebrew(stripped) : stripped;
+  const clean = cleanSpeech(text);
   if (!clean) return;
   await ensureAudioMode();
+  stopClip();
   try {
     await Speech.stop();
   } catch {
     /* ignore */
   }
+  if (await playClip(lang, clean, opts)) return;
   const voice = await pickVoice(lang);
   const rate = SPEECH_RATES[opts.slow ? 'slow' : speed];
-  Speech.speak(clean, {
+  Speech.speak(lang === 'he' ? spokenHebrew(clean) : clean, {
     language: LOCALE[lang],
     ...(voice ? { voice } : {}),
     rate,
@@ -149,5 +137,7 @@ export async function speak(text: string, lang: SpeechLang, opts: SpeakOptions =
 }
 
 export function stopSpeaking(): void {
+  stopClip();
   void Speech.stop();
 }
+

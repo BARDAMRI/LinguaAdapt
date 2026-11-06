@@ -123,6 +123,28 @@ violence, alcohol, religion, politics and similar topics, keeps only sentences b
 native or near-native Hebrew authors, and assigns each sentence to the first
 unit in which all its words have been taught.
 
+## Voice recordings
+
+Letters, syllables, words, sentences and phrases are recorded once with Google
+Cloud Text-to-Speech (Chirp 3 HD voices) and published next to the packs at
+`/audio/v1/<lang>/<key>.mp3` with a `manifest.json`. The app downloads a clip the
+first time it is needed (and the current lesson's clips ahead of time), keeps it
+on the device, and uses the device voice for anything without a clip or when
+offline. The "slow" button plays the same clip at 0.72× speed.
+
+```bash
+# .env (Mac only, never EXPO_PUBLIC_): GOOGLE_TTS_API_KEY=...
+npm run audio:count              # clips and characters, no API calls
+npm run audio:sample             # listening test: ~120 clips in several voices → .cache/audio-sample
+npm run audio:generate           # record everything missing into public/audio/v1 (resumable)
+npm run deploy:web               # publishes the clips with the site
+```
+
+`public/audio/` is not in git (≈37k files); the published copy lives on the
+`gh-pages` branch. The catalog (`scripts/audio/catalog.ts`) mirrors the app's
+speak calls; keys come from `src/audio/text.ts`, shared by the app and the script.
+About 0.9M characters — inside the 1M free characters per month.
+
 ## Sources and licenses
 
 | Source | Used for | License | Attribution |
@@ -131,7 +153,8 @@ unit in which all its words have been taught.
 | [Wiktionary](https://en.wiktionary.org) via [kaikki.org](https://kaikki.org/dictionary/Hebrew/) | dictionary, niqqud, transliteration, gender, plural, root | CC BY-SA 4.0 | Required, and the adapted dictionary is published under CC BY-SA 4.0 (`public/content/v1`) |
 | [Dicta DictaBERT-large-char-menaked](https://huggingface.co/dicta-il/dictabert-large-char-menaked) | automatic niqqud for sentences and phrases | CC BY 4.0 | Credited |
 | Own content | letters, niqqud, phonics, phrasebook, course order, sounds | — | — |
-| Device voices | speech | — | — |
+| [Google Cloud Text-to-Speech](https://cloud.google.com/text-to-speech) | recorded AI voices (Chirp 3 HD) | Google Cloud terms; output owned by the customer | Credited as AI-generated voices |
+| Device voices | fallback speech | — | — |
 
 The Wiktionary and Tatoeba data are not inside the app binary; they are
 downloaded from the public website where the same files are freely available.

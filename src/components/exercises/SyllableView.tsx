@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, { ZoomIn } from 'react-native-reanimated';
 import { useAppTheme } from '../../context/PreferencesContext';
@@ -6,6 +6,7 @@ import { NIQQUD_SIGNS, SYLLABLE_CONSONANTS, buildSyllable } from '../../content/
 import type { SyllableExercise } from '../../engine/types';
 import { t } from '../../services/i18n';
 import { speak } from '../../services/tts';
+import { prefetchClips } from '../../audio/clips';
 import { tapHaptic } from '../../utils/exerciseFeedback';
 import { Button } from '../ui';
 import { choiceSurface, ExerciseFrame, type DoneResult } from './common';
@@ -22,6 +23,10 @@ export function SyllableView({ exercise, onDone }: { exercise: SyllableExercise;
   const [sign, setSign] = useState(focus.key === 'chataf' ? signs[0] : focus);
   const [tries, setTries] = useState(0);
   const syllable = buildSyllable(cons, sign);
+  useEffect(() => {
+    prefetchClips(SYLLABLE_CONSONANTS.flatMap((cc) => signs.map((sg) => ({ text: buildSyllable(cc, sg), lang: 'he' as const }))));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exercise.vowelKey]);
 
   const play = (cc: string, s: typeof sign) => {
     tapHaptic();

@@ -19,6 +19,7 @@ import type { AppNav, AppStackParamList } from '../navigation/types';
 import { useProgress, type ItemResult } from '../progress/ProgressContext';
 import { isRTL, t } from '../services/i18n';
 import { stopSpeaking } from '../services/tts';
+import { collectSpeakables, prefetchClips } from '../audio/clips';
 import { playSfx } from '../utils/exerciseFeedback';
 import { rowDir } from '../utils/platformStyles';
 
@@ -95,6 +96,11 @@ export function LessonScreen() {
   const finished = useRef(false);
 
   useEffect(() => () => stopSpeaking(), []);
+
+  // Download this lesson's recorded voice clips while the learner starts.
+  useEffect(() => {
+    if (queue.length) prefetchClips(collectSpeakables(queue));
+  }, [queue]);
 
   // Speed round clock.
   useEffect(() => {
