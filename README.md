@@ -223,9 +223,20 @@ Local development build: `npx expo run:ios`.
 * Credits & licenses are in Settings → Credits.
 * `ios.supportsTablet` is on, so App Store Connect asks for iPad screenshots too.
 * Store listing (English + Hebrew name, subtitle, description, keywords, age
-  rating, review notes) lives in `store.config.json` for `eas metadata:push`.
-  Contact details for App Review, App Privacy ("Data Not Collected" for the
-  guest-only build) and price are filled in App Store Connect.
+  rating) lives in `store.config.json` for `eas metadata:push` (run as yourself,
+  see [iOS builds](#ios-builds-eas)). EAS Metadata cannot send the age rating
+  any more (Apple's questionnaire gained questions it does not know, such as
+  social media), so answer the age rating in App Store Connect; the rest uploads.
+  A new language may need a second push before its description appears. App Review
+  information (contact name, email, phone and the notes below), App Privacy
+  ("Data Not Collected" for the guest-only build) and price are filled in App
+  Store Connect, so no personal contact details are kept in the repository.
+  Review notes: *No sign-in is needed. On the first screen, choose a direction
+  (Hebrew for English speakers, or English for Hebrew speakers). On first launch
+  the app downloads its word lists and recorded voices from
+  https://bardamri.github.io/LinguaAdapt, so it needs an internet connection the
+  first time; lessons that were downloaded keep working offline. Where a
+  recording is missing, the device's built-in voice reads the text.*
 * Production builds have no Supabase variables (none are set in EAS and `.env`
   is not uploaded), so the store app is guest-only and shows no sign-in.
 * Screenshots (iPhone 6.9" 1320×2868, iPad 13" 2064×2752) are in

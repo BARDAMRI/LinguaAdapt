@@ -1,6 +1,7 @@
 {
   "configVersion": 0,
   "apple": {
+    "version": "1.0.0",
     "copyright": "2026 BARDAMRI",
     "categories": ["EDUCATION", "REFERENCE"],
     "advisory": {
@@ -46,10 +47,6 @@
     },
     "release": {
       "automaticRelease": false
-    },
-    "review": {
-      "demoRequired": false,
-      "notes": "No sign-in is needed. On the first screen, choose a direction (Hebrew for English speakers, or English for Hebrew speakers). On first launch the app downloads its word lists and recorded voices from https://bardamri.github.io/LinguaAdapt, so it needs an internet connection the first time; lessons that were downloaded keep working offline. Where a recording is missing, the device's built-in voice reads the text."
     }
   }
 }
