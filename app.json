@@ -31,11 +31,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png",
-      "bundler": "metro",
-      "baseUrl": "/LinguaAdapt"
-    },
-    "experiments": {
-      "baseUrl": "/LinguaAdapt"
+      "bundler": "metro"
     },
     "plugins": [
       "expo-localization",
