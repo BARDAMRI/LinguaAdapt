@@ -216,4 +216,17 @@ Local development build: `npx expo run:ios`.
   if the learner creates an account.
 * Credits & licenses are in Settings → Credits.
 * `ios.supportsTablet` is on, so App Store Connect asks for iPad screenshots too.
+* Store listing (English + Hebrew name, subtitle, description, keywords, age
+  rating, review notes) lives in `store.config.json` for `eas metadata:push`.
+  Contact details for App Review, App Privacy ("Data Not Collected" for the
+  guest-only build) and price are filled in App Store Connect.
+* Production builds have no Supabase variables (none are set in EAS and `.env`
+  is not uploaded), so the store app is guest-only and shows no sign-in.
+* Screenshots (iPhone 6.9" 1320×2868, iPad 13" 2064×2752) are in
+  `store/screenshots/`. They come from a Release simulator build with screen
+  links turned on: `EXPO_NO_DOTENV=1 EXPO_PUBLIC_SCREENSHOT_LINKS=1 npx expo run:ios --configuration Release`,
+  then `xcrun simctl openurl booted com.bardamri.linguaadapt://Dictionary` (any
+  screen name) and `xcrun simctl io booted screenshot`. Store builds leave the
+  links out. The iOS 26.3 simulator draws emoji as "?" boxes, so screens with
+  word pictures (teach cards) are left out until they can be shot on a device.
 * Submitting (`eas submit`) is a separate, manual step.

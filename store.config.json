@@ -1,0 +1,55 @@
+{
+  "configVersion": 0,
+  "apple": {
+    "copyright": "2026 BARDAMRI",
+    "categories": ["EDUCATION", "REFERENCE"],
+    "advisory": {
+      "alcoholTobaccoOrDrugUseOrReferences": "INFREQUENT_OR_MILD",
+      "contests": "NONE",
+      "gamblingSimulated": "NONE",
+      "horrorOrFearThemes": "NONE",
+      "matureOrSuggestiveThemes": "INFREQUENT_OR_MILD",
+      "medicalOrTreatmentInformation": "NONE",
+      "profanityOrCrudeHumor": "INFREQUENT_OR_MILD",
+      "sexualContentGraphicAndNudity": "NONE",
+      "sexualContentOrNudity": "NONE",
+      "violenceCartoonOrFantasy": "NONE",
+      "violenceRealistic": "NONE",
+      "violenceRealisticProlongedGraphicOrSadistic": "NONE",
+      "gambling": false,
+      "unrestrictedWebAccess": false,
+      "kidsAgeBand": null,
+      "ageRatingOverride": "NONE",
+      "koreaAgeRatingOverride": "NONE"
+    },
+    "info": {
+      "en-US": {
+        "title": "LinguaAdapt: Learn Hebrew",
+        "subtitle": "From the alef-bet to sentences",
+        "promoText": "Free, with no ads and no account. Learn to read Hebrew letter by letter, then words and real sentences, read aloud by natural recorded voices.",
+        "description": "LinguaAdapt teaches Hebrew to English speakers from absolute zero, and English to Hebrew speakers. It is free, with no ads, no subscription and no account.\n\nTHE HEBREW COURSE\n• Letters: the 22 Hebrew letters in small groups, the five final forms and the letters that look alike.\n• Reading: the vowel marks (niqqud), dagesh and shin/sin, one step at a time.\n• Words: about 2,470 words, first by topic, then the most common words in the language.\n• Sentences: real sentences that use only words you have already learned, plus a phrasebook for everyday situations.\n\nFOR HEBREW SPEAKERS LEARNING ENGLISH\nThe same path in the other direction: the 26 letters, phonics (short vowels, sh/ch/th, magic e, vowel teams and more), about 2,460 words with Hebrew meanings, and sentences.\n\nPRACTICE THAT STICKS\n• Spaced repetition brings each word back just before you would forget it.\n• Many kinds of exercises: listening, matching pairs, spelling with letter tiles, building sentences, dictation, typing (no niqqud needed) and tracing letters.\n• A daily goal, streaks and XP.\n• Checkpoints let you skip ahead if you already know the basics.\n\nALSO INSIDE\n• A searchable Hebrew–English dictionary with about 11,500 entries.\n• My words: every word you have learned, in one place.\n• A phrasebook with 169 phrases in 17 situations.\n• A chart of all the letters.\n\nNATURAL VOICES\nLessons are read aloud by natural recorded voices, at normal or slow speed.\n\nPRIVACY\nYour progress stays on your device. The app collects no personal data.\n\nDictionary and sentences: Wiktionary (CC BY-SA 4.0) and Tatoeba (CC BY 2.0 FR).",
+        "keywords": ["alef bet", "aleph", "alphabet", "niqqud", "nikud", "ivrit", "israel", "ulpan", "vocabulary", "dictionary", "phrasebook", "words"],
+        "marketingUrl": "https://bardamri.github.io/LinguaAdapt",
+        "supportUrl": "https://github.com/BARDAMRI/LinguaAdapt/issues",
+        "privacyPolicyUrl": "https://bardamri.github.io/LinguaAdapt/privacy.html"
+      },
+      "he": {
+        "title": "LinguaAdapt: לומדים אנגלית",
+        "subtitle": "מה-ABC ועד משפטים שלמים",
+        "promoText": "חינם, בלי פרסומות ובלי הרשמה. לומדים לקרוא אנגלית אות אחר אות, ואחר כך מילים ומשפטים אמיתיים, בקול טבעי מוקלט.",
+        "description": "LinguaAdapt מלמדת אנגלית לדוברי עברית מאפס, ועברית לדוברי אנגלית. היא חינמית, בלי פרסומות, בלי מנוי ובלי הרשמה.\n\nהקורס באנגלית\n• אותיות: 26 האותיות, גדולות וקטנות, שם האות מול הצליל שלה, ואותיות שמתבלבלים ביניהן (b d p q).\n• קריאה: איך קוראים באנגלית, צעד אחר צעד: תנועות קצרות, sh/ch/th, ה-e השקטה, צירופי תנועות, אותיות שלא נשמעות ועוד.\n• מילים: כ-2,460 מילים באנגלית עם הפירוש בעברית, קודם לפי נושאים ואחר כך המילים הנפוצות ביותר.\n• משפטים: משפטים אמיתיים שבנויים רק ממילים שכבר למדתם, ושיחון למצבים יומיומיים.\n\nלדוברי אנגלית שלומדים עברית\nאותו מסלול בכיוון השני: 22 האותיות והאותיות הסופיות, ניקוד, דגש ושין/שׂין, כ-2,470 מילים ומשפטים.\n\nתרגול שנשאר בזיכרון\n• חזרה מרווחת מחזירה כל מילה רגע לפני שהייתם שוכחים אותה.\n• הרבה סוגי תרגילים: האזנה, התאמת זוגות, איות באותיות, בניית משפטים, הכתבה, הקלדה ועקיבה אחרי צורת האות.\n• יעד יומי, רצף ימים ונקודות.\n• נקודות דילוג למי שכבר מכיר את הבסיס.\n\nעוד באפליקציה\n• מילון עברי–אנגלי עם חיפוש, כ-11,500 ערכים.\n• המילים שלי: כל המילים שלמדתם, במקום אחד.\n• שיחון עם 169 ביטויים ב-17 מצבים.\n• לוח של כל האותיות.\n\nקול טבעי\nהשיעורים מוקראים בקול טבעי מוקלט, במהירות רגילה או איטית.\n\nפרטיות\nההתקדמות שלכם נשמרת במכשיר. האפליקציה לא אוספת מידע אישי.\n\nמילון ומשפטים: ויקימילון (CC BY-SA 4.0) ו-Tatoeba (CC BY 2.0 FR).",
+        "keywords": ["למתחילים", "אותיות", "אוצר מילים", "מילון", "משפטים", "הגייה", "קריאה", "שיחון", "דקדוק", "english", "abc", "שפות"],
+        "marketingUrl": "https://bardamri.github.io/LinguaAdapt",
+        "supportUrl": "https://github.com/BARDAMRI/LinguaAdapt/issues",
+        "privacyPolicyUrl": "https://bardamri.github.io/LinguaAdapt/privacy.html"
+      }
+    },
+    "release": {
+      "automaticRelease": false
+    },
+    "review": {
+      "demoRequired": false,
+      "notes": "No sign-in is needed. On the first screen, choose a direction (Hebrew for English speakers, or English for Hebrew speakers). On first launch the app downloads its word lists and recorded voices from https://bardamri.github.io/LinguaAdapt, so it needs an internet connection the first time; lessons that were downloaded keep working offline. Where a recording is missing, the device's built-in voice reads the text."
+    }
+  }
+}

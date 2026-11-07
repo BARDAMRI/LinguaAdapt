@@ -2,7 +2,7 @@ import { Platform } from 'react-native';
 import type { LinkingOptions } from '@react-navigation/native';
 import { WEB_BASE_PATH } from '../utils/webBase';
 
-/** GitHub Pages project site (must match app.json experiments.baseUrl + repo name). */
+/** GitHub Pages project site (must match the base path app.config.js sets for the web export + repo name). */
 export const GITHUB_PAGES_APP_ROOT = 'https://BARDAMRI.github.io/LinguaAdapt';
 
 /**
@@ -18,6 +18,12 @@ export function getNavigationLinking(): LinkingOptions<Record<string, unknown>> 
     const { origin } = window.location;
     if (WEB_BASE_PATH) prefixes.add(`${origin}${WEB_BASE_PATH}`);
     prefixes.add(origin);
+  }
+
+  // Store screenshot builds only (EXPO_PUBLIC_SCREENSHOT_LINKS=1): lets `xcrun simctl openurl`
+  // open a screen by name, e.g. com.bardamri.linguaadapt://Dictionary. Store builds leave it out.
+  if (Platform.OS !== 'web' && process.env.EXPO_PUBLIC_SCREENSHOT_LINKS === '1') {
+    prefixes.add('com.bardamri.linguaadapt://');
   }
 
   // No `screens` on purpose: without it React Navigation uses the screen names as paths
