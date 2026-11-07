@@ -222,11 +222,14 @@ Local development build: `npx expo run:ios`.
   if the learner creates an account.
 * Credits & licenses are in Settings → Credits.
 * `ios.supportsTablet` is on, so App Store Connect asks for iPad screenshots too.
-* Store listing (English + Hebrew name, subtitle, description, keywords, age
-  rating) lives in `store.config.json` for `eas metadata:push` (run as yourself,
-  see [iOS builds](#ios-builds-eas)). EAS Metadata cannot send the age rating
-  any more (Apple's questionnaire gained questions it does not know, such as
-  social media), so answer the age rating in App Store Connect; the rest uploads.
+* Store listing (English + Hebrew name, subtitle, description, keywords,
+  screenshots) lives in `store.config.json` for `eas metadata:push` (run as
+  yourself, see [iOS builds](#ios-builds-eas)). The age rating is kept only in
+  App Store Connect: eas-cli (27.5.0) does not send the questions Apple added,
+  such as social media, so an `advisory` block in the file makes every push end
+  with "missing a required attribute … 'socialMedia'". Leave it out.
+  A version waiting for or in App Review is locked; push only while it is
+  "Prepare for Submission" or for the next version.
   A new language may need a second push before its description appears. App Review
   information (contact name, email, phone and the notes below), App Privacy
   ("Data Not Collected" for the guest-only build) and price are filled in App
