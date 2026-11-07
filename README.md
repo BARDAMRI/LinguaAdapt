@@ -205,6 +205,12 @@ npx eas-cli@latest build --platform ios --profile preview-simulator   # simulato
 npx eas-cli@latest build --platform ios --profile production          # App Store build
 ```
 
+The EAS project belongs to the `linguaadapt` Expo organization (`owner` in
+`app.json`), with its own iOS credentials. If `EXPO_TOKEN` on your machine is a
+robot of another organization, run EAS commands as yourself:
+`env -u EXPO_TOKEN npx eas-cli@latest login` once, then prefix each command with
+`env -u EXPO_TOKEN`.
+
 Local development build: `npx expo run:ios`.
 
 ## App Store checklist
