@@ -1,7 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, TextInput, View, type TextStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LangText, SpeakButton } from '../components/DisplayView';
 import { ScreenHeader } from '../components/ScreenHeader';
@@ -52,6 +52,13 @@ function search(dict: DictEntry[], q: string): DictEntry[] {
   return out.slice(0, 60).map((x) => x.e);
 }
 
+/** Latin text (transliteration, English meaning) on the reading side of the row, with its own
+ * punctuation order: in a Hebrew UI an rtl writing direction showed "?ma sh'lomkha". Computed at
+ * render time: a StyleSheet reads isRTL once at load, before the saved UI language is applied. */
+function latinStart(rtl: boolean): TextStyle {
+  return { textAlign: rtl ? 'right' : 'left', writingDirection: 'ltr' };
+}
+
 export function WordRow({ w, onPress }: { w: Word; onPress: () => void }) {
   const theme = useAppTheme();
   const c = theme.colors;
@@ -66,9 +73,9 @@ export function WordRow({ w, onPress }: { w: Word; onPress: () => void }) {
             {w.emoji ? <Text style={styles.emoji}>{w.emoji}</Text> : null}
           </View>
           {w.translit && state.settings.showTranslit ? (
-            <Text style={[styles.translit, { color: c.textSecondary }, textStart(isRTL)]}>{w.translit}</Text>
+            <Text style={[styles.translit, { color: c.textSecondary }, latinStart(isRTL)]}>{w.translit}</Text>
           ) : null}
-          <Text style={[styles.meaning, { color: c.textSecondary }]} numberOfLines={2}>
+          <Text style={[styles.meaning, { color: c.textSecondary }, latinStart(isRTL)]} numberOfLines={2}>
             {w.en}
           </Text>
         </View>
@@ -183,5 +190,5 @@ const styles = StyleSheet.create({
   rowMain: { flex: 1, alignItems: 'center', gap: 10 },
   emoji: { fontSize: 20 },
   translit: { fontSize: 13, fontStyle: 'italic' },
-  meaning: { fontSize: 15, textAlign: 'left', writingDirection: 'ltr', alignSelf: isRTL ? 'flex-end' : 'flex-start' },
+  meaning: { fontSize: 15 }, // side and direction come from latinStart() at render time
 });
