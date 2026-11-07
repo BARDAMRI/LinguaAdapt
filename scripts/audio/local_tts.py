@@ -15,8 +15,16 @@ Chatterbox sometimes rambles past the end of a short text or stops early.
 Each Hebrew clip is therefore length-capped and checked against the length its
 text should have; a bad take is retried (another take, then the alternative
 spelling), and a clip that never passes is left out, so the app reads that one
-with the device voice. Rejections are logged to <jobs>.rejected.jsonl.
+with the device voice. Rejections are logged to <jobs>.rejected.jsonl, and a
+resumed run skips them (delete that file to try them again).
+
+On Apple GPUs (MPS) memory grows with every clip of a new length (emptying the
+PyTorch cache does not stop it): a long run grew past 28 GB on a 16 GB Mac and
+slowed to a third of its speed. So a Hebrew run restarts itself in place (same
+process id, same output) every RESTART_EVERY clips and carries on from the files
+already written.
 """
+import gc
 import json
 import math
 import os
@@ -26,6 +34,7 @@ import time
 
 SPEED = 0.92  # English: a little slower than conversation, these are learners
 TOKEN_HZ = 25  # Chatterbox speech tokens per second of audio
+RESTART_EVERY = 50  # Hebrew clips per process, see the MPS note above
 
 
 def encode_mp3(wav_path: str, mp3_path: str) -> None:
@@ -85,6 +94,10 @@ def run_hebrew(jobs, rejected_log):
         else:
             rejected_log.write(json.dumps({"out": job["out"], "expected": round(exp, 2), "tries": tries}, ensure_ascii=False) + "\n")
             rejected_log.flush()
+        del wav
+        if device == "mps":
+            gc.collect()
+            torch.mps.empty_cache()
         yield i
 
 
@@ -108,19 +121,28 @@ def run_english(jobs, voice):
 def main():
     lang, jobs_path = sys.argv[1], sys.argv[2]
     voice = sys.argv[sys.argv.index("--voice") + 1] if "--voice" in sys.argv else "af_heart"
+    rejected_path = jobs_path + ".rejected.jsonl"
+    rejected_before = set()
+    if os.path.exists(rejected_path):
+        with open(rejected_path, encoding="utf-8") as f:
+            rejected_before = {json.loads(line)["out"] for line in f if line.strip()}
     with open(jobs_path, encoding="utf-8") as f:
-        jobs = [j for j in json.load(f) if not os.path.exists(j["out"])]
+        jobs = [j for j in json.load(f) if not os.path.exists(j["out"]) and j["out"] not in rejected_before]
     for d in {os.path.dirname(j["out"]) for j in jobs}:
         os.makedirs(d, exist_ok=True)
     print(f"{lang}: {len(jobs)} clips to record", flush=True)
     started = time.time()
-    with open(jobs_path + ".rejected.jsonl", "a", encoding="utf-8") as rejected:
+    with open(rejected_path, "a", encoding="utf-8") as rejected:
         runner = run_hebrew(jobs, rejected) if lang == "he" else run_english(jobs, voice)
         for i in runner:
             if (i + 1) % 50 == 0 or i + 1 == len(jobs):
                 rate = (i + 1) / max(1e-6, time.time() - started)
                 left = (len(jobs) - i - 1) / max(rate, 1e-6) / 3600
                 print(f"{lang}: {i + 1}/{len(jobs)} ({rate * 60:.1f}/min, ~{left:.1f} h left)", flush=True)
+            if lang == "he" and i + 1 >= RESTART_EVERY and i + 1 < len(jobs):
+                rejected.flush()
+                print(f"{lang}: restarting to free GPU memory", flush=True)
+                os.execv(sys.executable, [sys.executable, "-I", *sys.argv])
 
 
 if __name__ == "__main__":
