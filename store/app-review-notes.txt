@@ -1,0 +1,28 @@
+1. SCREEN RECORDING
+Recorded on an iPhone with the latest iOS, build 1.0.0 (4) from TestFlight. The video is in the Attachment field below. It starts at launch and shows the typical flow: choosing a course, a first lesson with audio and exercises, the lesson summary, the dictionary, the phrasebook, the letter chart and Settings. The app has no account registration or login, no user-generated content and no paid content.
+
+2. PURPOSE AND AUDIENCE
+LinguaAdapt is a free course for complete beginners. English speakers learn to read and understand Hebrew from zero: the alphabet, the vowel marks (niqqud), common words and then real sentences. Hebrew speakers learn English the same way, from the 26 letters and phonics to words and sentences. It solves the first hurdle of a new language, a new script: letters come in small steps, every word is read aloud by natural recorded voices, and spaced repetition brings words back before they are forgotten. No ads, no subscription, no account. Audience: adults and teens starting Hebrew or English.
+
+3. HOW TO USE IT
+No sign-in, login credentials or sample files are needed. On first launch:
+- Choose a course: "I speak English / Learn Hebrew" or "I speak Hebrew / Learn English".
+- Choose "From the very beginning" (or "I know some already" to take a placement checkpoint).
+- On the home screen, tap the current lesson. Lessons mix listening, matching, spelling with letter tiles, building sentences and typing.
+- From the home screen: Dictionary (search in Hebrew or English), Phrasebook (169 phrases in 17 situations), Letter chart, Profile (XP, streaks, lessons done) and Settings (course, daily goal, slow speech, sound, niqqud, transliteration, app language, dark mode, Credits & licenses, Privacy). Words saved from the dictionary can be practiced under "My words".
+The first launch needs an internet connection to download the word lists and recordings. Downloaded lessons keep working offline.
+
+4. EXTERNAL SERVICES
+- GitHub Pages (https://bardamri.github.io/LinguaAdapt): static hosting for the word lists, sentences and pre-recorded audio that the app downloads over HTTPS. Nothing about the user is sent.
+- Apple's on-device text-to-speech (AVSpeechSynthesizer), used only where a recording is missing.
+The app uses no login, analytics, advertising, payment or AI services. Progress is stored only on the device.
+
+5. REGIONAL DIFFERENCES
+None. The app and its content are the same in every region. The interface is in English or Hebrew: it follows the device language and can be changed in Settings.
+
+6. THIRD-PARTY MATERIAL
+The app is not in a regulated industry. All third-party content is under open licenses and credited in Settings > Credits & licenses:
+- Dictionary entries: English Wiktionary (CC BY-SA 4.0).
+- Example sentences: Tatoeba (CC BY 2.0 FR).
+- Vowel marks: DictaBERT-large-char-menaked by Dicta (CC BY 4.0).
+- Recorded voices, made in advance with open models: Chatterbox Multilingual by Resemble AI (MIT) and Kokoro-82M (Apache 2.0). These models do not run in the app; it only plays the recorded files.
