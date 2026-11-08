@@ -66,19 +66,38 @@ export const OWN_CONTENT_NOTE = {
   he: 'שיעורי האותיות, הניקוד והקריאה, השיחון, סדר הקורס והצלילים נכתבו עבור LinguaAdapt. טקסט שאין לו הקלטה מוקרא בקול המובנה במכשיר שלכם.',
 };
 
-export const PRIVACY_TEXT = {
-  en: [
-    'You can use LinguaAdapt without an account. Your progress is then stored only on this device.',
-    'If you create an account, your email address and your learning progress are stored with our backend provider (Supabase) so you can sync between devices. You can delete the account and that data at any time in Settings → Delete account.',
-    'Speech is produced on your device. Nothing you type or say is sent to a third party.',
-    'The full dictionary and sentence lists are downloaded once from our public website (GitHub Pages). Like any website, GitHub may log the request.',
-    'LinguaAdapt shows no ads and does not track you across apps or websites.',
-  ],
-  he: [
-    'אפשר להשתמש ב-LinguaAdapt בלי חשבון. במקרה כזה ההתקדמות נשמרת רק במכשיר הזה.',
-    'אם תפתחו חשבון, כתובת האימייל וההתקדמות שלכם יישמרו אצל ספק השרת שלנו (Supabase), כדי לסנכרן בין מכשירים. אפשר למחוק את החשבון ואת המידע הזה בכל עת דרך הגדרות ← מחיקת חשבון.',
-    'ההשמעה נוצרת במכשיר שלכם. שום דבר שאתם מקלידים או אומרים לא נשלח לגורם שלישי.',
-    'המילון המלא ורשימות המשפטים יורדים פעם אחת מהאתר הציבורי שלנו (GitHub Pages). כמו בכל אתר, GitHub עשויה לרשום את הבקשה.',
-    'ב-LinguaAdapt אין פרסומות והיא לא עוקבת אחריכם בין אפליקציות או אתרים.',
-  ],
+const PRIVACY = {
+  en: {
+    accounts: [
+      'You can use LinguaAdapt without an account. Your progress is then stored only on this device.',
+      'If you create an account, your email address and your learning progress are stored with our backend provider (Supabase) so you can sync between devices. You can delete the account and that data at any time in Settings → Delete account.',
+    ],
+    noAccounts: ['LinguaAdapt has no accounts and no sign-in. Your progress is stored only on this device.'],
+    common: [
+      'Speech is produced on your device. Nothing you type or say is sent to a third party.',
+      'The full dictionary and sentence lists are downloaded once from our public website (GitHub Pages). Like any website, GitHub may log the request.',
+      'LinguaAdapt shows no ads and does not track you across apps or websites.',
+    ],
+  },
+  he: {
+    accounts: [
+      'אפשר להשתמש ב-LinguaAdapt בלי חשבון. במקרה כזה ההתקדמות נשמרת רק במכשיר הזה.',
+      'אם תפתחו חשבון, כתובת האימייל וההתקדמות שלכם יישמרו אצל ספק השרת שלנו (Supabase), כדי לסנכרן בין מכשירים. אפשר למחוק את החשבון ואת המידע הזה בכל עת דרך הגדרות ← מחיקת חשבון.',
+    ],
+    noAccounts: ['ב-LinguaAdapt אין חשבונות ואין הרשמה. ההתקדמות נשמרת רק במכשיר הזה.'],
+    common: [
+      'ההשמעה נוצרת במכשיר שלכם. שום דבר שאתם מקלידים או אומרים לא נשלח לגורם שלישי.',
+      'המילון המלא ורשימות המשפטים יורדים פעם אחת מהאתר הציבורי שלנו (GitHub Pages). כמו בכל אתר, GitHub עשויה לרשום את הבקשה.',
+      'ב-LinguaAdapt אין פרסומות והיא לא עוקבת אחריכם בין אפליקציות או אתרים.',
+    ],
+  },
 };
+
+/**
+ * The privacy screen's paragraphs. Builds without Supabase (the App Store builds) have
+ * no sign-in, so they must not describe accounts.
+ */
+export function privacyText(lang: keyof typeof PRIVACY, accounts: boolean): string[] {
+  const p = PRIVACY[lang];
+  return [...(accounts ? p.accounts : p.noAccounts), ...p.common];
+}

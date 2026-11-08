@@ -2,8 +2,9 @@ import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-na
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { Card } from '../components/ui';
+import { useAuth } from '../context/AuthContext';
 import { useAppTheme } from '../context/PreferencesContext';
-import { CREDITS, OWN_CONTENT_NOTE, PRIVACY_TEXT } from '../content/legal';
+import { CREDITS, OWN_CONTENT_NOTE, privacyText } from '../content/legal';
 import { getUiLanguage, isRTL, t } from '../services/i18n';
 import { textStart } from '../utils/platformStyles';
 
@@ -44,12 +45,13 @@ export function PrivacyScreen() {
   const c = theme.colors;
   const insets = useSafeAreaInsets();
   const lang = getUiLanguage();
+  const { available: accounts } = useAuth();
   return (
     <View style={{ flex: 1, backgroundColor: c.background }}>
       <ScreenHeader title={t('privacy.title')} />
       <ScrollView contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 24 }]}>
         <View style={styles.column}>
-          {PRIVACY_TEXT[lang].map((p) => (
+          {privacyText(lang, accounts).map((p) => (
             <Text key={p} style={[styles.body, { color: c.text }, textStart(isRTL)]}>
               {p}
             </Text>

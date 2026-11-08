@@ -44,6 +44,7 @@ const translations = {
       knowSome: 'I know some already',
       knowSomeSub: 'Take a short test to skip ahead',
       guestNote: 'Your progress is saved on this device. You can create an account later to sync it.',
+      localNote: 'Your progress is saved on this device.',
     },
     stages: {
       letters: 'Letters',
@@ -334,6 +335,7 @@ const translations = {
       knowSome: 'אני כבר יודע/ת קצת',
       knowSomeSub: 'מבחן קצר כדי לדלג קדימה',
       guestNote: 'ההתקדמות נשמרת במכשיר הזה. אפשר לפתוח חשבון בהמשך כדי לסנכרן.',
+      localNote: 'ההתקדמות נשמרת במכשיר הזה.',
     },
     stages: {
       letters: 'אותיות',

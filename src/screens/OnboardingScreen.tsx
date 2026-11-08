@@ -6,6 +6,7 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BrandMark } from '../components/BrandMark';
 import { IconBadge, tint, type IconName } from '../components/ui';
+import { useAuth } from '../context/AuthContext';
 import { useAppTheme, usePreferences } from '../context/PreferencesContext';
 import { nativeOf, type PairId } from '../content/types';
 import { buildCourse } from '../course/build';
@@ -22,6 +23,8 @@ export function OnboardingScreen() {
   const navigation = useNavigation<AppNav>();
   const { setAppLanguage } = usePreferences();
   const { setActivePair } = useProgress();
+  // Store builds have no sign-in, so the note must not promise an account.
+  const { available: accounts } = useAuth();
   const [pair, setPair] = useState<PairId | null>(null);
 
   const choosePair = async (p: PairId) => {
@@ -117,7 +120,7 @@ export function OnboardingScreen() {
             {levelCard('rocket', c.primary, t('onboarding.knowSome'), t('onboarding.knowSomeSub'), () => start(true), 'onboarding_know_some')}
             <View style={[styles.note, { backgroundColor: c.surfaceElevated, flexDirection: rowDir(isRTL) }]}>
               <Ionicons name="phone-portrait-outline" size={18} color={c.textSecondary} />
-              <Text style={[styles.noteText, { color: c.textSecondary }, textStart(isRTL)]}>{t('onboarding.guestNote')}</Text>
+              <Text style={[styles.noteText, { color: c.textSecondary }, textStart(isRTL)]}>{t(accounts ? 'onboarding.guestNote' : 'onboarding.localNote')}</Text>
             </View>
             <Pressable onPress={() => setPair(null)} hitSlop={8} style={styles.backBtn}>
               <Text style={[styles.back, { color: c.primary }]}>{t('common.back')}</Text>
