@@ -2,7 +2,7 @@
   "expo": {
     "name": "LinguaAdapt",
     "slug": "linguaadapt",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -17,8 +17,14 @@
       "bundleIdentifier": "com.bardamri.linguaadapt",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "CFBundleAllowMixedLocalizations": true
+        "CFBundleAllowMixedLocalizations": true,
+        "CFBundleLocalizations": ["en", "he"],
+        "ExpoLocalization_supportsRTL": false
       }
+    },
+    "locales": {
+      "en": "./locales/en.json",
+      "he": "./locales/he.json"
     },
     "android": {
       "adaptiveIcon": {

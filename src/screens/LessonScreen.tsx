@@ -239,13 +239,16 @@ export function LessonScreen() {
 
   return (
     <View style={[styles.root, { backgroundColor: c.background, paddingTop: insets.top + 8 }]} testID="lesson_root">
+      <View pointerEvents="none" style={[styles.bgGlowTop, { backgroundColor: c.primary }]} />
+      <View pointerEvents="none" style={[styles.bgGlowBottom, { backgroundColor: c.primary }]} />
       <View style={[styles.header, { flexDirection: rowDir(isRTL) }]}>
         <IconButton icon="close" size={24} variant="plain" color={c.textSecondary} onPress={quit} label={t('common.close')} testID="lesson_btn_close" />
         <View style={{ flex: 1 }}>
           <ProgressBar
             height={10}
             value={params.mode === 'speed' ? timeLeft / SPEED_SECONDS : graded ? doneGraded / graded : 0}
-            color={params.mode === 'speed' ? (timeLeft <= 10 ? c.danger : c.secondary) : c.success}
+            color={params.mode === 'speed' ? (timeLeft <= 10 ? c.danger : c.secondary) : c.primary}
+            trackColor={c.primarySoft}
           />
         </View>
         {params.mode === 'speed' ? <Pill icon="timer-outline" label={String(timeLeft)} color={timeLeft <= 10 ? c.danger : c.text} /> : null}
@@ -268,7 +271,10 @@ export function LessonScreen() {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, paddingHorizontal: 18 },
+  root: { flex: 1, paddingHorizontal: 18, overflow: 'hidden' },
+  // The app icon's glow circles, faint, behind the exercise.
+  bgGlowTop: { position: 'absolute', width: 340, height: 340, borderRadius: 170, top: -170, right: -120, opacity: 0.05 },
+  bgGlowBottom: { position: 'absolute', width: 300, height: 300, borderRadius: 150, bottom: -160, left: -120, opacity: 0.04 },
   header: { alignItems: 'center', gap: 10, marginBottom: 10, marginHorizontal: -8 },
   modeTitle: { textAlign: 'center', fontSize: 13, fontWeight: '700', marginBottom: 6, letterSpacing: 0.3 },
   body: { flex: 1, width: '100%', maxWidth: 640, alignSelf: 'center' },

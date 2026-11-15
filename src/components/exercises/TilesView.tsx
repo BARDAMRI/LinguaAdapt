@@ -6,7 +6,7 @@ import type { TilesExercise } from '../../engine/types';
 import { tapHaptic } from '../../utils/exerciseFeedback';
 import { normalizeAnswer } from '../../utils/hebrew';
 import { DisplayView, SpeakButton, useAutoplay } from '../DisplayView';
-import { CheckFooter, choiceSurface, ExerciseFrame, useVerdictFeedback, type DoneResult, type Verdict } from './common';
+import { BrandPanel, CheckFooter, choiceSurface, ExerciseFrame, useVerdictFeedback, type DoneResult, type Verdict } from './common';
 
 /** Build a word from letter tiles or a sentence from word tiles. */
 export function TilesView({ exercise, onDone }: { exercise: TilesExercise; onDone: (r: DoneResult) => void }) {
@@ -48,7 +48,7 @@ export function TilesView({ exercise, onDone }: { exercise: TilesExercise; onDon
         />
       }
     >
-      <View style={styles.prompt}>
+      <BrandPanel>
         {exercise.prompt ? <DisplayView display={exercise.prompt} /> : null}
         {exercise.audio ? (
           <View style={styles.audioRow}>
@@ -56,7 +56,7 @@ export function TilesView({ exercise, onDone }: { exercise: TilesExercise; onDon
             <SpeakButton speakable={exercise.audio} size="md" slow />
           </View>
         ) : null}
-      </View>
+      </BrandPanel>
 
       <View
         style={[
@@ -108,7 +108,6 @@ export function TilesView({ exercise, onDone }: { exercise: TilesExercise; onDon
 }
 
 const styles = StyleSheet.create({
-  prompt: { alignItems: 'center', gap: 10 },
   audioRow: { flexDirection: 'row', alignItems: 'center', gap: 16 },
   answerArea: {
     minHeight: 76,

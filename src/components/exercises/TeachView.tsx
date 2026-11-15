@@ -7,7 +7,7 @@ import { isRTL, t } from '../../services/i18n';
 import { cardShadowStyle, rowDir, textStart } from '../../utils/platformStyles';
 import { DisplayView, LangText, SpeakButton, useAutoplay } from '../DisplayView';
 import { Button } from '../ui';
-import { ExerciseFrame, type DoneResult } from './common';
+import { BrandGlow, ExerciseFrame, type DoneResult } from './common';
 
 /** Introduces a new letter, vowel, pattern, word or phrase. */
 export function TeachView({ exercise, onDone }: { exercise: TeachExercise; onDone: (r: DoneResult) => void }) {
@@ -30,6 +30,7 @@ export function TeachView({ exercise, onDone }: { exercise: TeachExercise; onDon
 
       {tc.glyph ? (
         <Animated.View entering={ZoomIn.springify().damping(14)} style={[styles.hero, { backgroundColor: c.primarySoft }]}>
+          <BrandGlow />
           {tc.glyph.emoji ? <Text style={styles.heroEmoji}>{tc.glyph.emoji}</Text> : null}
           <LangText display={{ ...tc.glyph, emoji: undefined }} style={{ color: c.primary }} />
           {tc.glyph.translit ? <DisplayView display={{ text: tc.glyph.translit, lang: 'en', size: 'small' }} /> : null}
@@ -92,7 +93,7 @@ export function TeachView({ exercise, onDone }: { exercise: TeachExercise; onDon
 const styles = StyleSheet.create({
   badge: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 999, alignItems: 'center', gap: 5 },
   badgeText: { fontSize: 13, fontWeight: '700' },
-  hero: { borderRadius: 26, paddingVertical: 18, paddingHorizontal: 12, alignItems: 'center', gap: 6 },
+  hero: { borderRadius: 26, paddingVertical: 18, paddingHorizontal: 12, alignItems: 'center', gap: 6, overflow: 'hidden' },
   heroEmoji: { fontSize: 52 },
   speakRow: { flexDirection: 'row', alignItems: 'center', gap: 14, marginTop: 6 },
   row: { borderTopWidth: StyleSheet.hairlineWidth, paddingTop: 12, gap: 4 },

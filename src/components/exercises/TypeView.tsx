@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, TextInput } from 'react-native';
 import { useAppTheme } from '../../context/PreferencesContext';
 import type { TypeExercise } from '../../engine/types';
 import { t } from '../../services/i18n';
 import { gradeTypedAnswer } from '../../utils/hebrew';
 import { DisplayView, SpeakButton, useAutoplay } from '../DisplayView';
-import { CheckFooter, ExerciseFrame, useVerdictFeedback, type DoneResult, type Verdict } from './common';
+import { BrandPanel, CheckFooter, ExerciseFrame, useVerdictFeedback, type DoneResult, type Verdict } from './common';
 
 export function TypeView({ exercise, onDone }: { exercise: TypeExercise; onDone: (r: DoneResult) => void }) {
   const theme = useAppTheme();
@@ -36,10 +36,10 @@ export function TypeView({ exercise, onDone }: { exercise: TypeExercise; onDone:
         />
       }
     >
-      <View style={styles.prompt}>
+      <BrandPanel>
         {exercise.prompt ? <DisplayView display={exercise.prompt} /> : null}
         {exercise.audio && !exercise.prompt?.speak ? <SpeakButton speakable={exercise.audio} size="lg" /> : null}
-      </View>
+      </BrandPanel>
       <TextInput
         value={text}
         onChangeText={setText}
@@ -68,7 +68,6 @@ export function TypeView({ exercise, onDone }: { exercise: TypeExercise; onDone:
 }
 
 const styles = StyleSheet.create({
-  prompt: { alignItems: 'center', gap: 10 },
   input: {
     borderWidth: 1.5,
     borderRadius: 16,

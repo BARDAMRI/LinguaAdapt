@@ -1,7 +1,7 @@
 {
   "configVersion": 0,
   "apple": {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "copyright": "2026 BARDAMRI",
     "categories": ["EDUCATION", "REFERENCE"],
     "info": {
@@ -14,6 +14,7 @@
         "marketingUrl": "https://bardamri.github.io/LinguaAdapt",
         "supportUrl": "https://github.com/BARDAMRI/LinguaAdapt/issues",
         "privacyPolicyUrl": "https://bardamri.github.io/LinguaAdapt/privacy.html",
+        "releaseNotes": "Hebrew is now listed as a supported language. Minor improvements.",
         "screenshots": {
           "APP_IPHONE_67": ["./store/screenshots/iphone-6.9/en-US/1-home.png", "./store/screenshots/iphone-6.9/en-US/2-speed-round.png", "./store/screenshots/iphone-6.9/en-US/3-word.png", "./store/screenshots/iphone-6.9/en-US/4-dictionary.png", "./store/screenshots/iphone-6.9/en-US/5-phrasebook.png", "./store/screenshots/iphone-6.9/en-US/6-letter-chart.png"],
           "APP_IPAD_PRO_3GEN_129": ["./store/screenshots/ipad-13/en-US/1-home.png"]
@@ -28,6 +29,7 @@
         "marketingUrl": "https://bardamri.github.io/LinguaAdapt",
         "supportUrl": "https://github.com/BARDAMRI/LinguaAdapt/issues",
         "privacyPolicyUrl": "https://bardamri.github.io/LinguaAdapt/privacy.html",
+        "releaseNotes": "העברית מופיעה עכשיו ברשימת השפות של האפליקציה. שיפורים קטנים.",
         "screenshots": {
           "APP_IPHONE_67": ["./store/screenshots/iphone-6.9/he/1-home.png", "./store/screenshots/iphone-6.9/he/2-speed-round.png", "./store/screenshots/iphone-6.9/he/3-dictionary.png", "./store/screenshots/iphone-6.9/he/4-phrasebook.png", "./store/screenshots/iphone-6.9/he/5-letter-chart.png"],
           "APP_IPAD_PRO_3GEN_129": ["./store/screenshots/ipad-13/he/1-home.png"]

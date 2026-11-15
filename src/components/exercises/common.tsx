@@ -32,15 +32,43 @@ export function choiceSurface(theme: AppTheme, state: ChoiceState): ViewStyle {
 
 export type Verdict = { correct: boolean; typo?: boolean };
 
-/** Instruction on top, scrollable body, sticky footer. */
+/** The stage for an exercise's prompt, in the app icon's look: brand tint with two soft glow circles. */
+export function BrandPanel({ children, style }: { children: ReactNode; style?: ViewStyle }) {
+  const c = useAppTheme().colors;
+  return (
+    <View style={[styles.panel, { backgroundColor: c.primarySoft }, style]}>
+      <BrandGlow />
+      {children}
+    </View>
+  );
+}
+
+/** The two glow circles of the app icon, for a container with `overflow: 'hidden'`. */
+export function BrandGlow() {
+  const c = useAppTheme().colors;
+  return (
+    <>
+      <View pointerEvents="none" style={[styles.glowTop, { backgroundColor: c.primary }]} />
+      <View pointerEvents="none" style={[styles.glowBottom, { backgroundColor: c.primary }]} />
+    </>
+  );
+}
+
+/**
+ * Instruction on top, scrollable body, sticky footer. `scrollEnabled={false}` is for
+ * exercises that take finger drags (tracing): on iOS a drag would otherwise scroll or
+ * bounce the body under the finger.
+ */
 export function ExerciseFrame({
   instruction,
   children,
   footer,
+  scrollEnabled = true,
 }: {
   instruction?: string;
   children: ReactNode;
   footer: ReactNode;
+  scrollEnabled?: boolean;
 }) {
   const theme = useAppTheme();
   const insets = useSafeAreaInsets();
@@ -51,6 +79,8 @@ export function ExerciseFrame({
         contentContainerStyle={styles.bodyContent}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
+        scrollEnabled={scrollEnabled}
+        bounces={scrollEnabled}
       >
         {instruction ? (
           <Text style={[styles.instruction, { color: theme.colors.text }, textStart(isRTL)]} testID="exercise_instruction">
@@ -130,6 +160,9 @@ const styles = StyleSheet.create({
   body: { flex: 1 },
   bodyContent: { paddingTop: 4, paddingBottom: 24, gap: 20 },
   instruction: { fontSize: 21, fontWeight: '700', lineHeight: 28 },
+  panel: { borderRadius: 26, paddingVertical: 22, paddingHorizontal: 16, alignItems: 'center', gap: 12, overflow: 'hidden' },
+  glowTop: { position: 'absolute', width: 190, height: 190, borderRadius: 95, top: -95, right: -60, opacity: 0.09 },
+  glowBottom: { position: 'absolute', width: 140, height: 140, borderRadius: 70, bottom: -80, left: -50, opacity: 0.06 },
   footerPad: { paddingTop: 10 },
   banner: { borderRadius: 20, padding: 16, gap: 12, marginTop: 8, marginHorizontal: -4 },
   bannerHead: { alignItems: 'center', gap: 10 },

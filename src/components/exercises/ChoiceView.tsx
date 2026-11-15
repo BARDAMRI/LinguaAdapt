@@ -5,7 +5,7 @@ import type { ChoiceExercise } from '../../engine/types';
 import { speak } from '../../services/tts';
 import { tapHaptic } from '../../utils/exerciseFeedback';
 import { DisplayView, SpeakButton, useAutoplay } from '../DisplayView';
-import { CheckFooter, choiceSurface, ExerciseFrame, useVerdictFeedback, type DoneResult, type Verdict } from './common';
+import { BrandPanel, CheckFooter, choiceSurface, ExerciseFrame, useVerdictFeedback, type DoneResult, type Verdict } from './common';
 
 export function ChoiceView({ exercise, onDone, instant }: { exercise: ChoiceExercise; onDone: (r: DoneResult) => void; instant?: boolean }) {
   const theme = useAppTheme();
@@ -36,7 +36,7 @@ export function ChoiceView({ exercise, onDone, instant }: { exercise: ChoiceExer
       }
     >
       {exercise.prompt || exercise.audio ? (
-        <View style={styles.prompt}>
+        <BrandPanel>
           {exercise.prompt ? <DisplayView display={exercise.prompt} /> : null}
           {exercise.audio && !exercise.prompt?.speak ? (
             <View style={styles.audioRow}>
@@ -44,7 +44,7 @@ export function ChoiceView({ exercise, onDone, instant }: { exercise: ChoiceExer
               <SpeakButton speakable={exercise.audio} size="md" slow />
             </View>
           ) : null}
-        </View>
+        </BrandPanel>
       ) : null}
       <View style={[styles.options, grid && styles.grid]} testID="exercise_options">
         {exercise.options.map((opt, i) => {
@@ -88,7 +88,6 @@ export function ChoiceView({ exercise, onDone, instant }: { exercise: ChoiceExer
 }
 
 const styles = StyleSheet.create({
-  prompt: { alignItems: 'center', gap: 12, paddingVertical: 8 },
   audioRow: { flexDirection: 'row', alignItems: 'center', gap: 16 },
   options: { gap: 12 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 0 },

@@ -72,52 +72,51 @@ export function MatchView({ exercise, onDone }: { exercise: MatchExercise; onDon
         ) : null
       }
     >
-      <View style={styles.columns}>
-        <View style={styles.col}>
-          {left.map((p, i) => (
-            <Pressable
-              key={`l-${p.id}`}
-              testID={`match_left_${i}`}
-              disabled={matched.has(p.id) || flash !== null}
-              onPress={() => {
-                tapHaptic();
-                if (p.left.lang === 'he' || p.left.size === 'glyph') {
-                  if (p.left.speak) void speak(p.left.speak.text, p.left.speak.lang);
-                }
-                setPickLeft(p.id);
-                attempt(p.id, pickRight);
-              }}
-              style={cardStyle(p.id, 'l', pickLeft === p.id)}
-            >
-              <DisplayView display={{ ...p.left, size: p.left.size === 'glyph' ? 'big' : p.left.size, speak: undefined, note: undefined }} showSpeaker={false} />
-            </Pressable>
-          ))}
-        </View>
-        <View style={styles.col}>
-          {right.map((p, i) => (
-            <Pressable
-              key={`r-${p.id}`}
-              testID={`match_right_${i}`}
-              disabled={matched.has(p.id) || flash !== null}
-              onPress={() => {
-                tapHaptic();
-                setPickRight(p.id);
-                attempt(pickLeft, p.id);
-              }}
-              style={cardStyle(p.id, 'r', pickRight === p.id)}
-            >
-              <DisplayView display={{ ...p.right, size: p.right.size === 'glyph' ? 'big' : p.right.size, speak: undefined }} showSpeaker={false} />
-            </Pressable>
-          ))}
-        </View>
+      {/* One row per line: the two cards of a row share its height, so both sides line up. */}
+      <View style={styles.rows}>
+        {left.map((p, i) => {
+          const q = right[i];
+          return (
+            <View key={`row-${i}`} style={styles.row}>
+              <Pressable
+                testID={`match_left_${i}`}
+                disabled={matched.has(p.id) || flash !== null}
+                onPress={() => {
+                  tapHaptic();
+                  if (p.left.lang === 'he' || p.left.size === 'glyph') {
+                    if (p.left.speak) void speak(p.left.speak.text, p.left.speak.lang);
+                  }
+                  setPickLeft(p.id);
+                  attempt(p.id, pickRight);
+                }}
+                style={[cardStyle(p.id, 'l', pickLeft === p.id), styles.cell]}
+              >
+                <DisplayView display={{ ...p.left, size: p.left.size === 'glyph' ? 'big' : p.left.size, speak: undefined, note: undefined }} showSpeaker={false} />
+              </Pressable>
+              <Pressable
+                testID={`match_right_${i}`}
+                disabled={matched.has(q.id) || flash !== null}
+                onPress={() => {
+                  tapHaptic();
+                  setPickRight(q.id);
+                  attempt(pickLeft, q.id);
+                }}
+                style={[cardStyle(q.id, 'r', pickRight === q.id), styles.cell]}
+              >
+                <DisplayView display={{ ...q.right, size: q.right.size === 'glyph' ? 'big' : q.right.size, speak: undefined }} showSpeaker={false} />
+              </Pressable>
+            </View>
+          );
+        })}
       </View>
     </ExerciseFrame>
   );
 }
 
 const styles = StyleSheet.create({
-  columns: { flexDirection: 'row', gap: 12 },
-  col: { flex: 1, gap: 12 },
+  rows: { gap: 12 },
+  row: { flexDirection: 'row', gap: 12 },
+  cell: { flex: 1 },
   card: {
     minHeight: 64,
     alignItems: 'center',

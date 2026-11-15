@@ -5,7 +5,7 @@ import type { TraceExercise } from '../../engine/types';
 import { t } from '../../services/i18n';
 import { SpeakButton, useAutoplay } from '../DisplayView';
 import { Button, IconButton } from '../ui';
-import { ExerciseFrame, type DoneResult } from './common';
+import { BrandGlow, ExerciseFrame, type DoneResult } from './common';
 
 type Dot = { x: number; y: number };
 
@@ -40,6 +40,7 @@ export function TraceView({ exercise, onDone }: { exercise: TraceExercise; onDon
   return (
     <ExerciseFrame
       instruction={`${exercise.instruction}: ${exercise.label}`}
+      scrollEnabled={false}
       footer={
         <View style={styles.buttons}>
           <IconButton icon="refresh" label={t('common.retry')} onPress={() => setDots([])} style={styles.clear} color={theme.colors.primary} />
@@ -56,7 +57,8 @@ export function TraceView({ exercise, onDone }: { exercise: TraceExercise; onDon
       <View style={styles.speakRow}>
         <SpeakButton speakable={exercise.speak} />
       </View>
-      <View style={[styles.canvas, { borderColor: c.border, backgroundColor: c.surface }, webNoSelect]} {...pan.panHandlers} testID="trace_canvas">
+      <View style={[styles.canvas, { borderColor: c.primarySoft, backgroundColor: c.surface }, webNoSelect]} {...pan.panHandlers} testID="trace_canvas">
+        <BrandGlow />
         <View style={styles.guide} pointerEvents="none">
           <Text style={[styles.guideText, { color: c.primaryMuted }]}>{exercise.glyph}</Text>
         </View>
@@ -70,7 +72,7 @@ export function TraceView({ exercise, onDone }: { exercise: TraceExercise; onDon
 
 const styles = StyleSheet.create({
   speakRow: { alignItems: 'center' },
-  canvas: { height: 300, borderWidth: 1, borderRadius: 22, overflow: 'hidden' },
+  canvas: { height: 300, borderWidth: 2, borderRadius: 26, overflow: 'hidden' },
   guide: { ...StyleSheet.absoluteFillObject, alignItems: 'center', justifyContent: 'center' },
   guideText: { fontSize: 210, fontWeight: '600', opacity: 0.35 },
   dot: { position: 'absolute', width: 18, height: 18, borderRadius: 9, opacity: 0.8 },
